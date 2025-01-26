@@ -3,7 +3,6 @@ import React from "react";
 
 const MapWrapper: React.FC = () => {
   const key = process.env.API_KEY || "";
-  console.log(key);
 
   return (
     <>
