@@ -55,7 +55,7 @@ const EventParticipation: React.FC = () => {
     initialValues,
     validate,
     onSubmit: async (values) => {
-      const response = await fetch("api/users", {
+      const response = await fetch("/app/api/users", {
         method: "POST",
         body: JSON.stringify(values),
         headers: {
