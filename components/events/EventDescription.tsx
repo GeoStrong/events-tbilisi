@@ -17,28 +17,39 @@ import { EventEntity } from "@/lib/types";
 import useScreenSize from "@/lib/hooks/useScreenSize";
 import Link from "next/link";
 import Image from "next/image";
-import EventParticipation from "./EventParticipation";
+import defaultEventImg from "@/public/images/default-event-img.png";
+import EventParticipation from "./eventParticipation";
 
 const snapPoints = ["200px", 1];
 
-const EventDescription: React.FC<{
+interface EventDescriptionProps {
   buttonRef: React.RefObject<HTMLButtonElement>;
   event: EventEntity;
-}> = ({ buttonRef, event }) => {
-  const { isMobile } = useScreenSize();
+  setSearchParams: (params: string) => void;
+}
+
+const EventDescription: React.FC<EventDescriptionProps> = ({
+  buttonRef,
+  event,
+  setSearchParams,
+}) => {
+  const { isMobile, height } = useScreenSize();
   const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
 
   return (
     <>
       <Drawer
         repositionInputs={false}
-        snapPoints={isMobile ? snapPoints : [1]}
+        snapPoints={isMobile && event.image && height < 750 ? snapPoints : [1]}
         activeSnapPoint={snap}
         setActiveSnapPoint={setSnap}
         direction={isMobile ? "bottom" : "right"}
+        onClose={() => {
+          setSearchParams("");
+        }}
       >
         <DrawerTrigger ref={buttonRef} className="hidden"></DrawerTrigger>
-        <DrawerContent className="pt-5">
+        <DrawerContent className="pt-5 md:overflow-y-auto">
           <DrawerHeader className="relative">
             <div className="absolute left-5 top-1 z-20">
               <span className="rounded-full bg-primary px-2 text-xs text-white">
@@ -74,7 +85,7 @@ const EventDescription: React.FC<{
               </p>
               {event?.image && (
                 <Image
-                  src={event.image}
+                  src={event.image || defaultEventImg.src}
                   width={100}
                   height={100}
                   alt="event"
@@ -100,7 +111,7 @@ const EventDescription: React.FC<{
             </div>
           </DrawerHeader>
           <DrawerFooter className="flex flex-col gap-2 md:flex-row-reverse">
-            <EventParticipation />
+            <EventParticipation isNested />
             <DrawerClose>
               <Button
                 className="h-12 w-full bg-transparent text-lg"

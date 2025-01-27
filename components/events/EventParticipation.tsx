@@ -4,11 +4,11 @@ import React, { useState } from "react";
 import Form from "next/form";
 import { useFormik } from "formik";
 import {
+  Drawer,
   DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerHeader,
-  DrawerNested,
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
@@ -18,7 +18,7 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { ParticipantValues } from "@/lib/types";
 
-const EventParticipation: React.FC = () => {
+const EventParticipation: React.FC<{ isNested?: boolean }> = ({ isNested }) => {
   const { isMobile } = useScreenSize();
   const [responseError, setResponseError] = useState<string | null>(null);
 
@@ -75,13 +75,11 @@ const EventParticipation: React.FC = () => {
 
   return (
     <>
-      <DrawerNested direction={isMobile ? "bottom" : "right"}>
-        <DrawerTrigger>
-          <Button className="h-12 w-full text-lg text-white">
-            Participate
-          </Button>
+      <Drawer direction={isMobile ? "bottom" : "right"}>
+        <DrawerTrigger className="h-12 rounded-md bg-primary px-8 text-lg text-white">
+          Participate
         </DrawerTrigger>
-        <DrawerContent className="w-full md:w-2/6">
+        <DrawerContent className={`w-full ${isNested && "md:w-2/6"}`}>
           <DrawerHeader>
             <DrawerTitle className="mb-3 text-center text-xl">
               <span className="linear-light">Who are you?</span>
@@ -180,7 +178,7 @@ const EventParticipation: React.FC = () => {
             </Form>
           </DrawerHeader>
         </DrawerContent>
-      </DrawerNested>
+      </Drawer>
     </>
   );
 };

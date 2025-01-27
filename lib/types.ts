@@ -1,4 +1,7 @@
-export type EventType =
+import { SvgIconTypeMap } from "@mui/material";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
+
+export type EventCategories =
   | "music"
   | "sport"
   | "theater"
@@ -18,6 +21,14 @@ export type EventType =
   | "lottery"
   | "other";
 
+export interface Category {
+  id: number | string;
+  name: string;
+  icon: OverridableComponent<SvgIconTypeMap<object, "svg">>;
+  color: string;
+  category: EventCategories;
+}
+
 export interface ParticipantValues {
   name: string;
   email: string;
@@ -34,7 +45,7 @@ export interface EventEntity {
   endDate: Date | "ongoing";
   time: Date | string;
   location: string;
-  type: EventType;
+  type: EventCategories;
   targetAudience?: string;
   host?: "organization" | "individual";
   hostName?: string;

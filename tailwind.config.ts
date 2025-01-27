@@ -58,5 +58,11 @@ export default {
       },
     },
   },
+  safelist: [
+    {
+      pattern:
+        /bg-(blue|purple|indigo|orange|teal|gray|pink|red|green|yellow)-(100|200|500|700)/,
+    },
+  ],
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;

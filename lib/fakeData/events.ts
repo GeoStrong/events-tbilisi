@@ -17,7 +17,7 @@ const events: EventEntity[] = [
     targetAudience: "everyone",
     host: "organization",
     hostName: "Event Organization",
-    image: stockImg1.src,
+    // image: stockImg1.src,
   },
   {
     id: 2,
