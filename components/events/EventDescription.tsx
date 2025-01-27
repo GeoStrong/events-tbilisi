@@ -12,13 +12,12 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Button } from "../ui/button";
 import { EventEntity } from "@/lib/types";
 import useScreenSize from "@/lib/hooks/useScreenSize";
 import Link from "next/link";
 import Image from "next/image";
 import defaultEventImg from "@/public/images/default-event-img.png";
-import EventParticipation from "./eventParticipation";
+import EventParticipation from "./Participation";
 
 const snapPoints = ["200px", 1];
 

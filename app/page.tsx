@@ -1,4 +1,4 @@
-import EventCardsWrapper from "@/components/events/eventCards";
+import EventCardsWrapper from "@/components/events/eventCardsWrapper";
 import EventCategories from "@/components/events/eventCategories";
 import React from "react";
 
