@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Form from "next/form";
 import { useFormik } from "formik";
 import {
@@ -20,19 +20,18 @@ import { ParticipantValues } from "@/lib/types";
 
 const EventParticipation: React.FC = () => {
   const { isMobile } = useScreenSize();
+  const [responseError, setResponseError] = useState<string | null>(null);
 
   const initialValues: ParticipantValues = {
     name: "",
     email: "",
     phone: "",
+    additionalInfo: "",
   };
 
   const validate = (values: ParticipantValues) => {
-    const errors = {
-      name: "",
-      email: "",
-      phone: "",
-    };
+    const errors: Partial<ParticipantValues> = {};
+
     if (!values.name) {
       errors.name = "Required";
     }
@@ -55,13 +54,22 @@ const EventParticipation: React.FC = () => {
   const formik = useFormik({
     initialValues,
     validate,
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (values) => {
+      const response = await fetch("api/users", {
+        method: "POST",
+        body: JSON.stringify(values),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      setResponseError(null);
+
+      if (!response.ok) {
+        setResponseError(response.statusText);
+      }
     },
   });
-
-  console.log(formik.errors);
-  console.log(formik.errors.name !== "");
 
   return (
     <>
@@ -82,9 +90,11 @@ const EventParticipation: React.FC = () => {
             </DrawerDescription>
             <Form
               action=""
+              //   action="/app/api/route.ts"
               onSubmit={formik.handleSubmit}
               className="mt-5 flex flex-col gap-3"
             >
+              {responseError && <p className="text-red-500">{responseError}</p>}
               <div className="flex flex-col gap-2">
                 {formik.errors.name ? (
                   <span className="pl-1 text-left text-xs text-red-500">
@@ -141,6 +151,10 @@ const EventParticipation: React.FC = () => {
                   (Optional)
                 </span>
                 <Textarea
+                  id="additionalInfo"
+                  name="additionalInfo"
+                  onChange={formik.handleChange}
+                  value={formik.values.additionalInfo}
                   className="border border-gray-300 p-4 placeholder:p-0 placeholder:text-sm dark:border-gray-700"
                   placeholder="
                 Additional Information...
