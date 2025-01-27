@@ -4,8 +4,8 @@ import React, { Suspense, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import events from "@/lib/fakeData/events";
 import { EventEntity } from "@/lib/types";
-import EventCard from "./EventCard";
-import EventDescription from "./EventDescription";
+import EventCard from "./eventCard";
+import EventDescription from "./eventDescription";
 
 const EventCards: React.FC = () => {
   const [activeEvent, setActiveEvent] = useState<EventEntity | null>(null);
