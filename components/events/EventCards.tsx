@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import events from "@/lib/fakeData/events";
 import { EventEntity } from "@/lib/types";
 import EventCard from "./eventCard";
@@ -35,9 +35,12 @@ const EventCards: React.FC = () => {
     if (eventId) {
       const event = events.find((event) => event.id === +eventId);
       setActiveEvent(event || null);
-      openDrawer();
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    if (activeEvent) openDrawer();
+  }, [activeEvent]);
 
   return (
     <>
@@ -61,4 +64,11 @@ const EventCards: React.FC = () => {
     </>
   );
 };
-export default EventCards;
+
+const EventCardsWrapper: React.FC = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <EventCards />
+  </Suspense>
+);
+
+export default EventCardsWrapper;

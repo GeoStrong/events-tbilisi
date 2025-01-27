@@ -1,4 +1,4 @@
-import EventCards from "@/components/events/eventCards";
+import EventCardsWrapper from "@/components/events/eventCards";
 import EventCategories from "@/components/events/eventCategories";
 import React from "react";
 
@@ -9,7 +9,7 @@ const App: React.FC = () => {
         Events in Tbilisi
       </h1>
       <EventCategories />
-      <EventCards />
+      <EventCardsWrapper />
     </>
   );
 };

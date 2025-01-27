@@ -112,13 +112,8 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
           </DrawerHeader>
           <DrawerFooter className="flex flex-col gap-2 md:flex-row-reverse">
             <EventParticipation isNested />
-            <DrawerClose>
-              <Button
-                className="h-12 w-full bg-transparent text-lg"
-                variant="outline"
-              >
-                Cancel
-              </Button>
+            <DrawerClose className="h-12 w-full bg-transparent text-lg">
+              Cancel
             </DrawerClose>
           </DrawerFooter>
         </DrawerContent>
