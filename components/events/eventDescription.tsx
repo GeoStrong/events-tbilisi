@@ -39,7 +39,7 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
     <>
       <Drawer
         repositionInputs={false}
-        snapPoints={isMobile && event.image && height < 750 ? snapPoints : [1]}
+        snapPoints={isMobile && height < 750 ? snapPoints : [1]}
         activeSnapPoint={snap}
         setActiveSnapPoint={setSnap}
         direction={isMobile ? "bottom" : "right"}
@@ -61,23 +61,25 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
             <DrawerTitle className="linear-light text-center text-3xl font-bold">
               {event.title}
             </DrawerTitle>
-            <DrawerDescription className="text-left text-lg">
+            <DrawerDescription className="text-left text-base">
               {event.description}
             </DrawerDescription>
             <div className="mt-5 text-left">
               {event?.hostName && (
-                <p className="text-lg">
+                <p className="text-base">
                   Hosted by:{" "}
-                  <span className="linear-dark text-lg">{event?.hostName}</span>
+                  <span className="linear-dark text-base">
+                    {event?.hostName}
+                  </span>
                 </p>
               )}
               <p className="">
                 Location:{" "}
-                <span className="linear-dark text-lg">{event.location}</span>
+                <span className="linear-dark text-base">{event.location}</span>
               </p>
               <p className="">
                 Target Audience:
-                <span className="linear-dark text-lg">
+                <span className="linear-dark text-base">
                   {" "}
                   {event.targetAudience}
                 </span>
@@ -94,13 +96,13 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
               <div className="mt-3 flex items-center justify-evenly gap-2">
                 <p className="text-md text-center">
                   Start Date:{" "}
-                  <span className="linear-dark block text-lg">
+                  <span className="linear-dark block text-base">
                     {event.startDate.toDateString()}
                   </span>
                 </p>
                 <p className="text-md text-center">
                   End Date:{" "}
-                  <span className="linear-dark block text-lg">
+                  <span className="linear-dark block text-base">
                     {event.endDate instanceof Date
                       ? event.endDate.toDateString()
                       : event.endDate}

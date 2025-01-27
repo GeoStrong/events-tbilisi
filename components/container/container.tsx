@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import ThemeToggle from "../header/themeToggle";
+import ThemeToggle from "../general/themeToggle";
 const Container: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className="my-8 h-full px-10 md:px-20">
