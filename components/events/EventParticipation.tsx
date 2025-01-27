@@ -68,6 +68,8 @@ const EventParticipation: React.FC = () => {
       if (!response.ok) {
         setResponseError(response.statusText);
       }
+
+      console.log(await response.json());
     },
   });
 
