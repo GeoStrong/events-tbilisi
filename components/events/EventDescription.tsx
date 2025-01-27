@@ -17,7 +17,7 @@ import useScreenSize from "@/lib/hooks/useScreenSize";
 import Link from "next/link";
 import Image from "next/image";
 import defaultEventImg from "@/public/images/default-event-img.png";
-import EventParticipation from "./Participation";
+import EventParticipation from "./eventParticipation";
 
 const snapPoints = ["200px", 1];
 

@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import EventParticipation from "../events/Participation";
+import EventParticipation from "../events/eventParticipation";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { FiShare } from "react-icons/fi";
 import { BiBookmark } from "react-icons/bi";
