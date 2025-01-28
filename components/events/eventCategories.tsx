@@ -1,7 +1,7 @@
 "use client";
 
 import { categories } from "@/lib/fakeData/categories";
-import React from "react";
+import React, { Suspense } from "react";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
 import type { EventCategories } from "@/lib/types";
@@ -17,7 +17,7 @@ const EventCategories: React.FC = () => {
   };
 
   return (
-    <>
+    <Suspense fallback={<div>Loading...</div>}>
       <h2 className="section-title">Discover Categories</h2>
       <div className="mt-5">
         <Carousel opts={{ dragFree: true }}>
@@ -43,7 +43,7 @@ const EventCategories: React.FC = () => {
           </CarouselContent>
         </Carousel>
       </div>
-    </>
+    </Suspense>
   );
 };
 export default EventCategories;
