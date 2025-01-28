@@ -33,7 +33,23 @@ const events: EventEntity[] = [
     targetAudience: "athletes",
     host: "organization",
     hostName: "Sports Association",
+    hostContact: {
+      email: "careers@ge.in",
+      phone: "1234567890",
+      name: "John Doe",
+    },
     image: stockImg2.src,
+    tags: ["running", "sport", "marathon"],
+    maxAttendees: 100,
+    status: "active",
+    participants: [
+      {
+        name: "John Doe",
+        email: "",
+        phone: "1234567890",
+      },
+    ],
+    link: "https://www.google.com",
   },
   {
     id: 3,

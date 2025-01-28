@@ -80,7 +80,7 @@ const EventParticipation: React.FC<{
     <>
       <Drawer direction={isMobile ? "bottom" : "right"}>
         <DrawerTrigger
-          className={`h-12 rounded-md bg-primary px-8 text-white ${isBtnLarge && "w-3/4"}`}
+          className={`h-12 rounded-md bg-primary px-8 text-white ${isBtnLarge && "w-3/4 md:w-auto"}`}
         >
           Participate
         </DrawerTrigger>
@@ -95,7 +95,6 @@ const EventParticipation: React.FC<{
             </DrawerDescription>
             <Form
               action=""
-              //   action="/app/api/route.ts"
               onSubmit={formik.handleSubmit}
               className="mt-5 flex flex-col gap-3"
             >

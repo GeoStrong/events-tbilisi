@@ -67,7 +67,7 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background -tracking-wider text-foreground;
   }
   .linear-light {
     background: linear-gradient(90deg, #3d16ec 0%, #fd247b 100%);

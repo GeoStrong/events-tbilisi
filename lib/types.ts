@@ -54,6 +54,7 @@ export interface EventEntity {
     email?: string;
     phone?: string;
     name: string;
+    image?: string;
   };
   link?: string;
   image?: string;
