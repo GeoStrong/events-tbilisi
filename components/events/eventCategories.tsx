@@ -9,8 +9,9 @@ import type { EventCategories } from "@/lib/types";
 const Categories: React.FC = () => {
   const { handleSearch, searchParams } = useAddSearchQuery();
 
+  const activeCategory = searchParams.get("category");
+
   const getActiveCategoryStyles = (category: string, categoryColor: string) => {
-    const activeCategory = searchParams.get("category");
     if (activeCategory === category) {
       return `border-${categoryColor} text-${categoryColor}`;
     }
@@ -31,7 +32,9 @@ const Categories: React.FC = () => {
                   <button
                     className={`flex h-14 w-14 items-center justify-center rounded-full border-[3px] bg-gray-100 p-3 dark:bg-gray-800 ${getActiveCategoryStyles(category.name, category.color)}`}
                     onClick={() => {
-                      handleSearch("category", category.name);
+                      if (activeCategory && activeCategory === category.name)
+                        return handleSearch("category", "");
+                      return handleSearch("category", category.name);
                     }}
                   >
                     <category.icon className={`text-inherit`} />

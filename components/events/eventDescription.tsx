@@ -1,5 +1,5 @@
 "use client";
-
+import { FiShare } from "react-icons/fi";
 import { MdOutlineOpenInNew } from "react-icons/md";
 import React, { useState } from "react";
 import {
@@ -118,6 +118,10 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
                   </span>
                 </p>
               </div>
+              <p className="mt-4 flex items-center justify-between gap-2 md:justify-start">
+                Share this event with friends:
+                <FiShare className="text-xl" />
+              </p>
             </div>
           </DrawerHeader>
           <DrawerFooter className="flex flex-col gap-2 md:flex-row-reverse">
