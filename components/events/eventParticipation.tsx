@@ -18,7 +18,10 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { ParticipantValues } from "@/lib/types";
 
-const EventParticipation: React.FC<{ isNested?: boolean }> = ({ isNested }) => {
+const EventParticipation: React.FC<{
+  isNested?: boolean;
+  isBtnLarge?: boolean;
+}> = ({ isNested, isBtnLarge }) => {
   const { isMobile } = useScreenSize();
   const [responseError, setResponseError] = useState<string | null>(null);
 
@@ -76,7 +79,9 @@ const EventParticipation: React.FC<{ isNested?: boolean }> = ({ isNested }) => {
   return (
     <>
       <Drawer direction={isMobile ? "bottom" : "right"}>
-        <DrawerTrigger className="h-12 rounded-md bg-primary px-8 text-lg text-white">
+        <DrawerTrigger
+          className={`h-12 rounded-md bg-primary px-8 text-white ${isBtnLarge && "w-3/4"}`}
+        >
           Participate
         </DrawerTrigger>
         <DrawerContent className={`w-full ${isNested && "md:w-2/6"}`}>
@@ -165,15 +170,7 @@ const EventParticipation: React.FC<{ isNested?: boolean }> = ({ isNested }) => {
                 <Button type="submit" className="h-12 text-base text-white">
                   Sign me up
                 </Button>
-                <DrawerClose>
-                  <Button
-                    className="h-12 w-full bg-transparent text-base"
-                    type="button"
-                    variant="outline"
-                  >
-                    Cancel
-                  </Button>
-                </DrawerClose>
+                <DrawerClose className="h-12 text-base">Cancel</DrawerClose>
               </div>
             </Form>
           </DrawerHeader>

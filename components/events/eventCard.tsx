@@ -10,10 +10,12 @@ import {
 import Image from "next/image";
 import defaultEventImg from "@/public/images/default-event-img.png";
 import { EventEntity } from "@/lib/types";
+import { makeFirstLetterUpperCase } from "@/lib/functions/helperFunctions";
+import { getCategoryColor } from "@/lib/fakeData/categories";
 
 interface EventCardProps {
   event: EventEntity;
-  setSearchParams: (term: string) => void;
+  setSearchParams: (query: string, value: string) => void;
 }
 
 const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
@@ -21,7 +23,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
     <Card
       className="cursor-pointer duration-300 hover:scale-105 dark:bg-slate-800"
       onClick={() => {
-        setSearchParams(event.id.toString());
+        setSearchParams("event", event.id.toString());
       }}
       key={event.id}
     >
@@ -35,10 +37,17 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
             className={`h-full w-full rounded-t-xl ${!event.image ? "object-contain" : "object-cover"}`}
           />
         </div>
-        <div className="mb-2 w-full px-2 text-right">
-          <span className="rounded-full bg-primary px-2 text-xs text-white">
-            {event.type.charAt(0).toUpperCase() + event.type.slice(1)}
-          </span>
+        <div className="!my-2 h-4 w-full px-2 text-right">
+          <div className="flex justify-end gap-2">
+            {event.categories.map((category) => (
+              <span
+                key={category}
+                className={`rounded-full ${getCategoryColor(category)} px-2 text-xs text-white`}
+              >
+                {makeFirstLetterUpperCase(category)}
+              </span>
+            ))}
+          </div>
         </div>
         <CardTitle className="px-6">{event.title}</CardTitle>
         <CardDescription></CardDescription>

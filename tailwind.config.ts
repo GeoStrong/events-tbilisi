@@ -21,7 +21,7 @@ export default {
           foreground: "hsl(var(--popover-foreground))",
         },
         primary: {
-          DEFAULT: "#5350f6",
+          DEFAULT: "#DDB73D",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
@@ -56,12 +56,23 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      backgroundImage: {
+        yellow: "linear-gradient(90deg,#f0d466,#d7af31)",
+      },
     },
   },
   safelist: [
     {
       pattern:
         /bg-(blue|purple|indigo|orange|teal|gray|pink|red|green|yellow)-(100|200|500|700)/,
+    },
+    {
+      pattern:
+        /border-(blue|purple|indigo|orange|teal|gray|pink|red|green|yellow)-(100|200|500|700)/,
+    },
+    {
+      pattern:
+        /text-(blue|purple|indigo|orange|teal|gray|pink|red|green|yellow)-(100|200|500|700)/,
     },
   ],
   plugins: [require("tailwindcss-animate")],

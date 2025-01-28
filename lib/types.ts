@@ -6,7 +6,7 @@ export type EventCategories =
   | "sport"
   | "theater"
   | "marathon"
-  | "contest"
+  | "tournament"
   | "conference"
   | "exhibition"
   | "festival"
@@ -14,6 +14,7 @@ export type EventCategories =
   | "protest"
   | "discussion"
   | "workshop"
+  | "coding"
   | "seminar"
   | "training"
   | "concert"
@@ -45,7 +46,7 @@ export interface EventEntity {
   endDate: Date | "ongoing";
   time: Date | string;
   location: string;
-  type: EventCategories;
+  categories: EventCategories[];
   targetAudience?: string;
   host?: "organization" | "individual";
   hostName?: string;

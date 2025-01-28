@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import localFont from "next/font/local";
 import { ThemeProvider } from "next-themes";
 import Header from "@/components/header/header";
 import Container from "@/components/container/container";
 import "./globals.css";
 
-const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin"],
+const myFont = localFont({
+  src: "../public/fonts/GT-Walsheim-Regular-Trial.woff2",
+  style: "normal",
   weight: "400",
+  variable: "--font-myFont",
 });
 
 export const metadata: Metadata = {
@@ -23,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable} antialiased`}>
+      <body className={`${myFont.variable} antialiased`}>
         <ThemeProvider attribute="class">
           <Header />
           <Container>{children}</Container>

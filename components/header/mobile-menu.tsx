@@ -20,23 +20,29 @@ const MobileMenu: React.FC = () => {
       <SheetTrigger>
         <BiMenuAltRight className="cursor-pointer text-4xl text-gray-900 dark:text-slate-200" />
       </SheetTrigger>
-      <SheetContent className="dark:bg-gray-900">
+      <SheetContent className="w-full dark:bg-gray-900">
         <SheetHeader className="h-full text-left">
           <SheetTitle className="mt-5">
-            <h3 className="linear-light dark:linear-dark">Events-Tbilisi</h3>
+            <h3 className="text-2xl">Events-Tbilisi</h3>
           </SheetTitle>
           <SheetDescription className="flex h-full flex-col items-end justify-between text-xl text-slate-800 dark:text-white">
             <ul className="mt-10 flex h-1/3 w-full flex-col gap-5">
               <li className="flex w-full items-center justify-between rounded-lg border border-slate-300 px-4 py-2 dark:border-gray-600">
-                <Link href="/">Events</Link>
+                <Link className="text-lg" href="/">
+                  Events
+                </Link>
                 <BsFillCalendar2EventFill className="text-purple-900" />
               </li>
               <li className="flex w-full items-center justify-between rounded-lg border border-slate-300 px-4 py-2 dark:border-gray-600">
-                <Link href="/Map">Map</Link>
+                <Link className="text-lg" href="/Map">
+                  Map
+                </Link>
                 <BsFillMapFill className="text-green-800" />
               </li>
               <li className="flex w-full items-center justify-between rounded-lg border border-slate-300 px-4 py-2 dark:border-gray-600">
-                <Link href="/About">About Us</Link>
+                <Link className="text-lg" href="/About">
+                  About Us
+                </Link>
                 <ImUsers />
               </li>
             </ul>

@@ -1,28 +1,29 @@
 "use client";
 
 import React, { Suspense, useEffect, useRef, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import events from "@/lib/fakeData/events";
-import { EventEntity } from "@/lib/types";
+import { EventCategories, EventEntity } from "@/lib/types";
 import EventCard from "./eventCard";
 import EventDescription from "./eventDescription";
+import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
+import { getEvents } from "@/lib/functions/getEvents";
+import { makeFirstLetterUpperCase } from "@/lib/functions/helperFunctions";
 
 const EventCards: React.FC = () => {
+  const [events, setEvents] = useState<EventEntity[]>([]);
   const [activeEvent, setActiveEvent] = useState<EventEntity | null>(null);
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const { replace } = useRouter();
+  const { searchParams, handleSearch } = useAddSearchQuery();
   const triggerRef = useRef<HTMLButtonElement>(null!);
 
-  const handleSearch = (term: string) => {
-    const params = new URLSearchParams(searchParams);
-    if (term) {
-      params.set("event", term);
+  const category = searchParams.get("category");
+
+  useEffect(() => {
+    if (category) {
+      const events = getEvents(category as EventCategories);
+      setEvents(events);
     } else {
-      params.delete("event");
+      setEvents(getEvents());
     }
-    replace(`${pathname}?${params.toString()}`);
-  };
+  }, [category, searchParams]);
 
   const openDrawer = () => {
     setTimeout(() => {
@@ -36,7 +37,7 @@ const EventCards: React.FC = () => {
       const event = events.find((event) => event.id === +eventId);
       setActiveEvent(event || null);
     }
-  }, [searchParams]);
+  }, [events, searchParams]);
 
   useEffect(() => {
     if (activeEvent) openDrawer();
@@ -44,7 +45,15 @@ const EventCards: React.FC = () => {
 
   return (
     <>
-      <h2 className="section-title mt-10">Recent events</h2>
+      <h2 className="section-title mt-10">
+        {category ? makeFirstLetterUpperCase(category) : "Recent"} events
+      </h2>
+      {events.length === 0 && (
+        <p className="mt-3 text-center">
+          No events found for the selected category. Try another{" "}
+          <span className="text-primary">category</span>.
+        </p>
+      )}
       <div className="mt-3 grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {events.map((event) => (
           <EventCard

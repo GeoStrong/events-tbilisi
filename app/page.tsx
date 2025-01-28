@@ -5,9 +5,7 @@ import React from "react";
 const App: React.FC = () => {
   return (
     <>
-      <h1 className="linear-dark mb-10 text-4xl font-bold">
-        Events in Tbilisi
-      </h1>
+      <h1 className="mb-5 text-2xl font-bold md:mb-10">Events in Tbilisi</h1>
       <EventCategories />
       <EventCardsWrapper />
     </>

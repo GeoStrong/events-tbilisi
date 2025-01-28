@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: "myFont", sans-serif;
 }
 
 @layer base {
   :root {
-    --background: 210 16% 96%;
+    --background: 0 0% 96%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -79,8 +79,14 @@ body {
     -webkit-text-fill-color: transparent;
     @apply bg-clip-text text-2xl font-bold;
   }
+  .linear-yellow {
+    /* background: linear-gradient(90deg, #f6d365 0%, #fda085 100%); */
+    background: linear-gradient(90deg, #f0d466, #d7af31);
+    -webkit-text-fill-color: transparent;
+    @apply bg-clip-text text-2xl font-bold;
+  }
   .section-title {
-    @apply text-xl font-bold text-primary md:text-3xl;
+    @apply text-xl font-bold;
   }
 }
 

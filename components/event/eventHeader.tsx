@@ -36,7 +36,7 @@ const EventHeader: React.FC<{
           </div>
         </div>
         <div className="fixed bottom-10 left-0 flex w-full justify-center md:static md:bottom-0 md:justify-end">
-          <EventParticipation />
+          <EventParticipation isBtnLarge />
         </div>
       </header>
     </>

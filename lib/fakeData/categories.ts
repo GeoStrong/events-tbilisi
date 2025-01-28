@@ -11,6 +11,7 @@ import CelebrationIcon from "@mui/icons-material/Celebration";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 import ChatIcon from "@mui/icons-material/Chat";
 import HomeRepairServiceIcon from "@mui/icons-material/HomeRepairService";
+import DataObjectIcon from "@mui/icons-material/DataObject";
 import SchoolIcon from "@mui/icons-material/School";
 import ModelTrainingIcon from "@mui/icons-material/ModelTraining";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
@@ -18,7 +19,7 @@ import MovieIcon from "@mui/icons-material/Movie";
 import LocalActivityIcon from "@mui/icons-material/LocalActivity";
 import AbcIcon from "@mui/icons-material/Abc";
 
-const categories: Category[] = [
+export const categories: Category[] = [
   {
     id: 1,
     category: "music",
@@ -49,8 +50,8 @@ const categories: Category[] = [
   },
   {
     id: 5,
-    category: "contest",
-    name: "Contest",
+    category: "tournament",
+    name: "Tournament",
     icon: VideogameAssetIcon,
     color: "yellow-500",
   },
@@ -105,41 +106,48 @@ const categories: Category[] = [
   },
   {
     id: 13,
+    category: "coding",
+    name: "Coding",
+    icon: DataObjectIcon,
+    color: "red-700",
+  },
+  {
+    id: 14,
     category: "seminar",
     name: "Seminar",
     icon: SchoolIcon,
     color: "purple-700",
   },
   {
-    id: 14,
+    id: 15,
     category: "training",
     name: "Training",
     icon: ModelTrainingIcon,
     color: "red-700",
   },
   {
-    id: 15,
+    id: 16,
     category: "concert",
     name: "Concert",
     icon: MusicNoteIcon,
     color: "yellow-700",
   },
   {
-    id: 16,
+    id: 17,
     category: "movie",
     name: "Movie",
     icon: MovieIcon,
     color: "indigo-700",
   },
   {
-    id: 17,
+    id: 18,
     category: "lottery",
     name: "Lottery",
     icon: LocalActivityIcon,
     color: "pink-700",
   },
   {
-    id: 18,
+    id: 19,
     category: "other",
     name: "Other",
     icon: AbcIcon,
@@ -147,4 +155,7 @@ const categories: Category[] = [
   },
 ];
 
-export default categories;
+export const getCategoryColor = (category: string) => {
+  const activeCategory = categories.find((cat) => cat.category === category);
+  return `bg-${activeCategory?.color}`;
+};
