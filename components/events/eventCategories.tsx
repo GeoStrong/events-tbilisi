@@ -6,7 +6,7 @@ import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
 import type { EventCategories } from "@/lib/types";
 
-const EventCategories: React.FC = () => {
+const Categories: React.FC = () => {
   const { handleSearch, searchParams } = useAddSearchQuery();
 
   const getActiveCategoryStyles = (category: string, categoryColor: string) => {
@@ -17,7 +17,7 @@ const EventCategories: React.FC = () => {
   };
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <>
       <h2 className="section-title">Discover Categories</h2>
       <div className="mt-5">
         <Carousel opts={{ dragFree: true }}>
@@ -43,7 +43,16 @@ const EventCategories: React.FC = () => {
           </CarouselContent>
         </Carousel>
       </div>
+    </>
+  );
+};
+
+const EventCategories: React.FC = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Categories />
     </Suspense>
   );
 };
+
 export default EventCategories;
