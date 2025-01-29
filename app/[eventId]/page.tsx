@@ -21,7 +21,7 @@ const EventPage: React.FC<EventPageProps> = async ({ params }) => {
 
   return (
     <>
-      <Event event={activeEvent} />
+      <Event event={activeEvent} eventId={eventId} />
     </>
   );
 };

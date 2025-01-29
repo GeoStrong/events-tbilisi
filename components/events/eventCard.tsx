@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Card,
@@ -15,7 +17,7 @@ import { getCategoryColor } from "@/lib/fakeData/categories";
 
 interface EventCardProps {
   event: EventEntity;
-  setSearchParams: (query: string, value: string) => void;
+  setSearchParams?: (query: string, value: string) => void;
 }
 
 const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
@@ -23,7 +25,8 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
     <Card
       className="cursor-pointer duration-300 hover:scale-105 dark:bg-slate-800"
       onClick={() => {
-        setSearchParams("event", event.id.toString());
+        if (setSearchParams)
+          return setSearchParams("event", event.id.toString());
       }}
       key={event.id}
     >

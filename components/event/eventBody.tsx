@@ -12,11 +12,18 @@ import { BiUser } from "react-icons/bi";
 import { Button } from "../ui/button";
 import { getCategoryColor } from "@/lib/fakeData/categories";
 import { makeFirstLetterUpperCase } from "@/lib/functions/helperFunctions";
+import { getEvents } from "@/lib/functions/getEvents";
+import { CiShare1 } from "react-icons/ci";
 
 const EventBody: React.FC<{ event: EventEntity }> = ({ event }) => {
+  const eventCategory = event.categories[0];
+  const events = getEvents(eventCategory);
+
+  const twoEvents = events.slice(0, 2);
+
   return (
-    <div className="mb-10 mt-5 grid grid-cols-1 grid-rows-4 gap-5 lg:grid-cols-4">
-      <div className="col-span-3 row-span-4 flex flex-col gap-5 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 md:px-6">
+    <div className="mb-10 mt-5 grid grid-cols-1 grid-rows-3 gap-5 lg:grid-cols-4">
+      <div className="col-span-3 row-span-3 flex flex-col gap-5 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 md:px-6">
         <div className="rounded-md bg-white">
           <Image
             src={event.image || defaultEventImg.src}
@@ -91,7 +98,7 @@ const EventBody: React.FC<{ event: EventEntity }> = ({ event }) => {
           <Socials />
         </div>
       </div>
-      <div className="col-span-3 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">
+      <div className="col-span-3 max-h-40 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">
         <h3 className="font-bold md:text-lg">Host</h3>
         <div className="flex items-center gap-2">
           <Avatar className="h-12 w-12">
@@ -106,7 +113,7 @@ const EventBody: React.FC<{ event: EventEntity }> = ({ event }) => {
           </div>
         </div>
       </div>
-      <div className="col-span-3 row-span-2 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">
+      <div className="col-span-3 row-span-1 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">
         <h3 className="font-bold md:text-lg">Additional Info</h3>
         <div className="flex items-center gap-2">
           <div className="mt-2 flex flex-col">
@@ -140,6 +147,26 @@ const EventBody: React.FC<{ event: EventEntity }> = ({ event }) => {
               value={event.hostContact?.phone}
             />
           </div>
+        </div>
+      </div>
+      <div className="col-span-3 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">
+        <h3 className="font-bold md:text-lg">
+          Explore More {makeFirstLetterUpperCase(eventCategory)} Events
+        </h3>
+        <div className="mt-3 flex flex-col gap-2">
+          {twoEvents.map((event) => (
+            <div key={event.id} className="flex justify-between gap-2">
+              <div className="flex flex-col">
+                <h3 className="text-sm font-semibold">{event.title}</h3>
+                <p className="text-xs text-muted-foreground">
+                  {event.startDate.toDateString()}
+                </p>
+              </div>
+              <Link href={`/${event.id}`}>
+                <CiShare1 />
+              </Link>
+            </div>
+          ))}
         </div>
       </div>
     </div>
