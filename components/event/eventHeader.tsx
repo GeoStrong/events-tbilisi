@@ -12,7 +12,7 @@ const EventHeader: React.FC<{
 }> = ({ img, title }) => {
   return (
     <>
-      <header className="sticky mt-5 flex items-center justify-start gap-5 rounded-xl bg-white px-2 py-4 shadow-md dark:bg-gray-900 md:px-6">
+      <header className="sticky top-20 z-40 mt-5 flex items-center justify-start gap-5 rounded-xl bg-white px-2 py-4 shadow-md dark:bg-gray-900 md:static md:px-6">
         <div className="flex flex-col gap-3">
           <Link
             href="/"

@@ -12,7 +12,11 @@ const ThemeToggle: React.FC = () => {
 
   return (
     <button className="text-3xl" onClick={onThemeToggle}>
-      {theme === "dark" ? <MdLightMode /> : <MdModeNight />}
+      {theme === "dark" ? (
+        <MdLightMode className="text-lg" />
+      ) : (
+        <MdModeNight className="text-lg" />
+      )}
     </button>
   );
 };

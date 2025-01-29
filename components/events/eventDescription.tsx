@@ -42,7 +42,6 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
   return (
     <>
       <Drawer
-        repositionInputs={true}
         snapPoints={isMobile ? snapPoints : [1]}
         activeSnapPoint={snap}
         setActiveSnapPoint={setSnap}
