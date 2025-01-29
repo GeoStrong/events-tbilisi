@@ -22,9 +22,7 @@ const MobileMenu: React.FC = () => {
       </SheetTrigger>
       <SheetContent className="w-full dark:bg-gray-900">
         <SheetHeader className="h-full text-left">
-          <SheetTitle className="mt-5">
-            <h3 className="text-2xl">Events-Tbilisi</h3>
-          </SheetTitle>
+          <SheetTitle className="mt-5 text-2xl">Events-Tbilisi</SheetTitle>
           <SheetDescription className="flex h-full flex-col items-end justify-between text-xl text-slate-800 dark:text-white">
             <ul className="mt-10 flex h-1/3 w-full flex-col gap-5">
               <li className="flex w-full items-center justify-between rounded-lg border border-slate-300 px-4 py-2 dark:border-gray-600">

@@ -67,7 +67,7 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background -tracking-wider text-foreground;
+    @apply bg-background -tracking-wider text-foreground md:tracking-normal;
   }
   .linear-light {
     background: linear-gradient(90deg, #3d16ec 0%, #fd247b 100%);
@@ -85,8 +85,34 @@ body {
     -webkit-text-fill-color: transparent;
     @apply bg-clip-text text-2xl font-bold;
   }
-  .section-title {
-    @apply text-xl font-bold;
+  .drawer-after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 500px;
+    background: rgba(0, 0, 0, 0.5);
+    /* z-index: 999; */
+  }
+  @media (min-width: 768px) {
+    .section-title {
+      @apply text-xl font-bold;
+    }
+    ::-webkit-scrollbar {
+      @apply h-1 w-2;
+    }
+    ::-webkit-scrollbar-track {
+      @apply bg-gray-200 dark:bg-gray-800;
+    }
+    ::-webkit-scrollbar-thumb {
+      @apply rounded-md bg-gray-500 dark:bg-gray-700;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      @apply bg-gray-700 transition dark:bg-gray-500;
+    }
   }
 }
 
