@@ -64,15 +64,15 @@ export default {
   safelist: [
     {
       pattern:
-        /bg-(blue|purple|indigo|orange|teal|gray|pink|red|green|yellow)-(100|200|500|700)/,
+        /bg-(blue|purple|indigo|orange|teal|gray|pink|red|green|yellow)-(100|200|500|600|700)/,
     },
     {
       pattern:
-        /border-(blue|purple|indigo|orange|teal|gray|pink|red|green|yellow)-(100|200|500|700)/,
+        /border-(blue|purple|indigo|orange|teal|gray|pink|red|green|yellow)-(100|200|500|600|700)/,
     },
     {
       pattern:
-        /text-(blue|purple|indigo|orange|teal|gray|pink|red|green|yellow)-(100|200|500|700)/,
+        /text-(blue|purple|indigo|orange|teal|gray|pink|red|green|yellow)-(100|200|500|600|700)/,
     },
   ],
   plugins: [require("tailwindcss-animate")],
