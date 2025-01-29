@@ -11,19 +11,19 @@ const Socials: React.FC = () => {
     <>
       <div className="mt-2 flex items-center gap-3">
         <Link href="">
-          <BsFacebook />
+          <BsFacebook className="text-lg" />
         </Link>
         <Link href="">
-          <BsInstagram />
+          <BsInstagram className="text-lg" />
         </Link>
         <Link href="">
-          <BsWhatsapp />
+          <BsWhatsapp className="text-lg" />
         </Link>
         <Link href="">
-          <BsPinterest />
+          <BsPinterest className="text-lg" />
         </Link>
         <Link href="">
-          <BsLinkedin />
+          <BsLinkedin className="text-lg" />
         </Link>
       </div>
     </>

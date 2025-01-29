@@ -22,6 +22,7 @@ import defaultEventImg from "@/public/images/default-event-img.png";
 import EventParticipation from "./eventParticipation";
 import { makeFirstLetterUpperCase } from "@/lib/functions/helperFunctions";
 import { getCategoryColor } from "@/lib/fakeData/categories";
+import Share from "../general/share";
 
 const snapPoints = [0.5, 1];
 
@@ -128,7 +129,9 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
                   </div>
                   <p className="de mt-4 flex items-center justify-between gap-2 md:justify-start">
                     Share this event with friends:
-                    <FiShare className="text-xl" />
+                    <Share event={event}>
+                      <FiShare className="text-xl" />
+                    </Share>
                   </p>
                 </div>
               </DrawerHeader>

@@ -17,13 +17,15 @@ const EventBody: React.FC<{ event: EventEntity }> = ({ event }) => {
   return (
     <div className="mb-10 mt-5 grid grid-cols-1 grid-rows-4 gap-5 lg:grid-cols-4">
       <div className="col-span-3 row-span-4 flex flex-col gap-5 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 md:px-6">
-        <Image
-          src={event.image || defaultEventImg.src}
-          width={100}
-          height={100}
-          alt="event"
-          className={`max-h-56 w-full rounded-md object-center ${event.image ? "object-cover" : "object-contain"}`}
-        />
+        <div className="rounded-md bg-white">
+          <Image
+            src={event.image || defaultEventImg.src}
+            width={100}
+            height={100}
+            alt="event"
+            className={`max-h-56 w-full rounded-md object-center ${event.image ? "object-cover" : "object-contain"}`}
+          />
+        </div>
         <div className="w-full">
           <h3 className="my-3 text-base font-semibold md:text-xl">
             About the Event
