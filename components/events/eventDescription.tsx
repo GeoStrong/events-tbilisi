@@ -54,7 +54,14 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
         <DrawerTrigger ref={buttonRef} className="hidden"></DrawerTrigger>
         <DrawerOverlay className="fixed inset-0 bg-black/40" />
         <DrawerPortal>
-          <DrawerContent className="mx-[-1px] flex h-full flex-col rounded-t-[10px] bg-white">
+          <DrawerContent
+            headerChildren={
+              <Link href={`/${event.id}`} className="absolute right-5 top-4">
+                <MdOutlineOpenInNew className="linear-yellow duration-300 hover:text-primary" />
+              </Link>
+            }
+            className="mx-[-1px] flex h-full flex-col border-0 bg-white"
+          >
             <div className="flex h-screen w-full flex-col overflow-y-auto">
               <DrawerHeader className="relative">
                 <div className="absolute left-5 top-3 z-20 flex gap-2">
@@ -67,10 +74,7 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
                     </span>
                   ))}
                 </div>
-                <Link href={`/${event.id}`}>
-                  <MdOutlineOpenInNew className="linear-yellow absolute right-5 top-2 duration-300 hover:text-primary" />
-                </Link>
-                <DrawerTitle className="mt-3 text-center text-3xl font-bold">
+                <DrawerTitle className="mt-3 text-center text-xl font-bold">
                   {event.title}
                 </DrawerTitle>
                 <DrawerDescription className="text-left text-base">

@@ -5,6 +5,11 @@ import { Drawer as DrawerPrimitive } from "vaul";
 
 import { cn } from "@/lib/utils";
 
+interface DrawerContentProps
+  extends React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> {
+  headerChildren?: React.ReactNode;
+}
+
 const Drawer = ({
   shouldScaleBackground = true,
   ...props
@@ -38,20 +43,23 @@ DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName;
 
 const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+  DrawerContentProps
+>(({ className, children, headerChildren, ...props }, ref) => (
   <DrawerPortal>
     <DrawerOverlay />
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed bottom-0 right-0 z-50 mt-24 flex h-auto max-h-[97%] flex-col scroll-auto rounded-t-[10px] border bg-background pt-5 dark:bg-gray-800 md:h-full md:max-h-full md:w-2/5",
+        "fixed bottom-0 right-0 z-50 mt-24 flex h-auto max-h-[97%] flex-col scroll-auto rounded-t-[2rem] border bg-background dark:bg-gray-800 md:h-full md:max-h-full md:w-2/5",
         className,
       )}
       {...props}
     >
-      <div className="h-5">
+      <div
+        className={`${headerChildren ? "h-16" : "h-5 pt-3"} flex items-center`}
+      >
         <div className="mx-auto h-1 min-h-1 w-[40px] rounded-full bg-gray-300 dark:bg-gray-700 md:hidden" />
+        {headerChildren}
       </div>
       {children}
     </DrawerPrimitive.Content>
