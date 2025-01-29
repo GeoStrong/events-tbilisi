@@ -78,10 +78,7 @@ const EventParticipation: React.FC<{
 
   return (
     <>
-      <Drawer
-        repositionInputs={false}
-        direction={isMobile ? "bottom" : "right"}
-      >
+      <Drawer repositionInputs={true} direction={isMobile ? "bottom" : "right"}>
         <DrawerTrigger
           className={`h-12 rounded-md bg-primary px-8 text-white ${isBtnLarge && "w-3/4 md:w-auto"}`}
         >
