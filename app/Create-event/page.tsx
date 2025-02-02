@@ -1,7 +1,7 @@
 import React from "react";
-import CreateEventBtn from "@/components/map/createEventBtn";
 import Welcome from "@/components/map/welcome";
 import MapWrapper from "@/components/map/map";
+import CreateEventBtnWrapper from "@/components/map/createEventBtn";
 
 const Map: React.FC = () => {
   const key = process.env.API_KEY || "";
@@ -14,7 +14,7 @@ const Map: React.FC = () => {
         </div>
         <Welcome />
         <div className="fixed bottom-14 left-0 flex w-full justify-center md:hidden">
-          <CreateEventBtn />
+          <CreateEventBtnWrapper />
         </div>
       </div>
     </>

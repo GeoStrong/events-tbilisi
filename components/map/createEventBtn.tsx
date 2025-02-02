@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { Suspense, useRef } from "react";
 import { Button } from "../ui/button";
 import CreateEvent from "./createEvent";
 import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
@@ -34,4 +34,11 @@ const CreateEventBtn: React.FC = () => {
     </>
   );
 };
-export default CreateEventBtn;
+
+const CreateEventBtnWrapper: React.FC = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <CreateEventBtn />
+  </Suspense>
+);
+
+export default CreateEventBtnWrapper;
