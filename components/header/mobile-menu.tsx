@@ -43,29 +43,41 @@ const MobileMenu: React.FC = () => {
           <SheetTitle className="mt-5 text-2xl">Events-Tbilisi</SheetTitle>
           <div className="flex h-full flex-col items-end justify-between text-xl text-slate-800 dark:text-white">
             <ul className="mt-10 flex h-1/3 w-full flex-col gap-5">
-              <li className="flex w-full items-center justify-between rounded-lg border border-slate-300 px-4 py-2 dark:border-gray-600">
-                <Link className="text-lg" href="/">
+              <li className="w-full">
+                <Link
+                  className="flex items-center justify-between rounded-lg border border-slate-300 px-4 py-2 text-lg dark:border-gray-600"
+                  href="/"
+                >
                   Events
+                  <BsFillCalendar2EventFill className="text-purple-900" />
                 </Link>
-                <BsFillCalendar2EventFill className="text-purple-900" />
               </li>
-              <li className="flex w-full items-center justify-between rounded-lg border border-slate-300 px-4 py-2 dark:border-gray-600">
-                <Link className="text-lg" href="/Map">
+              <li className="w-full">
+                <Link
+                  className="flex items-center justify-between rounded-lg border border-slate-300 px-4 py-2 text-lg dark:border-gray-600"
+                  href="/Map"
+                >
                   Map of Events
+                  <BsFillMapFill className="text-green-800" />
                 </Link>
-                <BsFillMapFill className="text-green-800" />
               </li>
-              <li className="flex w-full items-center justify-between rounded-lg border border-slate-300 px-4 py-2 dark:border-gray-600">
-                <Link className="text-lg" href="/Create-event">
+              <li className="w-full">
+                <Link
+                  className="flex items-center justify-between rounded-lg border border-slate-300 px-4 py-2 text-lg dark:border-gray-600"
+                  href="/Create-event"
+                >
                   Create Event
+                  <BsPlusCircle className="text-amber-600" />
                 </Link>
-                <BsPlusCircle className="text-amber-600" />
               </li>
-              <li className="flex w-full items-center justify-between rounded-lg border border-slate-300 px-4 py-2 dark:border-gray-600">
-                <Link className="text-lg" href="/About">
+              <li className="w-full">
+                <Link
+                  className="flex items-center justify-between rounded-lg border border-slate-300 px-4 py-2 text-lg dark:border-gray-600"
+                  href="/About"
+                >
                   About Us
+                  <ImUsers />
                 </Link>
-                <ImUsers />
               </li>
             </ul>
           </div>
