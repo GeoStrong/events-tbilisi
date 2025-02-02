@@ -31,7 +31,10 @@ interface EventCardProps {
 const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
   const { map } = useSelector((state: RootState) => state.map);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setValue] = useLocalStorage<Poi | null>("location", null);
+  const [_, setValue, removeValue] = useLocalStorage<Poi | null>(
+    "location",
+    null,
+  );
 
   const setLocationToLocalStorage = (location: Poi) => {
     setValue(location);
@@ -44,6 +47,9 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
     };
     setLocationToLocalStorage(poi);
     zoomToLocation(map, poi);
+    setTimeout(() => {
+      removeValue();
+    }, 500);
     if (setSearchParams) {
       return setSearchParams("display-events", "");
     }

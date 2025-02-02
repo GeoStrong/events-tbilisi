@@ -19,7 +19,7 @@ const MapComponent: React.FC = () => {
   const map = useMap();
   const [eventsLocations, setEventsLocations] = useState<Poi[]>(locations);
   const dispatch = useDispatch();
-  const [value] = useLocalStorage<Poi | null>("location", null);
+  const [value, _, removeValue] = useLocalStorage<Poi | null>("location", null);
 
   const addNewEventLocation = (event: MapMouseEvent) => {
     console.log(event);
@@ -42,7 +42,10 @@ const MapComponent: React.FC = () => {
     if (value && map) {
       zoomToLocation(map, value);
     }
-  }, [map, value]);
+    setTimeout(() => {
+      removeValue();
+    }, 500);
+  }, [map, removeValue, value]);
 
   return (
     <GoogleMap
