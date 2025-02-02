@@ -11,9 +11,17 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import defaultEventImg from "@/public/images/default-event-img.png";
-import { EventEntity } from "@/lib/types";
-import { makeFirstLetterUpperCase } from "@/lib/functions/helperFunctions";
+import { EventEntity, Poi } from "@/lib/types";
+import {
+  makeFirstLetterUpperCase,
+  zoomToLocation,
+} from "@/lib/functions/helperFunctions";
 import { getCategoryColor } from "@/lib/fakeData/categories";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/lib/store/store";
+import Link from "next/link";
+import { ImLocation2 } from "react-icons/im";
+import { useLocalStorage } from "react-use";
 
 interface EventCardProps {
   event: EventEntity;
@@ -21,6 +29,26 @@ interface EventCardProps {
 }
 
 const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
+  const { map } = useSelector((state: RootState) => state.map);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setValue] = useLocalStorage<Poi | null>("location", null);
+
+  const setLocationToLocalStorage = (location: Poi) => {
+    setValue(location);
+  };
+
+  const handleLocationClick = (location: google.maps.LatLngLiteral) => {
+    const poi: Poi = {
+      key: `event-${event.id}`,
+      location: location,
+    };
+    setLocationToLocalStorage(poi);
+    zoomToLocation(map, poi);
+    if (setSearchParams) {
+      return setSearchParams("display-events", "");
+    }
+  };
+
   return (
     <Card
       className="cursor-pointer duration-300 hover:scale-105 dark:bg-slate-800"
@@ -55,8 +83,22 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
         <CardTitle className="px-6">{event.title}</CardTitle>
         <CardDescription></CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex items-center justify-between">
         <p className="text-muted-foreground">{event.hostName}</p>
+        {event.googleLocation && (
+          <Link
+            href="/Map"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (event.googleLocation) {
+                handleLocationClick(event.googleLocation);
+              }
+            }}
+            className="rounded-md border border-primary bg-transparent p-2"
+          >
+            <ImLocation2 className="text-primary" />
+          </Link>
+        )}
       </CardContent>
       <CardFooter>
         <p className="text-xs text-muted-foreground">

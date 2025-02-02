@@ -7,12 +7,23 @@ import EventDescription from "./eventDescription";
 import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
 import { getEvents } from "@/lib/functions/getEvents";
 import { makeFirstLetterUpperCase } from "@/lib/functions/helperFunctions";
+import { usePathname } from "next/navigation";
 
 const EventCards: React.FC = () => {
   const [events, setEvents] = useState<EventEntity[]>([]);
   const [activeEvent, setActiveEvent] = useState<EventEntity | null>(null);
+  const [gridStyles, setGridStyles] = useState<string>("");
+  const pathname = usePathname();
   const { searchParams, handleSearch } = useAddSearchQuery();
   const triggerRef = useRef<HTMLButtonElement>(null!);
+
+  useEffect(() => {
+    setGridStyles(
+      pathname === "/Map"
+        ? "lg:grid-cols-1"
+        : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
+    );
+  }, [pathname]);
 
   const category = searchParams.get("category");
 
@@ -54,7 +65,7 @@ const EventCards: React.FC = () => {
           <span className="text-primary">category</span>.
         </p>
       )}
-      <div className="mt-3 grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className={`mt-3 grid gap-5 ${gridStyles}`}>
         {events.map((event) => (
           <EventCard
             key={event.id}

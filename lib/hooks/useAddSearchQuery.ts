@@ -7,6 +7,9 @@ const useAddSearchQuery = () => {
   const pathname = usePathname();
   const { replace } = useRouter();
 
+  const handleReplace = (params: URLSearchParams) =>
+    replace(`${pathname}?${params.toString()}`);
+
   const handleSearch = (query: string, value: string) => {
     const params = new URLSearchParams(searchParams);
 
@@ -15,9 +18,9 @@ const useAddSearchQuery = () => {
     } else {
       params.delete(query);
     }
-    replace(`${pathname}?${params.toString()}`);
+    handleReplace(params);
   };
 
-  return { handleSearch, searchParams };
+  return { handleSearch, handleReplace, searchParams };
 };
 export default useAddSearchQuery;

@@ -24,6 +24,13 @@ const HeaderNav: React.FC = () => {
               </Link>
             </li>
             <li
+              className={`hover:text-primary ${pathname === "/Create-event" && "text-primary"}`}
+            >
+              <Link href="/Create-event" className="">
+                Create Event
+              </Link>
+            </li>
+            <li
               className={`hover:text-primary ${pathname === "/Map" && "text-primary"}`}
             >
               <Link href="/Map">Map</Link>

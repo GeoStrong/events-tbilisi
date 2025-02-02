@@ -1,5 +1,5 @@
 import EventCardsWrapper from "@/components/events/eventCardsWrapper";
-import EventCategories from "@/components/events/eventCategories";
+import EventCategories from "@/components/events/eventCategoriesCarousel";
 import React from "react";
 
 const App: React.FC = () => {

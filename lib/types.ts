@@ -13,13 +13,14 @@ export type EventCategories =
   | "party"
   | "protest"
   | "discussion"
-  | "workshop"
+  | "hiking"
   | "coding"
   | "seminar"
   | "training"
   | "concert"
   | "movie"
   | "lottery"
+  | "workshop"
   | "other";
 
 export interface Category {
@@ -46,6 +47,7 @@ export interface EventEntity {
   endDate: Date | "ongoing";
   time: Date | string;
   location: string;
+  googleLocation?: google.maps.LatLngLiteral;
   categories: EventCategories[];
   targetAudience?: string;
   host?: "organization" | "individual";
@@ -69,3 +71,5 @@ export interface EventEntity {
   updatedAt?: Date;
   participants?: ParticipantValues[];
 }
+
+export type Poi = { key: string; location: google.maps.LatLngLiteral };

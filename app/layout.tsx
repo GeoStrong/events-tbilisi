@@ -5,6 +5,7 @@ import Header from "@/components/header/header";
 import Container from "@/components/container/container";
 import "./globals.css";
 import Footer from "@/components/footer/footer";
+import StoreProvider from "@/lib/store/storeProvider";
 
 const myFont = localFont({
   src: "../public/fonts/GT-Walsheim-Regular-Trial.woff2",
@@ -26,11 +27,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${myFont.variable} antialiased`}>
-        <ThemeProvider attribute="class">
-          <Header />
-          <Container>{children}</Container>
-          <Footer />
-        </ThemeProvider>
+        <StoreProvider>
+          <ThemeProvider attribute="class">
+            <Header />
+            <Container>{children}</Container>
+            <Footer />
+          </ThemeProvider>
+        </StoreProvider>
       </body>
     </html>
   );

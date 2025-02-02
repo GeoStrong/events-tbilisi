@@ -10,13 +10,14 @@ import FestivalIcon from "@mui/icons-material/Festival";
 import CelebrationIcon from "@mui/icons-material/Celebration";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 import ChatIcon from "@mui/icons-material/Chat";
-import HomeRepairServiceIcon from "@mui/icons-material/HomeRepairService";
+import HikingIcon from "@mui/icons-material/Hiking";
 import DataObjectIcon from "@mui/icons-material/DataObject";
 import SchoolIcon from "@mui/icons-material/School";
 import ModelTrainingIcon from "@mui/icons-material/ModelTraining";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import MovieIcon from "@mui/icons-material/Movie";
 import LocalActivityIcon from "@mui/icons-material/LocalActivity";
+import HomeRepairServiceIcon from "@mui/icons-material/HomeRepairService";
 import AbcIcon from "@mui/icons-material/Abc";
 
 export const categories: Category[] = [
@@ -99,9 +100,9 @@ export const categories: Category[] = [
   },
   {
     id: 12,
-    category: "workshop",
-    name: "Workshop",
-    icon: HomeRepairServiceIcon,
+    category: "hiking",
+    name: "Hiking",
+    icon: HikingIcon,
     color: "green-700",
   },
   {
@@ -148,6 +149,13 @@ export const categories: Category[] = [
   },
   {
     id: 19,
+    category: "workshop",
+    name: "Workshop",
+    icon: HomeRepairServiceIcon,
+    color: "green-700",
+  },
+  {
+    id: 20,
     category: "other",
     name: "Other",
     icon: AbcIcon,

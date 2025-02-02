@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { BiMenuAltRight } from "react-icons/bi";
 import {
   Sheet,
   SheetContent,
@@ -10,13 +9,25 @@ import {
   SheetTrigger,
 } from "../ui/sheet";
 import { ImUsers } from "react-icons/im";
-import { BsFillCalendar2EventFill, BsFillMapFill } from "react-icons/bs";
+import {
+  BsPlusCircle,
+  BsFillCalendar2EventFill,
+  BsFillMapFill,
+} from "react-icons/bs";
+import { BiMenuAltRight } from "react-icons/bi";
 import Link from "next/link";
 import { useLocation } from "react-use";
+import useScreenSize from "@/lib/hooks/useScreenSize";
 
 const MobileMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(true);
   const location = useLocation();
+  const { isMobile } = useScreenSize();
+
+  const menuColor =
+    location.pathname === "/Map" && isMobile
+      ? "text-black"
+      : "text-gray-900 dark:text-slate-200";
 
   useEffect(() => {
     setIsOpen(false);
@@ -25,7 +36,7 @@ const MobileMenu: React.FC = () => {
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger>
-        <BiMenuAltRight className="cursor-pointer text-4xl text-gray-900 dark:text-slate-200" />
+        <BiMenuAltRight className={`cursor-pointer text-4xl ${menuColor}`} />
       </SheetTrigger>
       <SheetContent className="w-full dark:bg-gray-900">
         <SheetHeader className="h-full text-left">
@@ -40,9 +51,15 @@ const MobileMenu: React.FC = () => {
               </li>
               <li className="flex w-full items-center justify-between rounded-lg border border-slate-300 px-4 py-2 dark:border-gray-600">
                 <Link className="text-lg" href="/Map">
-                  Map
+                  Map of Events
                 </Link>
                 <BsFillMapFill className="text-green-800" />
+              </li>
+              <li className="flex w-full items-center justify-between rounded-lg border border-slate-300 px-4 py-2 dark:border-gray-600">
+                <Link className="text-lg" href="/Create-event">
+                  Create Event
+                </Link>
+                <BsPlusCircle className="text-amber-600" />
               </li>
               <li className="flex w-full items-center justify-between rounded-lg border border-slate-300 px-4 py-2 dark:border-gray-600">
                 <Link className="text-lg" href="/About">
