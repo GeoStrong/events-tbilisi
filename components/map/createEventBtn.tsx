@@ -27,7 +27,7 @@ const CreateEventBtn: React.FC = () => {
           handleSearch("create-event", "true");
           openDrawer();
         }}
-        className="rounded-full px-8 py-6 text-xl font-bold text-white md:p-8"
+        className="rounded-full px-8 py-6 text-base font-bold text-white md:p-8"
       >
         Create Event
       </Button>
