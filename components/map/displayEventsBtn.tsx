@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { Suspense, useEffect, useRef } from "react";
 import { Button } from "../ui/button";
 import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
 import DisplayedEvents from "./displayedEvents";
@@ -39,4 +39,11 @@ const DisplayEventsBtn: React.FC = () => {
     </>
   );
 };
-export default DisplayEventsBtn;
+
+const DisplayEventsBtnWrapper: React.FC = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <DisplayEventsBtn />
+  </Suspense>
+);
+
+export default DisplayEventsBtnWrapper;

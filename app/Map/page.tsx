@@ -1,6 +1,6 @@
 import React from "react";
 import MapWrapper from "@/components/map/map";
-import DisplayEventsBtn from "@/components/map/displayEventsBtn";
+import DisplayEventsBtnWrapper from "@/components/map/displayEventsBtn";
 
 const Map: React.FC = () => {
   const key = process.env.API_KEY || "";
@@ -12,7 +12,7 @@ const Map: React.FC = () => {
           <MapWrapper API_KEY={key} />
         </div>
         <div className="fixed bottom-14 left-0 flex w-full justify-center">
-          <DisplayEventsBtn />
+          <DisplayEventsBtnWrapper />
         </div>
       </div>
     </>
