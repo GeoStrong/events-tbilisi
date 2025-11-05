@@ -22,10 +22,9 @@ const MapComponent: React.FC = () => {
   const [value, _, removeValue] = useLocalStorage<Poi | null>("location", null);
 
   const addNewEventLocation = (event: MapMouseEvent) => {
-    console.log(event);
+    // console.log(event);
     // const latLng = event.detail.latLng;
     // if (!latLng) return;
-
     // const newLocation = {
     //   key: `event-${eventsLocations.length + 1}`,
     //   location: latLng,

@@ -73,7 +73,7 @@ const EventCards: React.FC = () => {
             setSearchParams={handleSearch}
           />
         ))}
-        {activeEvent && (
+        {activeEvent && pathname !== "/Map" && (
           <EventDescription
             buttonRef={triggerRef}
             event={activeEvent}

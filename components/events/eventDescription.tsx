@@ -23,7 +23,7 @@ import EventParticipation from "./eventParticipation";
 import { makeFirstLetterUpperCase } from "@/lib/functions/helperFunctions";
 import { getCategoryColor } from "@/lib/fakeData/categories";
 import Share from "../general/share";
-import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
+
 import { useEffectOnce } from "react-use";
 
 const snapPoints = [0.5, 1];
@@ -41,12 +41,9 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
 }) => {
   const { isMobile } = useScreenSize();
   const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
-  const { searchParams } = useAddSearchQuery();
-
   useEffectOnce(() => {
-    if (searchParams.get("display-events")) {
-      setSnap(1);
-    }
+    // Always open at full height when mounted
+    setSnap(1);
   });
 
   return (

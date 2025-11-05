@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 const About: React.FC = () => {
   return (
     <>
-      <h1 className="">About us </h1>
+      <h1 className="">About us</h1>
     </>
   );
 };

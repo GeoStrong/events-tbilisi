@@ -1,27 +1,31 @@
+import { IoIosPin } from "react-icons/io";
 import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
 import { Poi } from "@/lib/types";
-import { AdvancedMarker, Pin } from "@vis.gl/react-google-maps";
+import { AdvancedMarker } from "@vis.gl/react-google-maps";
 import React from "react";
 
 const PoiMarkers: React.FC<{ pois: Poi[] }> = ({ pois }) => {
-  const { handleReplace, searchParams } = useAddSearchQuery();
-  const params = new URLSearchParams(searchParams);
-
+  const { handleReplace } = useAddSearchQuery();
   return (
     <>
       {pois.map((poi: Poi) => (
         <AdvancedMarker
           key={poi.key}
           onClick={(event) => {
-            const pin = event.domEvent.target as HTMLDivElement;
-            params.set("display-events", "true");
-            params.set("event", pin.id.split("-")[1]);
-            handleReplace(params);
+            let element = event.domEvent.target as HTMLElement;
+            while (element && !element.id) {
+              element = element.parentElement as HTMLElement;
+            }
+            if (element && element.id) {
+              const newParams = new URLSearchParams();
+              newParams.set("event", element.id.split("-")[1]);
+              handleReplace(newParams);
+            }
           }}
           position={poi.location}
           clickable
         >
-          <div id={poi.key} className="h-8 w-8 rounded-full bg-red-500"></div>
+          <IoIosPin id={poi.key} className="text-4xl text-red-500" />
           {/* <Pin
             background={"#FBBC04"}
             glyphColor={"#000"}

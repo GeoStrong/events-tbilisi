@@ -3,6 +3,10 @@ import fs from "fs";
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 
+export const GET = async () => {
+  return NextResponse.json({ message: "User route" }, { status: 200 });
+};
+
 export const POST = async (request: NextRequest) => {
   const data: ParticipantValues = await request.json();
   const filePath = path.join(process.cwd(), "data", "users.json");
