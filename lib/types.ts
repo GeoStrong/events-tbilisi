@@ -1,5 +1,3 @@
-import { SvgIconTypeMap } from "@mui/material";
-import { OverridableComponent } from "@mui/material/OverridableComponent";
 
 export type EventCategories =
   | "music"
@@ -26,7 +24,8 @@ export type EventCategories =
 export interface Category {
   id: number | string;
   name: string;
-  icon: OverridableComponent<SvgIconTypeMap<object, "svg">>;
+  icon: string; 
+  // OverridableComponent<SvgIconTypeMap<object, "svg">>;
   color: string;
   category: EventCategories;
 }

@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import {
   Drawer,
   DrawerClose,
@@ -15,6 +17,8 @@ import useScreenSize from "@/lib/hooks/useScreenSize";
 import EventCardsWrapper from "../events/eventCardsWrapper";
 import EventCategories from "../events/eventCategoriesCarousel";
 import EventCategoriesSheet from "../events/eventCategoriesSheet";
+import { getCategories, supabase } from "@/lib/supabase/supabaseClient";
+import { Category } from "@/lib/types";
 
 interface CreateEventProps {
   buttonRef: React.RefObject<HTMLButtonElement>;
@@ -26,6 +30,15 @@ const DisplayedEvents: React.FC<CreateEventProps> = ({
   setSearchParams,
 }) => {
   const { isMobile } = useScreenSize();
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const categories = (await getCategories()) as Category[];
+      setCategories(categories);
+    };
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -47,7 +60,11 @@ const DisplayedEvents: React.FC<CreateEventProps> = ({
                 <DrawerDescription className="text-left text-base"></DrawerDescription>
               </DrawerHeader>
               <div className="flex flex-col gap-3 p-4">
-                {isMobile ? <EventCategories /> : <EventCategoriesSheet />}
+                {isMobile ? (
+                  <EventCategories categories={categories} />
+                ) : (
+                  <EventCategoriesSheet categories={categories} />
+                )}
                 <EventCardsWrapper />
               </div>
               <DrawerFooter className="flex flex-col gap-2 md:flex-row-reverse">

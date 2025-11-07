@@ -1,6 +1,7 @@
 import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
 import { Category } from "@/lib/types";
 import React from "react";
+import DynamicIcon from "../ui/dynamicIcon";
 
 const EventCategory: React.FC<{ category: Category }> = ({ category }) => {
   const { handleSearch, searchParams } = useAddSearchQuery();
@@ -23,7 +24,7 @@ const EventCategory: React.FC<{ category: Category }> = ({ category }) => {
           return handleSearch("category", category.name);
         }}
       >
-        <category.icon className={`text-inherit`} />
+        <DynamicIcon name={category.icon} />
       </button>
       <span className="text-sm">{category.name}</span>
     </div>

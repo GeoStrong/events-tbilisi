@@ -1,11 +1,15 @@
 "use client";
 
-import { categories } from "@/lib/fakeData/categories";
 import React, { Suspense } from "react";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import EventCategory from "./eventCategory";
+import { Category } from "@/lib/types";
 
-const Categories: React.FC = () => {
+interface CategoriesProps {
+  categories: Category[];
+}
+
+const Categories: React.FC<CategoriesProps> = ({ categories }) => {
   return (
     <>
       <h2 className="section-title">Discover Categories</h2>
@@ -27,10 +31,10 @@ const Categories: React.FC = () => {
   );
 };
 
-const EventCategoriesCarousel: React.FC = () => {
+const EventCategoriesCarousel: React.FC<CategoriesProps> = ({ categories }) => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <Categories />
+      <Categories categories={categories} />
     </Suspense>
   );
 };

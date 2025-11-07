@@ -7,10 +7,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { categories } from "@/lib/fakeData/categories";
 import EventCategory from "./eventCategory";
+import { Category } from "@/lib/types";
 
-const EventCategoriesSheet: React.FC = () => {
+interface CategoriesProps {
+  categories: Category[];
+}
+
+const EventCategoriesSheet: React.FC<CategoriesProps> = ({ categories }) => {
   return (
     <>
       <Dialog>
