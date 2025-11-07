@@ -17,7 +17,7 @@ import useScreenSize from "@/lib/hooks/useScreenSize";
 import EventCardsWrapper from "../events/eventCardsWrapper";
 import EventCategories from "../events/eventCategoriesCarousel";
 import EventCategoriesSheet from "../events/eventCategoriesSheet";
-import { getCategories, supabase } from "@/lib/supabase/supabaseClient";
+import { getCategories } from "@/lib/supabase/supabaseClient";
 import { Category } from "@/lib/types";
 
 interface CreateEventProps {

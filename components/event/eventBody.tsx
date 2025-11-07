@@ -1,8 +1,8 @@
 "use client";
 
-import { EventEntity } from "@/lib/types";
+import { Category, EventEntity } from "@/lib/types";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import defaultEventImg from "@/public/images/default-event-img.png";
 import EventDetails from "./eventDetails";
 import Link from "next/link";
@@ -14,6 +14,7 @@ import { getCategoryColor } from "@/lib/fakeData/categories";
 import { makeFirstLetterUpperCase } from "@/lib/functions/helperFunctions";
 import { getEvents } from "@/lib/functions/getEvents";
 import { CiShare1 } from "react-icons/ci";
+import { getCategories } from "@/lib/supabase/supabaseClient";
 
 const EventBody: React.FC<{ event: EventEntity }> = ({ event }) => {
   const eventCategory = event.categories[0];

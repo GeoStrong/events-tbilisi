@@ -163,6 +163,8 @@ export const categories: Category[] = [
   // },
 ];
 
+
+
 export const getCategoryColor = (category: string) => {
   const activeCategory = categories.find((cat) => cat.category === category);
   return `bg-${activeCategory?.color}`;

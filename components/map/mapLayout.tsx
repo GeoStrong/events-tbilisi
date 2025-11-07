@@ -1,13 +1,17 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { Suspense, useEffect, useRef } from "react";
 import MapWrapper from "@/components/map/map";
 import DisplayEventsBtnWrapper from "@/components/map/displayEventsBtn";
 import EventDescription from "@/components/events/eventDescription";
 import events from "@/lib/fakeData/events";
 import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
 
-const MapLayout: React.FC<{ mapKey: string }> = ({ mapKey }) => {
+interface MapLayoutProps {
+  mapKey: string;
+}
+
+const MapLayout: React.FC<MapLayoutProps> = ({ mapKey }) => {
   const eventButtonRef = useRef<HTMLButtonElement>(null!);
   const { searchParams, handleReplace } = useAddSearchQuery();
 
@@ -50,4 +54,11 @@ const MapLayout: React.FC<{ mapKey: string }> = ({ mapKey }) => {
     </>
   );
 };
-export default MapLayout;
+
+const MapLayoutWrapper: React.FC<MapLayoutProps> = ({ mapKey }) => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <MapLayout mapKey={mapKey} />
+  </Suspense>
+);
+
+export default MapLayoutWrapper;
