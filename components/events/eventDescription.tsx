@@ -90,7 +90,7 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
           >
             <div className="flex h-screen w-full flex-col overflow-y-auto">
               <DrawerHeader className="relative">
-                <div className="absolute left-5 top-3 z-20 flex gap-2">
+                <div className="absolute left-5 top-0 z-20 flex gap-2">
                   {categories.map((category) => (
                     <span
                       key={category.id}
