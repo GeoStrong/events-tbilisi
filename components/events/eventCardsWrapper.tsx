@@ -76,7 +76,8 @@ const EventCards: React.FC = () => {
   return (
     <>
       <h2 className="section-title mt-10">
-        {categoryId ? category[0].name : "Recent"} events
+        {categoryId && category.length !== 0 ? category[0].name : "Recent"}{" "}
+        events
       </h2>
       {events === null && (
         <div className="mt-5">
