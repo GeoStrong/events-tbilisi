@@ -42,20 +42,18 @@ const EventCards: React.FC = () => {
   }, [pathname]);
 
   useEffect(() => {
-    (async () => {
-      const events = await getEvents();
-      setEvents(events);
-    })();
-  }, []);
-
-  useEffect(() => {
     if (categoryId) {
       (async () => {
         const events = await getEventsByCategoryId(categoryId);
         setEvents(events);
       })();
+    } else {
+      (async () => {
+        const events = await getEvents();
+        setEvents(events);
+      })();
     }
-  }, [categoryId, searchParams]);
+  }, [categoryId]);
 
   useEffect(() => {
     (async () => {
