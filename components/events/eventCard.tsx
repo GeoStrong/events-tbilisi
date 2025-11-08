@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -11,17 +11,17 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import defaultEventImg from "@/public/images/default-event-img.png";
-import { EventEntity, Poi } from "@/lib/types";
-import {
-  makeFirstLetterUpperCase,
-  zoomToLocation,
-} from "@/lib/functions/helperFunctions";
-import { getCategoryColor } from "@/lib/fakeData/categories";
+import { Category, EventEntity, Poi } from "@/lib/types";
+import { zoomToLocation } from "@/lib/functions/helperFunctions";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/lib/store/store";
 import Link from "next/link";
 import { ImLocation2 } from "react-icons/im";
 import { useLocalStorage } from "react-use";
+import {
+  getCategoriesByEventId,
+  getEventImageUrl,
+} from "@/lib/functions/supabaseFunctions";
 
 interface EventCardProps {
   event: EventEntity;
@@ -29,7 +29,10 @@ interface EventCardProps {
 }
 
 const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
+  const [categories, setCategories] = useState<Category[]>([]);
   const { map } = useSelector((state: RootState) => state.map);
+  const [eventImage, setEventImage] = useState<string>();
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setValue, removeValue] = useLocalStorage<Poi | null>(
     "location",
@@ -55,6 +58,21 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
     }
   };
 
+  useEffect(() => {
+    (async () => {
+      const categories = await getCategoriesByEventId(event.id);
+      setCategories(categories || []);
+    })();
+  }, [event.id]);
+
+  useEffect(() => {
+    (async () => {
+      const imageUrl = await getEventImageUrl(event.image);
+
+      setEventImage(imageUrl);
+    })();
+  }, [event.image]);
+
   return (
     <Card
       className="cursor-pointer duration-300 hover:scale-105 dark:bg-slate-800"
@@ -67,21 +85,21 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
       <CardHeader className="p-0">
         <div className="relative h-48 w-full rounded-t-xl bg-white">
           <Image
-            src={event.image || defaultEventImg.src}
+            src={eventImage || defaultEventImg.src}
             width={100}
             height={100}
             alt="event"
-            className={`h-full w-full rounded-t-xl ${!event.image ? "object-contain" : "object-cover"}`}
+            className={`h-full w-full rounded-t-xl ${!eventImage ? "object-contain" : "object-cover"}`}
           />
         </div>
         <div className="!my-2 h-4 w-full px-2 text-right">
           <div className="flex justify-end gap-2">
-            {event.categories.map((category) => (
+            {categories.map((category) => (
               <span
-                key={category}
-                className={`rounded-full ${getCategoryColor(category)} px-2 text-xs text-white`}
+                key={category.id}
+                className={`rounded-full bg-${category.color} px-2 text-xs text-white`}
               >
-                {makeFirstLetterUpperCase(category)}
+                {category.name}
               </span>
             ))}
           </div>
@@ -108,7 +126,12 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
       </CardContent>
       <CardFooter>
         <p className="text-xs text-muted-foreground">
-          {event.date.toDateString()}
+          {new Date(event.startDate).toLocaleDateString("en-US", {
+            month: "long",
+            year: "numeric",
+            weekday: "short",
+            day: "numeric",
+          })}
         </p>
       </CardFooter>
     </Card>

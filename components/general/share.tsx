@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -15,12 +15,13 @@ import defaultEventImg from "@/public/images/default-event-img.png";
 import Socials from "./socials";
 import { useLocation } from "react-use";
 import { Button } from "../ui/button";
+import { getEventImageUrl } from "@/lib/functions/supabaseFunctions";
 
 const Share: React.FC<{ children: React.ReactNode; event: EventEntity }> = ({
   children,
   event,
 }) => {
-  const image = event.image || defaultEventImg.src;
+  const [eventImage, setEventImage] = useState<string>();
   const { href } = useLocation();
   const [copied, setCopied] = useState(false);
 
@@ -30,6 +31,14 @@ const Share: React.FC<{ children: React.ReactNode; event: EventEntity }> = ({
       setCopied(true);
     }, 1000);
   };
+
+  useEffect(() => {
+    (async () => {
+      const imageUrl = await getEventImageUrl(event.image);
+
+      setEventImage(imageUrl);
+    })();
+  }, [event.image]);
 
   return (
     <>
@@ -43,12 +52,17 @@ const Share: React.FC<{ children: React.ReactNode; event: EventEntity }> = ({
             </DialogDescription>
             <div className="flex items-center gap-3 rounded-md border shadow-lg">
               <div className="bg-white">
-                <Image src={image} alt="event" width={100} height={100} />
+                <Image
+                  src={eventImage || defaultEventImg.src}
+                  alt="event"
+                  width={100}
+                  height={100}
+                />
               </div>
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col">
                 <h3 className="">{event.title}</h3>
                 <p className="text-sm text-muted-foreground">
-                  {event.date.toDateString()}
+                  {event.description}
                 </p>
               </div>
             </div>

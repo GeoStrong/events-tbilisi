@@ -17,11 +17,11 @@ const EventCategory: React.FC<{ category: Category }> = ({ category }) => {
   return (
     <div className="flex flex-col items-center gap-2">
       <button
-        className={`flex h-14 w-14 items-center justify-center rounded-full border-[3px] bg-gray-100 p-3 dark:bg-gray-800 ${getActiveCategoryStyles(category.name, category.color)}`}
+        className={`flex h-14 w-14 items-center justify-center rounded-full border-[3px] bg-gray-100 p-3 dark:bg-gray-800 ${getActiveCategoryStyles(category.id.toLocaleString(), category.color)}`}
         onClick={() => {
-          if (activeCategory && activeCategory === category.name)
+          if (activeCategory && activeCategory === category.id)
             return handleSearch("category", "");
-          return handleSearch("category", category.name);
+          return handleSearch("category", category.id.toLocaleString());
         }}
       >
         <DynamicIcon name={category.icon} />

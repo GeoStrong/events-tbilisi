@@ -9,7 +9,7 @@ import {
 } from "@vis.gl/react-google-maps";
 import PoiMarkers from "./poiMarkers";
 import { Poi } from "@/lib/types";
-import { locations } from "@/lib/fakeData/locations";
+import { locations } from "@/lib/data/locations";
 import { useDispatch } from "react-redux";
 import { mapActions } from "@/lib/store/mapSlice";
 import { useLocalStorage } from "react-use";

@@ -2,7 +2,7 @@
 
 import { Category, EventEntity } from "@/lib/types";
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import defaultEventImg from "@/public/images/default-event-img.png";
 import EventDetails from "./eventDetails";
 import Link from "next/link";
@@ -10,24 +10,47 @@ import Socials from "../general/socials";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { BiUser } from "react-icons/bi";
 import { Button } from "../ui/button";
-import { getCategoryColor } from "@/lib/fakeData/categories";
-import { makeFirstLetterUpperCase } from "@/lib/functions/helperFunctions";
-import { getEvents } from "@/lib/functions/getEvents";
 import { CiShare1 } from "react-icons/ci";
-import { getCategories } from "@/lib/supabase/supabaseClient";
+import {
+  getEventImageUrl,
+  getEventsByCategoryId,
+} from "@/lib/functions/supabaseFunctions";
 
-const EventBody: React.FC<{ event: EventEntity }> = ({ event }) => {
-  const eventCategory = event.categories[0];
-  const events = getEvents(eventCategory);
+interface EventBodyProps {
+  categories: Category[];
+  event: EventEntity;
+}
 
-  const twoEvents = events.slice(0, 2);
+const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
+  const [eventImage, setEventImage] = useState<string>();
+  const [similarEvents, setSimilarEvents] = useState<EventEntity[]>([]);
+
+  // const twoEvents = events.slice(0, 2);
+
+  useEffect(() => {
+    (async () => {
+      const events = await getEventsByCategoryId(
+        categories[0].id.toLocaleString(),
+      );
+
+      setSimilarEvents(events);
+    })();
+  }, [categories]);
+
+  useEffect(() => {
+    (async () => {
+      const imageUrl = await getEventImageUrl(event.image);
+
+      setEventImage(imageUrl);
+    })();
+  }, [event.image]);
 
   return (
     <div className="mb-10 mt-5 grid grid-cols-1 grid-rows-3 gap-5 lg:grid-cols-4">
       <div className="col-span-3 row-span-3 flex flex-col gap-5 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 md:px-6">
         <div className="rounded-md bg-white">
           <Image
-            src={event.image || defaultEventImg.src}
+            src={eventImage || defaultEventImg.src}
             width={100}
             height={100}
             alt="event"
@@ -39,12 +62,12 @@ const EventBody: React.FC<{ event: EventEntity }> = ({ event }) => {
             About the Event
           </h3>
           <div className="flex gap-2">
-            {event.categories.map((category) => (
+            {categories.map((category) => (
               <span
-                key={category}
-                className={`rounded-full ${getCategoryColor(category)} px-2 text-xs text-white`}
+                key={category.id}
+                className={`rounded-full bg-${category.color} px-2 text-xs text-white`}
               >
-                {makeFirstLetterUpperCase(category)}
+                {category.name}
               </span>
             ))}
           </div>
@@ -57,24 +80,21 @@ const EventBody: React.FC<{ event: EventEntity }> = ({ event }) => {
           <div className="mt-2">
             <EventDetails
               detail="📅 Date"
-              value={event.startDate.toDateString()}
+              value={new Date(event.startDate).toLocaleString("en-US", {
+                month: "long",
+                year: "numeric",
+                weekday: "short",
+                day: "numeric",
+              })}
             />
             <EventDetails
               detail="⌚ Time"
-              value={
-                event.time instanceof Date
-                  ? event.time.toDateString()
-                  : event.time
-              }
+              value={new Date(event.time).toLocaleString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
             />
-            <EventDetails
-              detail="📍 Address"
-              value={
-                event.time instanceof Date
-                  ? event.time.toDateString()
-                  : event.time
-              }
-            />
+            <EventDetails detail="📍 Address" value={event.location} />
           </div>
           {event.link && (
             <Link
@@ -129,11 +149,12 @@ const EventBody: React.FC<{ event: EventEntity }> = ({ event }) => {
             <EventDetails detail="Status" value={event.status} />
             <EventDetails
               detail="End Date"
-              value={
-                event.endDate instanceof Date
-                  ? event.endDate.toDateString()
-                  : event.endDate
-              }
+              value={new Date(event.endDate).toLocaleString("en-US", {
+                month: "long",
+                year: "numeric",
+                weekday: "short",
+                day: "numeric",
+              })}
             />
             <EventDetails
               detail="Participants"
@@ -152,15 +173,20 @@ const EventBody: React.FC<{ event: EventEntity }> = ({ event }) => {
       </div>
       <div className="col-span-3 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">
         <h3 className="font-bold md:text-lg">
-          Explore More {makeFirstLetterUpperCase(eventCategory)} Events
+          Explore More {categories[0].name} Events
         </h3>
         <div className="mt-3 flex flex-col gap-2">
-          {twoEvents.map((event) => (
+          {similarEvents.map((event) => (
             <div key={event.id} className="flex justify-between gap-2">
               <div className="flex flex-col">
                 <h3 className="text-sm font-semibold">{event.title}</h3>
                 <p className="text-xs text-muted-foreground">
-                  {event.startDate.toDateString()}
+                  {new Date(event.startDate).toLocaleString("en-US", {
+                    month: "long",
+                    year: "numeric",
+                    weekday: "short",
+                    day: "numeric",
+                  })}
                 </p>
               </div>
               <Link href={`/${event.id}`}>

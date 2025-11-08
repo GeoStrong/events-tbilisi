@@ -18,7 +18,8 @@ const PoiMarkers: React.FC<{ pois: Poi[] }> = ({ pois }) => {
             }
             if (element && element.id) {
               const newParams = new URLSearchParams();
-              newParams.set("event", element.id.split("-")[1]);
+              const eventId = element.id.split("-").slice(1).join("-");
+              newParams.set("event", eventId);
               handleReplace(newParams);
             }
           }}

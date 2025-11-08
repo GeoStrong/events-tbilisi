@@ -1,4 +1,3 @@
-
 export type EventCategories =
   | "music"
   | "sport"
@@ -22,10 +21,9 @@ export type EventCategories =
   | "other";
 
 export interface Category {
-  id: number | string;
+  id: string;
   name: string;
-  icon: string; 
-  // OverridableComponent<SvgIconTypeMap<object, "svg">>;
+  icon: string;
   color: string;
   category: EventCategories;
 }
@@ -47,7 +45,7 @@ export interface EventEntity {
   time: Date | string;
   location: string;
   googleLocation?: google.maps.LatLngLiteral;
-  categories: EventCategories[];
+  categories?: EventCategories[];
   targetAudience?: string;
   host?: "organization" | "individual";
   hostName?: string;
@@ -57,8 +55,8 @@ export interface EventEntity {
     name: string;
     image?: string;
   };
+  image: string;
   link?: string;
-  image?: string;
   maxAttendees?: number;
   tags?: string[];
   maxTags?: 10;

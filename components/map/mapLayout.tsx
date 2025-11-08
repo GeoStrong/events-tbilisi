@@ -4,7 +4,7 @@ import React, { Suspense, useEffect, useRef } from "react";
 import MapWrapper from "@/components/map/map";
 import DisplayEventsBtnWrapper from "@/components/map/displayEventsBtn";
 import EventDescription from "@/components/events/eventDescription";
-import events from "@/lib/fakeData/events";
+import events from "@/lib/data/events";
 import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
 
 interface MapLayoutProps {
@@ -16,7 +16,7 @@ const MapLayout: React.FC<MapLayoutProps> = ({ mapKey }) => {
   const { searchParams, handleReplace } = useAddSearchQuery();
 
   const eventId = searchParams.get("event");
-  const activeEvent = eventId ? events.find((e) => e.id === +eventId) : null;
+  const activeEvent = eventId ? events.find((e) => e.id === eventId) : null;
 
   useEffect(() => {
     if (activeEvent && eventButtonRef.current) {

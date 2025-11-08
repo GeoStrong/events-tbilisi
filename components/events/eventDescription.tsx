@@ -1,7 +1,7 @@
 "use client";
 import { FiShare } from "react-icons/fi";
 import { MdOutlineOpenInNew } from "react-icons/md";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Drawer,
   DrawerClose,
@@ -14,17 +14,19 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { EventEntity } from "@/lib/types";
+import { Category, EventEntity } from "@/lib/types";
 import useScreenSize from "@/lib/hooks/useScreenSize";
 import Link from "next/link";
 import Image from "next/image";
 import defaultEventImg from "@/public/images/default-event-img.png";
 import EventParticipation from "./eventParticipation";
-import { makeFirstLetterUpperCase } from "@/lib/functions/helperFunctions";
-import { getCategoryColor } from "@/lib/fakeData/categories";
 import Share from "../general/share";
 
 import { useEffectOnce } from "react-use";
+import {
+  getCategoriesByEventId,
+  getEventImageUrl,
+} from "@/lib/functions/supabaseFunctions";
 
 const snapPoints = [0.5, 1];
 
@@ -41,10 +43,28 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
 }) => {
   const { isMobile } = useScreenSize();
   const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
+  const [categories, setCategories] = useState<Category[]>([]);
+
   useEffectOnce(() => {
     // Always open at full height when mounted
     setSnap(1);
   });
+  const [eventImage, setEventImage] = useState<string>();
+
+  useEffect(() => {
+    (async () => {
+      const imageUrl = await getEventImageUrl(event.image);
+
+      setEventImage(imageUrl);
+    })();
+  }, [event.image]);
+
+  useEffect(() => {
+    (async () => {
+      const categories = await getCategoriesByEventId(event.id);
+      setCategories(categories || []);
+    })();
+  }, [event.id]);
 
   return (
     <>
@@ -66,17 +86,17 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
                 <MdOutlineOpenInNew className="linear-yellow duration-300 hover:text-primary" />
               </Link>
             }
-            className="mx-[-1px] flex h-full flex-col border-0 bg-white"
+            className={`${isMobile ? "w-full" : "w-auto"} mx-[-1px] flex h-full flex-col border-0 bg-white`}
           >
             <div className="flex h-screen w-full flex-col overflow-y-auto">
               <DrawerHeader className="relative">
                 <div className="absolute left-5 top-3 z-20 flex gap-2">
-                  {event.categories.map((category) => (
+                  {categories.map((category) => (
                     <span
-                      key={category}
-                      className={`rounded-full ${getCategoryColor(category)} px-2 text-xs text-white`}
+                      key={category.id}
+                      className={`rounded-full bg-${category.color} px-2 text-xs text-white`}
                     >
-                      {makeFirstLetterUpperCase(category)}
+                      {category.name}
                     </span>
                   ))}
                 </div>
@@ -110,7 +130,7 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
                   </p>
                   {event?.image && (
                     <Image
-                      src={event.image || defaultEventImg.src}
+                      src={eventImage || defaultEventImg.src}
                       width={100}
                       height={100}
                       alt="event"
@@ -121,15 +141,27 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
                     <p className="text-md text-center">
                       Start Date:{" "}
                       <span className="linear-yellow block text-base">
-                        {event.startDate.toDateString()}
+                        {new Date(event.startDate).toLocaleString("en-US", {
+                          month: "long",
+                          year: "numeric",
+                          weekday: "short",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </span>
                     </p>
                     <p className="text-md text-center">
                       End Date:{" "}
                       <span className="linear-yellow block text-base">
-                        {event.endDate instanceof Date
-                          ? event.endDate.toDateString()
-                          : event.endDate}
+                        {new Date(event.endDate).toLocaleString("en-US", {
+                          month: "long",
+                          year: "numeric",
+                          weekday: "short",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </span>
                     </p>
                   </div>

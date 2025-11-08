@@ -8,11 +8,12 @@ import { BiBookmark } from "react-icons/bi";
 import Share from "../general/share";
 import { EventEntity } from "@/lib/types";
 import defaultEventImg from "@/public/images/default-event-img.png";
+import { getEventImageUrl } from "@/lib/functions/supabaseFunctions";
 
 const EventHeader: React.FC<{
   event: EventEntity;
-}> = ({ event }) => {
-  const image = event.image || defaultEventImg.src;
+}> = async ({ event }) => {
+  const imageUrl = await getEventImageUrl(event.image);
 
   return (
     <>
@@ -25,7 +26,7 @@ const EventHeader: React.FC<{
             <IoMdArrowRoundBack />
           </Link>
           <Image
-            src={image}
+            src={imageUrl || defaultEventImg.src}
             alt="event"
             width={100}
             height={100}

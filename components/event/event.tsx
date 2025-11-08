@@ -3,16 +3,18 @@ import EventHeader from "./eventHeader";
 import { EventEntity } from "@/lib/types";
 import EventBody from "./eventBody";
 import EventFooter from "./eventFooter";
+import { getCategoriesByEventId } from "@/lib/functions/supabaseFunctions";
 
-const Event: React.FC<{ event: EventEntity; eventId: string }> = ({
+const Event: React.FC<{ event: EventEntity; eventId: string }> = async ({
   event,
   eventId,
 }) => {
+  const categories = await getCategoriesByEventId(eventId);
   return (
     <>
       <EventHeader event={event} />
-      <EventBody event={event} />
-      <EventFooter categories={event.categories} eventId={eventId} />
+      <EventBody categories={categories} event={event} />
+      <EventFooter categories={categories} eventId={eventId} />
     </>
   );
 };
