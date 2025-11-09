@@ -135,6 +135,7 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
                       height={100}
                       alt="event"
                       className="mt-5 h-44 w-full rounded-xl object-cover"
+                      unoptimized
                     />
                   )}
                   <div className="mt-3 flex items-center justify-evenly gap-2">

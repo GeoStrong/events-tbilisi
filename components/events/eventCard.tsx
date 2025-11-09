@@ -90,6 +90,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
             height={100}
             alt="event"
             className={`h-full w-full rounded-t-xl ${!eventImage ? "object-contain" : "object-cover"}`}
+            unoptimized
           />
         </div>
         <div className="!my-2 h-4 w-full px-2 text-right">

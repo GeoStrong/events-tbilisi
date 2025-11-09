@@ -31,6 +31,7 @@ const EventHeader: React.FC<{
             width={100}
             height={100}
             className="hidden w-64 rounded-md bg-white md:block"
+            unoptimized
           />
         </div>
         <div className="flex w-full items-center justify-between gap-3 md:flex-col md:items-start md:justify-start">

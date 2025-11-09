@@ -57,6 +57,7 @@ const Share: React.FC<{ children: React.ReactNode; event: EventEntity }> = ({
                   alt="event"
                   width={100}
                   height={100}
+                  unoptimized
                 />
               </div>
               <div className="flex flex-col">
