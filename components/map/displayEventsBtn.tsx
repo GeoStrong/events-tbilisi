@@ -4,6 +4,7 @@ import React, { Suspense, useEffect, useRef } from "react";
 import { Button } from "../ui/button";
 import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
 import DisplayedEvents from "./displayedEvents";
+import Spinner from "../general/spinner";
 
 const DisplayEventsBtn: React.FC = () => {
   const displayEventsBtnRef = useRef<HTMLButtonElement>(null!);
@@ -41,7 +42,7 @@ const DisplayEventsBtn: React.FC = () => {
 };
 
 const DisplayEventsBtnWrapper: React.FC = () => (
-  <Suspense fallback={<div>Loading...</div>}>
+  <Suspense fallback={<Spinner />}>
     <DisplayEventsBtn />
   </Suspense>
 );

@@ -12,6 +12,7 @@ import {
   getCategoryById,
   getEventsByCategoryId,
 } from "@/lib/functions/supabaseFunctions";
+import EventCardsLoading from "./eventCardsLoading";
 
 const EventCards: React.FC = () => {
   const [events, setEvents] = useState<EventEntity[] | null>(null);
@@ -110,7 +111,7 @@ const EventCards: React.FC = () => {
 };
 
 const EventCardsWrapper: React.FC = () => (
-  <Suspense fallback={<div>Loading...</div>}>
+  <Suspense fallback={<EventCardsLoading />}>
     <EventCards />
   </Suspense>
 );

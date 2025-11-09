@@ -4,6 +4,7 @@ import React, { Suspense } from "react";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import EventCategory from "./eventCategory";
 import { Category } from "@/lib/types";
+import EventCategoriesCarouselLoading from "./EventCategoriesCarouselLoading";
 
 interface CategoriesProps {
   categories: Category[];
@@ -33,7 +34,7 @@ const Categories: React.FC<CategoriesProps> = ({ categories }) => {
 
 const EventCategoriesCarousel: React.FC<CategoriesProps> = ({ categories }) => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<EventCategoriesCarouselLoading />}>
       <Categories categories={categories} />
     </Suspense>
   );

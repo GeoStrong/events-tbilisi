@@ -1,10 +1,22 @@
+"use client";
+
 import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
 import { Category } from "@/lib/types";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DynamicIcon from "../ui/dynamicIcon";
+import { Badge } from "../ui/badge";
+import { getEventsByCategoryId } from "@/lib/functions/supabaseFunctions";
 
 const EventCategory: React.FC<{ category: Category }> = ({ category }) => {
   const { handleSearch, searchParams } = useAddSearchQuery();
+  const [eventQuantity, setEventQuantity] = useState<number>(0);
+
+  useEffect(() => {
+    (async () => {
+      const eventsByCategory = await getEventsByCategoryId(category.id);
+      setEventQuantity(eventsByCategory.length);
+    })();
+  }, [category.id]);
 
   const activeCategory = searchParams.get("category");
 
@@ -17,13 +29,20 @@ const EventCategory: React.FC<{ category: Category }> = ({ category }) => {
   return (
     <div className="flex flex-col items-center gap-2">
       <button
-        className={`flex h-14 w-14 items-center justify-center rounded-full border-[3px] bg-gray-100 p-3 dark:bg-gray-800 ${getActiveCategoryStyles(category.id.toLocaleString(), category.color)}`}
+        className={`relative flex h-14 w-14 items-center justify-center rounded-full border-[3px] bg-gray-100 p-3 dark:bg-gray-800 ${getActiveCategoryStyles(category.id.toLocaleString(), category.color)}`}
         onClick={() => {
           if (activeCategory && activeCategory === category.id)
             return handleSearch("category", "");
           return handleSearch("category", category.id.toLocaleString());
         }}
       >
+        {eventQuantity > 0 && (
+          <Badge
+            className={`bg-${category.color} absolute -right-2 -top-0 rounded-full px-[5px] py-0 text-[10px] font-medium`}
+          >
+            {eventQuantity}
+          </Badge>
+        )}
         <DynamicIcon name={category.icon} />
       </button>
       <span className="text-sm">{category.name}</span>

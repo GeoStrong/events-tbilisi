@@ -6,6 +6,7 @@ import DisplayEventsBtnWrapper from "@/components/map/displayEventsBtn";
 import EventDescription from "@/components/events/eventDescription";
 import events from "@/lib/data/events";
 import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
+import MapLoadingLayout from "./mapLayoutLoading";
 
 interface MapLayoutProps {
   mapKey: string;
@@ -56,7 +57,7 @@ const MapLayout: React.FC<MapLayoutProps> = ({ mapKey }) => {
 };
 
 const MapLayoutWrapper: React.FC<MapLayoutProps> = ({ mapKey }) => (
-  <Suspense fallback={<div>Loading...</div>}>
+  <Suspense fallback={<MapLoadingLayout />}>
     <MapLayout mapKey={mapKey} />
   </Suspense>
 );
