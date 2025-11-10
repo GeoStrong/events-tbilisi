@@ -18,11 +18,21 @@ import { BiMenuAltRight } from "react-icons/bi";
 import Link from "next/link";
 import { useLocation } from "react-use";
 import useScreenSize from "@/lib/hooks/useScreenSize";
+import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
+import HeaderProfileLoader from "./headerProfileLoader";
+import { Button } from "../ui/button";
+import { User } from "lucide-react";
+import HeaderProfile from "./headerProfile";
 
-const MobileMenu: React.FC = () => {
+interface MobileMenuProps {
+  onAuthClick: () => void;
+}
+
+const MobileMenu: React.FC<MobileMenuProps> = ({ onAuthClick }) => {
   const [isOpen, setIsOpen] = useState(true);
   const location = useLocation();
   const { isMobile } = useScreenSize();
+  const { userProfile } = useGetUserProfile();
 
   const menuColor =
     location.pathname === "/map" && isMobile
@@ -78,6 +88,25 @@ const MobileMenu: React.FC = () => {
                   About Us
                   <ImUsers />
                 </Link>
+              </li>
+              <li className="w-full">
+                {userProfile == null && <HeaderProfileLoader />}
+                {userProfile?.length === 0 ? (
+                  <Button
+                    onClick={onAuthClick}
+                    variant="ghost"
+                    className="gap-2"
+                  >
+                    <User className="h-5 w-5" />
+                    <span className="md:inline">Sign In</span>
+                  </Button>
+                ) : (
+                  <>
+                    {userProfile && (
+                      <HeaderProfile userName={userProfile[0].name} />
+                    )}
+                  </>
+                )}
               </li>
             </ul>
           </div>

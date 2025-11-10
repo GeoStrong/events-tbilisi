@@ -38,7 +38,7 @@ const MapLayout: React.FC<MapLayoutProps> = ({ mapKey }) => {
   return (
     <>
       <div className="flex w-full flex-col gap-2 rounded-md bg-white dark:bg-gray-800 md:mt-3 lg:flex-row">
-        <div className="absolute -top-24 left-0 w-full rounded-2xl md:static">
+        <div className="absolute -top-40 left-0 w-full rounded-2xl md:static">
           <MapWrapper API_KEY={mapKey} />
         </div>
         <div className="fixed bottom-14 left-0 flex w-full justify-center">

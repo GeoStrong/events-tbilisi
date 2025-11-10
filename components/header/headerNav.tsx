@@ -25,7 +25,7 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick }) => {
   return (
     <>
       {isXsm ? (
-        <MobileMenu />
+        <MobileMenu onAuthClick={onAuthClick} />
       ) : (
         <nav className="flex items-center gap-3">
           <ul className="flex items-center gap-6">
@@ -58,7 +58,7 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick }) => {
               {userProfile?.length === 0 ? (
                 <Button onClick={onAuthClick} variant="ghost" className="gap-2">
                   <User className="h-5 w-5" />
-                  <span className="hidden md:inline">Sign In</span>
+                  <span className="md:inline">Sign In</span>
                 </Button>
               ) : (
                 <>
