@@ -35,7 +35,7 @@ const AuthDialog: React.FC<AuthDialogProps> = ({ open, onOpenChange }) => {
 
   const handleSubmit = async (
     values: { fullName: string; email: string; password: string },
-    { setSubmitting }: any,
+    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
   ) => {
     setError("");
     try {
@@ -60,8 +60,9 @@ const AuthDialog: React.FC<AuthDialogProps> = ({ open, onOpenChange }) => {
       }
 
       onOpenChange(false); // close modal
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) setError(err.message);
+      else setError("Unexpected error");
     } finally {
       setSubmitting(false);
     }
