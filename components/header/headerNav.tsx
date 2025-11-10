@@ -9,7 +9,9 @@ import { Button } from "../ui/button";
 import { User } from "lucide-react";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import HeaderProfile from "./headerProfile";
-import Spinner from "../general/spinner";
+import HeaderProfileLoader from "./headerProfileLoader";
+import { TbMapPinFilled } from "react-icons/tb";
+import { BsFillCalendar2EventFill, BsPlusCircle } from "react-icons/bs";
 
 interface HeaderNavProps {
   onAuthClick: () => void;
@@ -28,26 +30,31 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick }) => {
         <nav className="flex items-center gap-3">
           <ul className="flex items-center gap-6">
             <li
-              className={`hover:text-primary ${pathname === "/" && "text-primary"}`}
+              className={`flex flex-col items-center gap-1 px-3 hover:text-primary ${pathname === "/" && "border-b-2 border-primary text-primary"}`}
             >
-              <Link href="/" className="">
+              <BsFillCalendar2EventFill className="" />
+              <Link href="/" className="text-sm">
                 Events
               </Link>
             </li>
             <li
-              className={`hover:text-primary ${pathname === "/map" && "text-primary"}`}
+              className={`flex flex-col items-center gap-1 px-3 hover:text-primary ${pathname === "/map" && "border-b-2 border-primary text-primary"}`}
             >
-              <Link href="/map">Map</Link>
+              <TbMapPinFilled className="text-xl" />
+              <Link href="/map" className="text-sm">
+                Map
+              </Link>
             </li>
             <li
-              className={`hover:text-primary ${pathname === "/create-event" && "text-primary"}`}
+              className={`flex flex-col items-center gap-1 px-3 hover:text-primary ${pathname === "/create-event" && "border-b-2 border-primary text-primary"}`}
             >
-              <Link href="/create-event" className="">
+              <BsPlusCircle className="" />
+              <Link href="/create-event" className="text-sm">
                 Create Event
               </Link>
             </li>
             <li className={`hover:text-primary`}>
-              {userProfile == null && <Spinner />}
+              {userProfile == null && <HeaderProfileLoader />}
               {userProfile?.length === 0 ? (
                 <Button onClick={onAuthClick} variant="ghost" className="gap-2">
                   <User className="h-5 w-5" />

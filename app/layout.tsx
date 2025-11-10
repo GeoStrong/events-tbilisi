@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { ThemeProvider } from "next-themes";
-import Header from "@/components/header/header";
-import Container from "@/components/container/container";
 import "./globals.css";
 import Footer from "@/components/footer/footer";
 import StoreProvider from "@/lib/store/storeProvider";
+import MainLayout from "@/components/general/mainLayout";
 
 const myFont = localFont({
   src: "../public/fonts/GT-Walsheim-Regular-Trial.woff2",
@@ -30,8 +29,7 @@ export default function RootLayout({
         <StoreProvider>
           <ThemeProvider attribute="class">
             <main className="flex min-h-screen flex-col">
-              <Header />
-              <Container>{children}</Container>
+              <MainLayout>{children}</MainLayout>
             </main>
             <Footer />
           </ThemeProvider>

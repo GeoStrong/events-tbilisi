@@ -30,7 +30,9 @@ const AuthDialog: React.FC<AuthDialogProps> = ({ open, onOpenChange }) => {
       ? Yup.string().notRequired()
       : Yup.string().min(2, "Too short!").required("Required"),
     email: Yup.string().email("Invalid email").required("Required"),
-    password: Yup.string().min(6, "At least 6 characters").required("Required"),
+    password: isSignin
+      ? Yup.string()
+      : Yup.string().min(6, "At least 6 characters").required("Required"),
   });
 
   const handleSubmit = async (

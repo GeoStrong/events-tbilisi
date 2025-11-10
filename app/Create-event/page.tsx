@@ -8,7 +8,7 @@ const Map: React.FC = () => {
 
   return (
     <>
-      <div className="flex w-full flex-col gap-2 rounded-md bg-white dark:bg-gray-800 lg:flex-row">
+      <div className="mt-3 flex w-full flex-col gap-2 rounded-md bg-white dark:bg-gray-800 lg:flex-row">
         <div className="absolute -top-24 left-0 w-full rounded-2xl md:static">
           <MapWrapper API_KEY={key} />
         </div>

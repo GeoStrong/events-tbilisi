@@ -82,7 +82,10 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
         <DrawerPortal>
           <DrawerContent
             headerChildren={
-              <Link href={`/${event.id}`} className="absolute right-5 top-4">
+              <Link
+                href={`/events/${event.id}`}
+                className="absolute right-5 top-4"
+              >
                 <MdOutlineOpenInNew className="linear-yellow duration-300 hover:text-primary" />
               </Link>
             }

@@ -75,7 +75,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
 
   return (
     <Card
-      className="cursor-pointer duration-300 hover:scale-105 dark:bg-slate-800"
+      className="cursor-pointer duration-300 hover:scale-105 dark:border-gray-600 dark:bg-slate-800"
       onClick={() => {
         if (setSearchParams)
           return setSearchParams("event", event.id.toString());
@@ -112,7 +112,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
         <p className="text-muted-foreground">{event.hostName}</p>
         {event.googleLocation && (
           <Link
-            href="/Map"
+            href="/map"
             onClick={(e) => {
               e.stopPropagation();
               if (event.googleLocation) {

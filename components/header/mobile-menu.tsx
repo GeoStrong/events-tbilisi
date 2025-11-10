@@ -25,7 +25,7 @@ const MobileMenu: React.FC = () => {
   const { isMobile } = useScreenSize();
 
   const menuColor =
-    location.pathname === "/Map" && isMobile
+    location.pathname === "/map" && isMobile
       ? "text-black"
       : "text-gray-900 dark:text-slate-200";
 

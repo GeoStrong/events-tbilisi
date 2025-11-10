@@ -20,32 +20,33 @@ const EventCategory: React.FC<{ category: Category }> = ({ category }) => {
 
   const activeCategory = searchParams.get("category");
 
+  const cateogryIsActive = activeCategory && activeCategory === category.id;
+
   const getActiveCategoryStyles = (category: string, categoryColor: string) => {
     if (activeCategory === category) {
-      return `border-${categoryColor} text-${categoryColor}`;
+      return `bg-${categoryColor} text-white`;
     }
   };
 
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="px-2">
       <button
-        className={`relative flex h-14 w-14 items-center justify-center rounded-full border-[3px] bg-gray-100 p-3 dark:bg-gray-800 ${getActiveCategoryStyles(category.id.toLocaleString(), category.color)}`}
+        className={`relative flex items-center justify-between gap-3 rounded-lg border px-3 py-1 dark:border-gray-600 ${getActiveCategoryStyles(category.id.toLocaleString(), category.color)}`}
         onClick={() => {
-          if (activeCategory && activeCategory === category.id)
-            return handleSearch("category", "");
+          if (cateogryIsActive) return handleSearch("category", "");
           return handleSearch("category", category.id.toLocaleString());
         }}
       >
         {eventQuantity > 0 && (
           <Badge
-            className={`bg-${category.color} absolute -right-2 -top-0 rounded-full px-[5px] py-0 text-[10px] font-medium`}
+            className={`${cateogryIsActive ? `bg-white text-${category.color} border-[1px] border-primary` : `bg-${category.color} text-white`} absolute -right-2 -top-0 rounded-full px-[5px] py-0 text-[10px] font-medium`}
           >
             {eventQuantity}
           </Badge>
         )}
         <DynamicIcon name={category.icon} />
+        <span className="text-sm">{category.name}</span>
       </button>
-      <span className="text-sm">{category.name}</span>
     </div>
   );
 };

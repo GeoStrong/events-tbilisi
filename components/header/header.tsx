@@ -14,13 +14,13 @@ const Header: React.FC = () => {
   const { isMobile } = useScreenSize();
 
   const headerBg =
-    (pathname === "/Map" || pathname === "/Create-event") && isMobile
+    (pathname === "/map" || pathname === "/create-event") && isMobile
       ? "bg-transparent"
       : "bg-white dark:bg-gray-900";
 
   return (
     <header
-      className={`sticky top-0 z-40 flex w-full items-center justify-between rounded-b-2xl ${headerBg} px-6 py-4`}
+      className={`sticky top-0 z-40 flex w-full items-center justify-between dark:border-gray-600 md:border-b md:px-20 ${headerBg} px-6 pt-2`}
     >
       <Link href="/" className="linear-yellow flex items-center gap-2">
         <IoMdMegaphone className="text-4xl text-primary" />

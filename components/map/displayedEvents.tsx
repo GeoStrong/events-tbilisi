@@ -16,7 +16,6 @@ import {
 import useScreenSize from "@/lib/hooks/useScreenSize";
 import EventCardsWrapper from "../events/eventCardsWrapper";
 import EventCategories from "../events/eventCategoriesCarousel";
-import EventCategoriesSheet from "../events/eventCategoriesSheet";
 import { categories } from "@/lib/data/categories";
 
 interface CreateEventProps {
@@ -50,11 +49,7 @@ const DisplayedEvents: React.FC<CreateEventProps> = ({
                 <DrawerDescription className="text-left text-base"></DrawerDescription>
               </DrawerHeader>
               <div className="flex flex-col gap-3 p-4">
-                {isMobile ? (
-                  <EventCategories categories={categories} />
-                ) : (
-                  <EventCategoriesSheet categories={categories} />
-                )}
+                {isMobile && <EventCategories categories={categories} />}
                 <EventCardsWrapper />
               </div>
               <DrawerFooter className="flex flex-col gap-2 md:flex-row-reverse">

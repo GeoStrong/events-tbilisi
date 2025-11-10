@@ -67,7 +67,7 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background -tracking-wider text-foreground md:tracking-normal;
+    @apply bg-gray-50 dark:bg-gray-800 -tracking-wider text-foreground md:tracking-normal;
   }
   .linear-light {
     background: linear-gradient(90deg, #3d16ec 0%, #fd247b 100%);

@@ -8,10 +8,10 @@ const Footer: React.FC = () => {
         <Link className="text-lg" href="/">
           Events
         </Link>
-        <Link className="text-lg" href="/Map">
+        <Link className="text-lg" href="/map">
           Map
         </Link>
-        <Link className="text-lg" href="/About">
+        <Link className="text-lg" href="/about">
           About Us
         </Link>
       </div>

@@ -13,15 +13,11 @@ interface CategoriesProps {
 const Categories: React.FC<CategoriesProps> = ({ categories }) => {
   return (
     <>
-      <h2 className="section-title">Discover Categories</h2>
-      <div className="mt-5">
+      <div className="mb-8 border-b bg-white px-2 py-4 dark:border-gray-600 dark:bg-gray-900 md:px-20">
         <Carousel opts={{ dragFree: true }}>
-          <CarouselContent className="pb-2">
+          <CarouselContent className="">
             {categories.map((category) => (
-              <CarouselItem
-                className="w-24 basis-1/4 sm:basis-1/4 md:w-28 md:basis-[10%] lg:basis-1/12"
-                key={category.id}
-              >
+              <CarouselItem className="basis-auto pl-2" key={category.id}>
                 <EventCategory category={category} />
               </CarouselItem>
             ))}

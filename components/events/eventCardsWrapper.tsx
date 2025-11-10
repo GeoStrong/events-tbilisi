@@ -36,7 +36,7 @@ const EventCards: React.FC = () => {
 
   useEffect(() => {
     setGridStyles(
-      pathname === "/Map"
+      pathname === "/map"
         ? "lg:grid-cols-1"
         : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
     );
@@ -74,10 +74,10 @@ const EventCards: React.FC = () => {
 
   return (
     <>
-      <h2 className="section-title mt-10">
+      <h1 className="section-title">
         {categoryId && category.length !== 0 ? category[0].name : "Recent"}{" "}
-        events
-      </h2>
+        events in Tbilisi
+      </h1>
       {events === null && (
         <div className="mt-5">
           <Spinner />
@@ -97,7 +97,7 @@ const EventCards: React.FC = () => {
               setSearchParams={handleSearch}
             />
           ))}
-          {activeEvent && pathname !== "/Map" && (
+          {activeEvent && pathname !== "/map" && (
             <EventDescription
               buttonRef={triggerRef}
               event={activeEvent}
