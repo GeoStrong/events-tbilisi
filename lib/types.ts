@@ -1,3 +1,10 @@
+export type UserProfile = {
+  id: string;
+  email: string;
+  name: string;
+  phone?: string;
+  additionalInfo?: string;
+};
 export type EventCategories =
   | "music"
   | "sport"

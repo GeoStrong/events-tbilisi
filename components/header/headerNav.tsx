@@ -5,9 +5,20 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import useScreenSize from "@/lib/hooks/useScreenSize";
 import MobileMenu from "./mobile-menu";
-const HeaderNav: React.FC = () => {
+import { Button } from "../ui/button";
+import { User } from "lucide-react";
+import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
+import HeaderProfile from "./headerProfile";
+import Spinner from "../general/spinner";
+
+interface HeaderNavProps {
+  onAuthClick: () => void;
+}
+
+const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick }) => {
   const pathname = usePathname();
   const { isXsm } = useScreenSize();
+  const { userProfile } = useGetUserProfile();
 
   return (
     <>
@@ -15,7 +26,7 @@ const HeaderNav: React.FC = () => {
         <MobileMenu />
       ) : (
         <nav className="flex items-center gap-3">
-          <ul className="flex gap-6">
+          <ul className="flex items-center gap-6">
             <li
               className={`hover:text-primary ${pathname === "/" && "text-primary"}`}
             >
@@ -24,21 +35,31 @@ const HeaderNav: React.FC = () => {
               </Link>
             </li>
             <li
-              className={`hover:text-primary ${pathname === "/Map" && "text-primary"}`}
+              className={`hover:text-primary ${pathname === "/map" && "text-primary"}`}
             >
-              <Link href="/Map">Map</Link>
+              <Link href="/map">Map</Link>
             </li>
             <li
-              className={`hover:text-primary ${pathname === "/Create-event" && "text-primary"}`}
+              className={`hover:text-primary ${pathname === "/create-event" && "text-primary"}`}
             >
-              <Link href="/Create-event" className="">
+              <Link href="/create-event" className="">
                 Create Event
               </Link>
             </li>
-            <li
-              className={`hover:text-primary ${pathname === "/About" && "text-primary"}`}
-            >
-              <Link href="/About">About Us</Link>
+            <li className={`hover:text-primary`}>
+              {userProfile == null && <Spinner />}
+              {userProfile?.length === 0 ? (
+                <Button onClick={onAuthClick} variant="ghost" className="gap-2">
+                  <User className="h-5 w-5" />
+                  <span className="hidden md:inline">Sign In</span>
+                </Button>
+              ) : (
+                <>
+                  {userProfile && (
+                    <HeaderProfile userName={userProfile[0].name} />
+                  )}
+                </>
+              )}
             </li>
           </ul>
         </nav>

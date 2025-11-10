@@ -1,13 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { IoMdMegaphone } from "react-icons/io";
 import HeaderNav from "./headerNav";
 import { useLocation } from "react-use";
 import useScreenSize from "@/lib/hooks/useScreenSize";
+import AuthDialog from "../auth/authForm";
 
 const Header: React.FC = () => {
+  const [authDialogOpen, setAuthDialogOpen] = useState<boolean>(false);
   const { pathname } = useLocation();
   const { isMobile } = useScreenSize();
 
@@ -24,7 +26,10 @@ const Header: React.FC = () => {
         <IoMdMegaphone className="text-4xl text-primary" />
         <span className="hidden md:inline">Events-Tbilisi</span>
       </Link>
-      <HeaderNav />
+      <HeaderNav onAuthClick={() => setAuthDialogOpen(true)} />
+      {authDialogOpen && (
+        <AuthDialog open={authDialogOpen} onOpenChange={setAuthDialogOpen} />
+      )}
     </header>
   );
 };

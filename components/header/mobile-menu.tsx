@@ -55,7 +55,7 @@ const MobileMenu: React.FC = () => {
               <li className="w-full">
                 <Link
                   className="flex items-center justify-between rounded-lg border border-slate-300 px-4 py-2 text-lg dark:border-gray-600"
-                  href="/Map"
+                  href="/map"
                 >
                   Map of Events
                   <BsFillMapFill className="text-green-800" />
@@ -64,7 +64,7 @@ const MobileMenu: React.FC = () => {
               <li className="w-full">
                 <Link
                   className="flex items-center justify-between rounded-lg border border-slate-300 px-4 py-2 text-lg dark:border-gray-600"
-                  href="/Create-event"
+                  href="/create-event"
                 >
                   Create Event
                   <BsPlusCircle className="text-amber-600" />
@@ -73,7 +73,7 @@ const MobileMenu: React.FC = () => {
               <li className="w-full">
                 <Link
                   className="flex items-center justify-between rounded-lg border border-slate-300 px-4 py-2 text-lg dark:border-gray-600"
-                  href="/About"
+                  href="/about"
                 >
                   About Us
                   <ImUsers />
