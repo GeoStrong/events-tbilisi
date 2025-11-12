@@ -6,8 +6,6 @@ import FooterMobileNav from "./footerMobileNav";
 const Footer: React.FC = () => {
   return (
     <>
-      {/* <footer className="fixed bottom-0 w-full bg-white py-3 md:hidden"> */}
-
       <footer className="border-t bg-white py-3 dark:border-gray-600 dark:bg-gray-900 md:px-6">
         <div className="hidden w-full md:block">
           <div className="flex flex-col items-center justify-around md:items-start">
