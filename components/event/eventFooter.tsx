@@ -6,12 +6,12 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
+  // CarouselNext,
+  // CarouselPrevious,
 } from "@/components/ui/carousel";
 import EventCard from "../events/eventCard";
 import Link from "next/link";
-import useScreenSize from "@/lib/hooks/useScreenSize";
+// import useScreenSize from "@/lib/hooks/useScreenSize";
 import { getEventsByCategoryId } from "@/lib/functions/supabaseFunctions";
 
 const EventFooter: React.FC<{
@@ -20,7 +20,7 @@ const EventFooter: React.FC<{
 }> = ({ categories, eventId }) => {
   const [firstEvents, setFirstEvents] = useState<EventEntity[]>([]);
   const [secondEvents, setSecondEvents] = useState<EventEntity[]>([]);
-  const { isMobile } = useScreenSize();
+  // const { isMobile } = useScreenSize();
   const firstCategory = categories[0].id;
   const secondCategory = categories[1].id;
 
@@ -48,19 +48,19 @@ const EventFooter: React.FC<{
               if (event.id === +eventId) return null;
               return (
                 <CarouselItem key={event.id} className="md:basis-1/3">
-                  <Link href={`/${event.id}`}>
+                  <Link href={`/events/${event.id}`}>
                     <EventCard event={event} />
                   </Link>
                 </CarouselItem>
               );
             })}
           </CarouselContent>
-          {(isMobile || firstEvents.length > 3) && (
+          {/* {(isMobile || firstEvents.length > 3) && (
             <>
               <CarouselPrevious />
               <CarouselNext />
             </>
-          )}
+          )} */}
         </Carousel>
       </div>
       {secondCategory && (
@@ -74,19 +74,19 @@ const EventFooter: React.FC<{
                 if (event.id === +eventId) return null;
                 return (
                   <CarouselItem key={event.id} className="md:basis-1/3">
-                    <Link href={`/${event.id}`}>
+                    <Link href={`/events/${event.id}`}>
                       <EventCard event={event} />
                     </Link>
                   </CarouselItem>
                 );
               })}
             </CarouselContent>
-            {(isMobile || secondEvents.length > 3) && (
+            {/* {(isMobile || secondEvents.length > 3) && (
               <>
                 <CarouselPrevious />
                 <CarouselNext />
               </>
-            )}
+            )} */}
           </Carousel>
         </div>
       )}

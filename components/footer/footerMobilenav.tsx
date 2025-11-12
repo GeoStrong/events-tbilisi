@@ -21,10 +21,10 @@ const FooterMobileNav: React.FC = () => {
             />
           </Link>
         </li>
-        <li className="">
+        <li className="-translate-y-1">
           <Link href="/create-event">
             <AiOutlinePlusCircle
-              className={`text-3xl ${pathname === "/create-event" && "text-primary"}`}
+              className={`text-4xl ${pathname === "/create-event" && "text-primary"}`}
             />
           </Link>
         </li>

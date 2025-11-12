@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { BsFacebook, BsGithub, BsInstagram, BsLinkedin } from "react-icons/bs";
-import FooterMobileNav from "./footerMobilenav";
+import FooterMobileNav from "./footerMobileNav";
 
 const Footer: React.FC = () => {
   return (

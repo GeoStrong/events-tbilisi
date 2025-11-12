@@ -10,7 +10,6 @@ import AuthDialog from "../auth/authForm";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import HeaderProfileLoader from "./headerProfileLoader";
 import { Button } from "../ui/button";
-import { User } from "lucide-react";
 import ProfileAvatar from "../general/profileAvatar";
 
 const Header: React.FC = () => {
@@ -38,7 +37,7 @@ const Header: React.FC = () => {
       <div className="md:hidden">
         {userProfile == null && <HeaderProfileLoader />}
         {userProfile?.length === 0 ? (
-          <Button onClick={openAuthDialog} variant="ghost" className="gap-2">
+          <Button onClick={openAuthDialog} variant="outline" className="gap-2">
             Sign in
           </Button>
         ) : (
