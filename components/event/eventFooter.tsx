@@ -42,7 +42,7 @@ const EventFooter: React.FC<{
     <footer className="py-4">
       <div className="flex flex-col gap-3">
         <h3 className="font-bold">More Events like this</h3>
-        <Carousel>
+        <Carousel opts={{ dragFree: true }}>
           <CarouselContent>
             {firstEvents.map((event) => {
               if (event.id === +eventId) return null;

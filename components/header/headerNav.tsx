@@ -2,56 +2,79 @@
 
 import React from "react";
 import Link from "next/link";
+import { LayoutGroup, motion } from "motion/react";
 import { usePathname } from "next/navigation";
-import useScreenSize from "@/lib/hooks/useScreenSize";
-import MobileMenu from "./mobile-menu";
 import { Button } from "../ui/button";
 import { User } from "lucide-react";
-import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import HeaderProfile from "./headerProfile";
 import HeaderProfileLoader from "./headerProfileLoader";
-import { TbMapPinFilled } from "react-icons/tb";
-import { BsFillCalendar2EventFill, BsPlusCircle } from "react-icons/bs";
+import { AiOutlineHome, AiOutlinePlusCircle } from "react-icons/ai";
+import { FiMapPin } from "react-icons/fi";
+import { UserProfile } from "@/lib/types";
 
 interface HeaderNavProps {
   onAuthClick: () => void;
+  userProfile: UserProfile[] | null;
 }
 
-const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick }) => {
+const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick, userProfile }) => {
   const pathname = usePathname();
-  const { isXsm } = useScreenSize();
-  const { userProfile } = useGetUserProfile();
 
   return (
     <>
-      {isXsm ? (
-        <MobileMenu onAuthClick={onAuthClick} />
-      ) : (
-        <nav className="flex items-center gap-3">
+      <nav className="hidden items-center gap-3 md:flex">
+        <LayoutGroup>
           <ul className="flex items-center gap-6">
             <li
-              className={`flex flex-col items-center gap-1 px-3 hover:text-primary ${pathname === "/" && "border-b-2 border-primary text-primary"}`}
+              className={`relative hover:text-primary ${pathname === "/" && "border-primary text-primary"}`}
             >
-              <BsFillCalendar2EventFill className="" />
-              <Link href="/" className="text-sm">
+              <Link
+                href="/"
+                className="mb-1 flex flex-col items-center gap-1 px-3 text-sm"
+              >
+                <AiOutlineHome className="text-base" />
                 Events
               </Link>
+              {pathname === "/" && (
+                <motion.div
+                  layoutId="underline"
+                  className="absolute bottom-0 h-[2px] w-full bg-primary"
+                />
+              )}
             </li>
             <li
-              className={`flex flex-col items-center gap-1 px-3 hover:text-primary ${pathname === "/map" && "border-b-2 border-primary text-primary"}`}
+              className={`relative flex flex-col items-center gap-1 px-3 hover:text-primary ${pathname === "/map" && "border-primary text-primary"}`}
             >
-              <TbMapPinFilled className="text-xl" />
-              <Link href="/map" className="text-sm">
+              <Link
+                href="/map"
+                className="mb-1 flex flex-col items-center gap-1 px-3 text-sm"
+              >
+                <FiMapPin className="text-base" />
                 Map
               </Link>
+              {pathname === "/map" && (
+                <motion.div
+                  layoutId="underline"
+                  className="absolute bottom-0 h-[2px] w-full bg-primary"
+                />
+              )}
             </li>
             <li
-              className={`flex flex-col items-center gap-1 px-3 hover:text-primary ${pathname === "/create-event" && "border-b-2 border-primary text-primary"}`}
+              className={`relative flex flex-col items-center gap-1 px-3 hover:text-primary ${pathname === "/create-event" && "border-primary text-primary"}`}
             >
-              <BsPlusCircle className="" />
-              <Link href="/create-event" className="text-sm">
+              <Link
+                href="/create-event"
+                className="mb-1 flex flex-col items-center gap-1 px-3 text-sm"
+              >
+                <AiOutlinePlusCircle className="text-base" />
                 Create Event
               </Link>
+              {pathname === "/create-event" && (
+                <motion.div
+                  layoutId="underline"
+                  className="absolute bottom-0 h-[2px] w-full bg-primary"
+                />
+              )}
             </li>
             <li className={`hover:text-primary`}>
               {userProfile == null && <HeaderProfileLoader />}
@@ -69,8 +92,8 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick }) => {
               )}
             </li>
           </ul>
-        </nav>
-      )}
+        </LayoutGroup>
+      </nav>
     </>
   );
 };

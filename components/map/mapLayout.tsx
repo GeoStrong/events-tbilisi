@@ -41,7 +41,7 @@ const MapLayout: React.FC<MapLayoutProps> = ({ mapKey }) => {
         <div className="absolute -top-40 left-0 w-full rounded-2xl md:static">
           <MapWrapper API_KEY={mapKey} />
         </div>
-        <div className="fixed bottom-14 left-0 flex w-full justify-center">
+        <div className="fixed bottom-16 left-0 flex w-full justify-center">
           <DisplayEventsBtnWrapper />
         </div>
       </div>

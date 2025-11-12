@@ -43,7 +43,7 @@ const EventHeader: React.FC<{
             </Share>
           </div>
         </div>
-        <div className="fixed bottom-14 left-0 flex w-full justify-center md:static md:bottom-0 md:justify-end">
+        <div className="fixed bottom-16 left-0 flex w-full justify-center md:static md:bottom-0 md:justify-end">
           <EventParticipation isBtnLarge />
         </div>
       </header>

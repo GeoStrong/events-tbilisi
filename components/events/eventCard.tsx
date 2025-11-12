@@ -75,7 +75,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
 
   return (
     <Card
-      className="cursor-pointer duration-300 hover:scale-105 dark:border-gray-600 dark:bg-slate-800"
+      className="cursor-pointer duration-300 dark:border-gray-600 dark:bg-slate-800"
       onClick={() => {
         if (setSearchParams)
           return setSearchParams("event", event.id.toString());
@@ -83,13 +83,13 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
       key={event.id}
     >
       <CardHeader className="p-0">
-        <div className="relative h-48 w-full rounded-t-xl bg-white">
+        <div className="group relative h-48 w-full overflow-hidden rounded-t-xl bg-white">
           <Image
             src={eventImage || defaultEventImg.src}
             width={100}
             height={100}
             alt="event"
-            className={`h-full w-full rounded-t-xl ${!eventImage ? "object-contain" : "object-cover"}`}
+            className={`h-full w-full transform rounded-t-xl transition-transform duration-300 group-hover:scale-105 ${!eventImage ? "object-contain" : "object-cover"}`}
             unoptimized
           />
         </div>

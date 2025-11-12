@@ -28,7 +28,7 @@ export default function RootLayout({
       <body className={`${myFont.variable} antialiased`}>
         <StoreProvider>
           <ThemeProvider attribute="class">
-            <main className="flex min-h-screen flex-col">
+            <main className="flex min-h-[90vh] flex-col">
               <MainLayout>{children}</MainLayout>
             </main>
             <Footer />

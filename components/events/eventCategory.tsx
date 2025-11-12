@@ -39,7 +39,7 @@ const EventCategory: React.FC<{ category: Category }> = ({ category }) => {
       >
         {eventQuantity > 0 && (
           <Badge
-            className={`${cateogryIsActive ? `bg-white text-${category.color} border-[1px] border-primary` : `bg-${category.color} text-white`} absolute -right-2 -top-0 rounded-full px-[5px] py-0 text-[10px] font-medium`}
+            className={`${cateogryIsActive ? `border-[1px] border-${category.color}/80 bg-white text-${category.color}` : `bg-${category.color} text-white`} hover:bg-${category.color} absolute -right-3 -top-0 flex w-1 items-center justify-center rounded-full text-[10px] font-medium`}
           >
             {eventQuantity}
           </Badge>

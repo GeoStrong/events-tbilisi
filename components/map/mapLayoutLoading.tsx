@@ -4,7 +4,7 @@ const MapLoadingLayout: React.FC = () => {
   return (
     <>
       <Skeleton
-        className="w-full"
+        className="w-full dark:!bg-gray-600"
         height={700}
         variant="rectangular"
       ></Skeleton>
