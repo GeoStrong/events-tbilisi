@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { BsFacebook, BsGithub, BsInstagram, BsLinkedin } from "react-icons/bs";
+import FooterNavMobile from "./footerNavMobile";
 
 const Footer: React.FC = () => {
   return (
@@ -48,7 +49,9 @@ const Footer: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="fixed bottom-0 md:hidden"></div>
+        <div className="fixed bottom-0 md:hidden">
+          <FooterNavMobile />
+        </div>
       </footer>
     </>
   );
