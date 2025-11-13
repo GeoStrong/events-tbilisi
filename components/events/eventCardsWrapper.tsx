@@ -74,10 +74,10 @@ const EventCards: React.FC = () => {
 
   return (
     <>
-      <h1 className="section-title mt-3 md:mt-1">
+      <h2 className="section-title mt-3 md:mt-1">
         {categoryId && category.length !== 0 ? category[0].name : "Recent"}{" "}
         events in Tbilisi
-      </h1>
+      </h2>
       {events === null && (
         <div className="mt-5">
           <Spinner />

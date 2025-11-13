@@ -6,16 +6,19 @@ import Container from "@/components/container/container";
 import EventCategoriesCarousel from "@/components/events/eventCategoriesCarousel";
 import { categories } from "@/lib/data/categories";
 import { useLocation } from "react-use";
+import SearchSection from "./searchSection";
 
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { pathname } = useLocation();
 
   const displayCategories = pathname === "/" || pathname === "/map";
+  const displaySearchSection = pathname === "/";
 
   return (
     <>
       <Header />
       {displayCategories && <EventCategoriesCarousel categories={categories} />}
+      {displaySearchSection && <SearchSection />}
       <Container>{children}</Container>
     </>
   );

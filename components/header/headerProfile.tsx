@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "@/lib/auth/auth";
 import ProfileAvatar from "../general/profileAvatar";
+import Link from "next/link";
 
 const HeaderProfile: React.FC<{ userName: string | undefined }> = ({
   userName,
@@ -22,7 +23,9 @@ const HeaderProfile: React.FC<{ userName: string | undefined }> = ({
         <DropdownMenuContent align="center">
           <DropdownMenuLabel>{userName}</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Profile</DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href="/profile">Profile</Link>
+          </DropdownMenuItem>
           <DropdownMenuItem>Settings</DropdownMenuItem>
           <DropdownMenuSeparator />
 

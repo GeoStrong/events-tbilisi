@@ -41,7 +41,11 @@ const Header: React.FC = () => {
             Sign in
           </Button>
         ) : (
-          userProfile && <ProfileAvatar />
+          userProfile && (
+            <Link href="/profile">
+              <ProfileAvatar />
+            </Link>
+          )
         )}
       </div>
 

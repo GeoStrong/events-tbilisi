@@ -82,7 +82,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
       }}
       key={event.id}
     >
-      <CardHeader className="p-0">
+      <CardHeader className="relative p-0">
         <div className="group relative h-48 w-full overflow-hidden rounded-t-xl bg-white">
           <Image
             src={eventImage || defaultEventImg.src}
@@ -93,19 +93,19 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
             unoptimized
           />
         </div>
-        <div className="!my-2 h-4 w-full px-2 text-right">
+        <div className="absolute top-0 h-4 w-full px-2 text-right">
           <div className="flex justify-end gap-2">
             {categories.map((category) => (
               <span
                 key={category.id}
-                className={`rounded-full bg-${category.color} px-2 text-xs text-white`}
+                className={`rounded-full bg-${category.color} px-3 py-1 text-base text-white`}
               >
                 {category.name}
               </span>
             ))}
           </div>
         </div>
-        <CardTitle className="px-6">{event.title}</CardTitle>
+        <CardTitle className="px-6 text-lg">{event.title}</CardTitle>
         <CardDescription></CardDescription>
       </CardHeader>
       <CardContent className="flex items-center justify-between">
