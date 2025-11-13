@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useState } from "react";
+import React, { useState } from "react";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import { ArrowLeft } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
@@ -19,49 +19,44 @@ const ProfileLayout: React.FC = () => {
 
   return (
     <>
-      {" "}
-      <div className="min-h-screen w-full dark:bg-gray-900">
-        <div className="w-full px-5 py-8">
-          <Link href="/" className="mb-6 flex items-center gap-3">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Events
-          </Link>
+      {user ? (
+        <div className="min-h-screen w-full dark:bg-gray-900">
+          <div className="w-full px-5 py-8">
+            <Link href="/" className="mb-6 flex items-center gap-3">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Events
+            </Link>
 
-          <div className="grid gap-6">
-            <ProfileHeader
-              user={user}
-              edit={editing}
-              onEditHandle={setEditing}
-            />
-            <Tabs defaultValue="about" className="w-full">
-              <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="about">About</TabsTrigger>
-                <TabsTrigger value="saved">Saved</TabsTrigger>
-                <TabsTrigger value="preferences">Preferences</TabsTrigger>
-                <TabsTrigger value="account">Account</TabsTrigger>
-              </TabsList>
+            <div className="grid gap-6">
+              <ProfileHeader
+                user={user}
+                edit={editing}
+                onEditHandle={setEditing}
+              />
+              <Tabs defaultValue="about" className="w-full">
+                <TabsList className="grid w-full grid-cols-4">
+                  <TabsTrigger value="about">About</TabsTrigger>
+                  <TabsTrigger value="saved">Saved</TabsTrigger>
+                  <TabsTrigger value="preferences">Preferences</TabsTrigger>
+                  <TabsTrigger value="account">Account</TabsTrigger>
+                </TabsList>
 
-              <ProfileAboutTab user={user} edit={editing} />
+                <ProfileAboutTab user={user} edit={editing} />
 
-              <ProfileSavedTab />
+                <ProfileSavedTab />
 
-              <ProfilePreferencesTab />
+                <ProfilePreferencesTab />
 
-              <ProfileAccountTab user={user} />
-            </Tabs>
+                <ProfileAccountTab user={user} />
+              </Tabs>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <ProfileLayoutLoading />
+      )}
     </>
   );
 };
 
-const ProfileLayoutWrapper: React.FC = () => {
-  return (
-    <Suspense fallback={<ProfileLayoutLoading />}>
-      <ProfileLayout />
-    </Suspense>
-  );
-};
-
-export default ProfileLayoutWrapper;
+export default ProfileLayout;

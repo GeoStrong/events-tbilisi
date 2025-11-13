@@ -4,10 +4,9 @@ import { Calendar, Camera } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarImage } from "../ui/avatar";
 import { UserProfile } from "@/lib/types";
 import defaultUserImg from "@/public/images/default-user.png";
-import { Badge } from "../ui/badge";
 import { handleUploadUserAvatar } from "@/lib/profile/profile";
 
 interface ProfileHeaderProps {
@@ -86,9 +85,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                     alt={user?.name}
                     className="object-cover"
                   />
-                  <AvatarFallback>
-                    {user?.name?.charAt(0).toUpperCase()}
-                  </AvatarFallback>
                 </Avatar>
                 {edit && (
                   <Button
@@ -102,7 +98,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                   </Button>
                 )}
               </div>
-              {!user && <Badge variant="outline">Guest Profile</Badge>}
             </div>
 
             <div className="flex-1 space-y-4">
@@ -143,4 +138,5 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     </>
   );
 };
+
 export default ProfileHeader;
