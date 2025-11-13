@@ -20,7 +20,7 @@ const HeaderProfile: React.FC<{ userName: string | undefined }> = ({
         <DropdownMenuTrigger>
           <ProfileAvatar />
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="center">
+        <DropdownMenuContent align="center" className="dark:bg-gray-900">
           <DropdownMenuLabel>{userName}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>

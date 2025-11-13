@@ -3,6 +3,8 @@ export type UserProfile = {
   email: string;
   name: string;
   phone?: string;
+  avatar_path?: string;
+  created_at: Date;
   additionalInfo?: string;
 };
 export type EventCategories =
