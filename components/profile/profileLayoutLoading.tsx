@@ -1,0 +1,39 @@
+import { Skeleton } from "@mui/material";
+import React from "react";
+
+const ProfileLayoutLoading: React.FC = () => {
+  return (
+    <>
+      <div className="w-full">
+        <Skeleton className="dark:!bg-gray-600" variant="text" width={250} />
+        <div className="mt-5 flex gap-3 md:gap-8">
+          <Skeleton
+            width={50}
+            height={50}
+            className="dark:!bg-gray-600"
+            variant="circular"
+          />
+          <Skeleton
+            width={50}
+            height={50}
+            className="dark:!bg-gray-600"
+            variant="circular"
+          />
+          <Skeleton
+            width={50}
+            height={50}
+            className="dark:!bg-gray-600"
+            variant="circular"
+          />
+          <Skeleton
+            width={50}
+            height={50}
+            className="dark:!bg-gray-600"
+            variant="circular"
+          />
+        </div>
+      </div>
+    </>
+  );
+};
+export default ProfileLayoutLoading;

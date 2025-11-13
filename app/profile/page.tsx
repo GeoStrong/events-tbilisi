@@ -1,10 +1,10 @@
-import ProfileLayout from "@/components/profile/profileLayout";
 import React from "react";
+import ProfileLayoutWrapper from "@/components/profile/profileLayout";
 
-const Profile: React.FC = () => {
+const Profile: React.FC = async () => {
   return (
     <div className="mt-4">
-      <ProfileLayout />
+      <ProfileLayoutWrapper />
     </div>
   );
 };

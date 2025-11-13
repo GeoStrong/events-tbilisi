@@ -45,8 +45,6 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
     })();
   }, [event.image]);
 
-  console.log(event.time);
-
   return (
     <div className="mb-10 mt-5 grid grid-cols-1 grid-rows-3 gap-5 lg:grid-cols-4">
       <div className="col-span-3 row-span-3 flex flex-col gap-5 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 md:px-6">

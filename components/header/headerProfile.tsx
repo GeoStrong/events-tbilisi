@@ -10,18 +10,17 @@ import {
 import { signOut } from "@/lib/auth/auth";
 import ProfileAvatar from "../general/profileAvatar";
 import Link from "next/link";
+import { UserProfile } from "@/lib/types";
 
-const HeaderProfile: React.FC<{ userName: string | undefined }> = ({
-  userName,
-}) => {
+const HeaderProfile: React.FC<{ user: UserProfile | null }> = ({ user }) => {
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <ProfileAvatar />
+          <ProfileAvatar image={user?.avatar_path} />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="center" className="dark:bg-gray-900">
-          <DropdownMenuLabel>{userName}</DropdownMenuLabel>
+          <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
             <Link href="/profile">Profile</Link>

@@ -1,5 +1,6 @@
 import { Skeleton } from "@mui/material";
 import React from "react";
+
 const EventCategoriesCarouselLoading: React.FC = () => {
   return (
     <div className="w-full">
@@ -9,25 +10,25 @@ const EventCategoriesCarouselLoading: React.FC = () => {
           width={50}
           height={50}
           className="dark:!bg-gray-600"
-          variant="circular"
+          variant="rectangular"
         />
         <Skeleton
           width={50}
           height={50}
           className="dark:!bg-gray-600"
-          variant="circular"
+          variant="rectangular"
         />
         <Skeleton
           width={50}
           height={50}
           className="dark:!bg-gray-600"
-          variant="circular"
+          variant="rectangular"
         />
         <Skeleton
           width={50}
           height={50}
           className="dark:!bg-gray-600"
-          variant="circular"
+          variant="rectangular"
         />
       </div>
     </div>

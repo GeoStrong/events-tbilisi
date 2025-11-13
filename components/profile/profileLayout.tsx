@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import { ArrowLeft } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
@@ -10,6 +10,7 @@ import ProfileAboutTab from "./profileAboutTab";
 import ProfileSavedTab from "./profileSavedTab";
 import ProfilePreferencesTab from "./profilePreferencesTab";
 import ProfileAccountTab from "./profileAccountTab";
+import ProfileLayoutLoading from "./profileLayoutLoading";
 
 const ProfileLayout: React.FC = () => {
   const [editing, setEditing] = useState(false);
@@ -54,4 +55,13 @@ const ProfileLayout: React.FC = () => {
     </>
   );
 };
-export default ProfileLayout;
+
+const ProfileLayoutWrapper: React.FC = () => {
+  return (
+    <Suspense fallback={<ProfileLayoutLoading />}>
+      <ProfileLayout />
+    </Suspense>
+  );
+};
+
+export default ProfileLayoutWrapper;

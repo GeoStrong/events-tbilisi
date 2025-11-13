@@ -84,11 +84,7 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick, userProfile }) => {
                   <span className="md:inline">Sign In</span>
                 </Button>
               ) : (
-                <>
-                  {userProfile && (
-                    <HeaderProfile userName={userProfile[0].name} />
-                  )}
-                </>
+                <>{userProfile && <HeaderProfile user={userProfile[0]} />}</>
               )}
             </li>
           </ul>

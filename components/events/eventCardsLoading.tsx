@@ -1,8 +1,41 @@
 import { Skeleton } from "@mui/material";
 import React from "react";
+
 const EventCardsLoading: React.FC = () => {
   return (
-    <div className="mt-10 w-full">
+    <div className="mt-3 w-full">
+      <div className="">
+        <Skeleton className="dark:!bg-gray-600" variant="text" width={250} />
+        <div className="mt-5 flex gap-3 md:gap-8">
+          <Skeleton
+            width={100}
+            height={30}
+            className="dark:!bg-gray-600"
+            variant="rounded"
+          />
+          <Skeleton
+            width={100}
+            height={30}
+            className="dark:!bg-gray-600"
+            variant="rounded"
+          />
+          <Skeleton
+            width={100}
+            height={30}
+            className="dark:!bg-gray-600"
+            variant="rounded"
+          />
+          <Skeleton
+            width={100}
+            height={30}
+            className="dark:!bg-gray-600"
+            variant="rounded"
+          />
+        </div>
+      </div>
+      <div className="my-4">
+        <Skeleton variant="rectangular" width="100%" height={400} />
+      </div>
       <Skeleton
         className="dark:!bg-gray-600"
         variant="text"

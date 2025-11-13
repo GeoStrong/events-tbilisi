@@ -43,7 +43,7 @@ const Header: React.FC = () => {
         ) : (
           userProfile && (
             <Link href="/profile">
-              <ProfileAvatar />
+              <ProfileAvatar image={userProfile[0].avatar_path} />
             </Link>
           )
         )}

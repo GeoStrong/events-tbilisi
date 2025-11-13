@@ -11,13 +11,13 @@ const ProfileAvatar: React.FC<{ image?: string }> = ({ image }) => {
   const { pathname } = useLocation();
 
   const activeProfile = pathname === "/profile";
+
   return (
     <>
-      {" "}
       <Avatar>
         {image ? (
           <AvatarImage
-            className="h-10 w-10 rounded-full"
+            className={`h-10 w-10 rounded-full border-2 border-gray-300 ${activeProfile && "border-primary"}`}
             src={image}
             alt="profile"
           />

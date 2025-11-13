@@ -138,8 +138,6 @@ import { getEvents } from "../functions/supabaseFunctions";
 //   },
 // ];
 
-// console.log(events2)
-
 const events = (await getEvents()) as EventEntity[];
 
 export default events;
