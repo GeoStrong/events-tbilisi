@@ -45,13 +45,15 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                     {user?.name.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <Button
-                  size="icon"
-                  variant="secondary"
-                  className="absolute bottom-0 right-0 h-10 w-10 rounded-full"
-                >
-                  <Camera className="h-4 w-4" />
-                </Button>
+                {edit && (
+                  <Button
+                    size="icon"
+                    variant="secondary"
+                    className="absolute bottom-0 right-0 h-10 w-10 rounded-full"
+                  >
+                    <Camera className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
               {!user && <Badge variant="outline">Guest Profile</Badge>}
             </div>
