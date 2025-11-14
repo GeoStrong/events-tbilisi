@@ -13,7 +13,6 @@ import { Button } from "../ui/button";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { Label } from "../ui/label";
 import { signIn, signUp } from "@/lib/auth/auth";
-import { supabase } from "@/lib/supabase/supabaseClient";
 import { useState } from "react";
 
 interface AuthDialogProps {
@@ -45,23 +44,10 @@ const AuthDialog: React.FC<AuthDialogProps> = ({ open, onOpenChange }) => {
         await signIn(values.email, values.password);
         window.location.reload();
       } else {
-        // 1️⃣ sign up user
-        const { user } = await signUp(values.email, values.password);
-
-        // 2️⃣ insert into your public.users table
-        if (user) {
-          await supabase.from("users").upsert([
-            {
-              id: user.id,
-              name: values.fullName,
-              email: values.email,
-              created_at: new Date(),
-            },
-          ]);
-        }
+        await signUp(values.email, values.password, values.fullName);
       }
 
-      onOpenChange(false); // close modal
+      onOpenChange(false);
     } catch (err: unknown) {
       if (err instanceof Error) setError(err.message);
       else setError("Unexpected error");

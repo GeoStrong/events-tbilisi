@@ -52,6 +52,17 @@ const ProfileAboutTab: React.FC<ProfileAboutTabProps> = ({ user, edit }) => {
             )}
 
             <div className="space-y-2">
+              <Label htmlFor="profile-website">Phone</Label>
+              <Input
+                id="profile-website"
+                disabled={!edit}
+                placeholder="+123456789"
+                className="dark:border-gray-500"
+                type="tel"
+              />
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="profile-bio">Bio</Label>
               <Textarea
                 id="profile-bio"
@@ -59,26 +70,6 @@ const ProfileAboutTab: React.FC<ProfileAboutTabProps> = ({ user, edit }) => {
                 disabled={!edit}
                 className="dark:border-gray-500"
                 rows={4}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="profile-location">Location</Label>
-              <Input
-                id="profile-location"
-                disabled={!edit}
-                placeholder="City, State"
-                className="dark:border-gray-500"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="profile-website">Website</Label>
-              <Input
-                id="profile-website"
-                disabled={!edit}
-                placeholder="https://yourwebsite.com"
-                className="dark:border-gray-500"
               />
             </div>
           </CardContent>

@@ -22,9 +22,9 @@ const HeaderProfile: React.FC<{ user: UserProfile | null }> = ({ user }) => {
         <DropdownMenuContent align="center" className="dark:bg-gray-900">
           <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <Link href="/profile">Profile</Link>
-          </DropdownMenuItem>
+          <Link href="/profile" className="cursor-pointer">
+            <DropdownMenuItem>Profile</DropdownMenuItem>
+          </Link>
           <DropdownMenuItem>Settings</DropdownMenuItem>
           <DropdownMenuSeparator />
 

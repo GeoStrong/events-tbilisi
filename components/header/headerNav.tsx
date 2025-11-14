@@ -43,7 +43,7 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick, userProfile }) => {
               )}
             </li>
             <li
-              className={`relative flex flex-col items-center gap-1 px-3 hover:text-primary ${pathname === "/map" && "border-primary text-primary"}`}
+              className={`relative flex flex-col items-center gap-1 hover:text-primary ${pathname === "/map" && "border-primary text-primary"}`}
             >
               <Link
                 href="/map"
@@ -60,7 +60,7 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick, userProfile }) => {
               )}
             </li>
             <li
-              className={`relative flex flex-col items-center gap-1 px-3 hover:text-primary ${pathname === "/create-event" && "border-primary text-primary"}`}
+              className={`relative flex flex-col items-center gap-1 hover:text-primary ${pathname === "/create-event" && "border-primary text-primary"}`}
             >
               <Link
                 href="/create-event"
@@ -77,8 +77,9 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick, userProfile }) => {
               )}
             </li>
             <li className={`hover:text-primary`}>
-              {userProfile == null && <HeaderProfileLoader />}
-              {userProfile?.length === 0 ? (
+              {userProfile === null && <HeaderProfileLoader />}
+              {userProfile?.length === 0 ||
+              (userProfile && userProfile[0] === null) ? (
                 <Button onClick={onAuthClick} variant="ghost" className="gap-2">
                   <User className="h-5 w-5" />
                   <span className="md:inline">Sign In</span>

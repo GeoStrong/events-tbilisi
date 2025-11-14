@@ -11,11 +11,14 @@ import ProfileSavedTab from "./profileSavedTab";
 import ProfilePreferencesTab from "./profilePreferencesTab";
 import ProfileAccountTab from "./profileAccountTab";
 import ProfileLayoutLoading from "./profileLayoutLoading";
+import { redirect } from "next/navigation";
 
 const ProfileLayout: React.FC = () => {
   const [editing, setEditing] = useState(false);
   const { userProfile } = useGetUserProfile();
   const user = userProfile && userProfile[0];
+
+  if (user === undefined) redirect("/");
 
   return (
     <>

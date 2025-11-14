@@ -1,9 +1,12 @@
 import { supabase } from "../supabase/supabaseClient";
 
-export const signUp = async (email: string, password: string) => {
+export const signUp = async (email: string, password: string, name: string) => {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
+    options: {
+      data: { name },
+    },
   });
   if (error) throw error;
   return data;
@@ -47,7 +50,22 @@ export const fetchUserProfile = async () => {
       .from("users")
       .select("*")
       .eq("id", user.id)
-      .single();
+      .maybeSingle();
+
+    if (profile === null) {
+      const { data: createdUser } = await supabase
+        .from("users")
+        .insert([
+          {
+            id: user.id,
+            name: user.user_metadata.name,
+            email: user.email,
+          },
+        ])
+        .select();
+
+      return [createdUser];
+    }
 
     return [profile];
   }

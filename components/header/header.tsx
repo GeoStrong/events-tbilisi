@@ -18,6 +18,8 @@ const Header: React.FC = () => {
   const { pathname } = useLocation();
   const { isMobile } = useScreenSize();
 
+  console.log("ser", userProfile);
+
   const headerBg =
     (pathname === "/map" || pathname === "/create-event") && isMobile
       ? "bg-transparent border-none"
@@ -43,7 +45,7 @@ const Header: React.FC = () => {
         ) : (
           userProfile && (
             <Link href="/profile">
-              <ProfileAvatar image={userProfile[0].avatar_path} />
+              <ProfileAvatar image={userProfile[0]?.avatar_path} />
             </Link>
           )
         )}
