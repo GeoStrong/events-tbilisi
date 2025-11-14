@@ -28,3 +28,26 @@ export const handleUploadUserAvatar = async (user: UserProfile, file: File) => {
 
   return data.publicUrl;
 };
+
+export const handleUploadUserInformation = async (
+  user: UserProfile,
+  name?: string,
+  phone?: string,
+  bio?: string,
+) => {
+  const { data, error } = await supabase
+    .from("users")
+    .update([
+      {
+        ...user,
+        name,
+        phone,
+        additionalInfo: bio,
+      },
+    ])
+    .eq("id", user.id);
+
+  if (error) throw error;
+
+  return data;
+};

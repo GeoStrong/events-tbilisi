@@ -1,14 +1,10 @@
 import { MdModeNight } from "react-icons/md";
 import { MdLightMode } from "react-icons/md";
-import { useTheme } from "next-themes";
 import React from "react";
+import useThemeSwitch from "@/lib/hooks/useThemeSwitch";
 
 const ThemeToggle: React.FC = () => {
-  const { theme, setTheme } = useTheme();
-
-  const onThemeToggle = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
+  const { theme, onThemeToggle } = useThemeSwitch();
 
   return (
     <button className="hidden text-3xl md:block" onClick={onThemeToggle}>

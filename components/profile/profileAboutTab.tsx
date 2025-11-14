@@ -15,9 +15,19 @@ import { UserProfile } from "@/lib/types";
 interface ProfileAboutTabProps {
   user: UserProfile | null;
   edit: boolean;
+  userDataValues: string[];
+  onSetUserDataFunctions: React.Dispatch<React.SetStateAction<string>>[];
 }
 
-const ProfileAboutTab: React.FC<ProfileAboutTabProps> = ({ user, edit }) => {
+const ProfileAboutTab: React.FC<ProfileAboutTabProps> = ({
+  user,
+  edit,
+  userDataValues,
+  onSetUserDataFunctions,
+}) => {
+  const [nameValue, phoneValue, bioValue] = userDataValues;
+  const [handleName, handlePhone, handleBio] = onSetUserDataFunctions;
+
   return (
     <>
       <TabsContent value="about" className="space-y-4">
@@ -36,6 +46,10 @@ const ProfileAboutTab: React.FC<ProfileAboutTabProps> = ({ user, edit }) => {
                 disabled={!edit}
                 placeholder="Enter your name"
                 className="dark:border-gray-500"
+                value={nameValue}
+                onChange={(event) => {
+                  handleName(event.target.value);
+                }}
               />
             </div>
 
@@ -59,6 +73,10 @@ const ProfileAboutTab: React.FC<ProfileAboutTabProps> = ({ user, edit }) => {
                 placeholder="+123456789"
                 className="dark:border-gray-500"
                 type="tel"
+                value={phoneValue}
+                onChange={(event) => {
+                  handlePhone(event.target.value);
+                }}
               />
             </div>
 
@@ -70,6 +88,10 @@ const ProfileAboutTab: React.FC<ProfileAboutTabProps> = ({ user, edit }) => {
                 disabled={!edit}
                 className="dark:border-gray-500"
                 rows={4}
+                value={bioValue}
+                onChange={(event) => {
+                  handleBio(event.target.value);
+                }}
               />
             </div>
           </CardContent>

@@ -18,8 +18,6 @@ const Header: React.FC = () => {
   const { pathname } = useLocation();
   const { isMobile } = useScreenSize();
 
-  console.log("ser", userProfile);
-
   const headerBg =
     (pathname === "/map" || pathname === "/create-event") && isMobile
       ? "bg-transparent border-none"

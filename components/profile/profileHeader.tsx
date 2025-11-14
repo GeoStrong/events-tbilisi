@@ -13,12 +13,14 @@ interface ProfileHeaderProps {
   user: UserProfile | null;
   edit: boolean;
   onEditHandle: React.Dispatch<React.SetStateAction<boolean>>;
+  onSaveHandle: () => void;
 }
 
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   user,
   edit,
   onEditHandle,
+  onSaveHandle,
 }) => {
   const [avatarUrl, setAvatarUrl] = useState<string>(user?.avatar_path || "");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -51,10 +53,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     } finally {
       setUploading(false);
     }
-  };
-
-  const handleSave = () => {
-    onEditHandle(false);
   };
 
   const handleCancel = () => {
@@ -123,7 +121,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                     <Button variant="outline" onClick={handleCancel}>
                       Cancel
                     </Button>
-                    <Button onClick={handleSave}>Save Changes</Button>
+                    <Button onClick={onSaveHandle}>Save Changes</Button>
                   </>
                 ) : (
                   <Button onClick={() => onEditHandle(true)}>

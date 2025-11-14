@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { TabsContent } from "../ui/tabs";
 import {
@@ -10,8 +12,11 @@ import {
 import { Bell, Globe, Mail, Palette } from "lucide-react";
 import { Label } from "../ui/label";
 import { Separator } from "@radix-ui/react-dropdown-menu";
+import { Switch } from "../ui/switch";
+import useThemeSwitch from "@/lib/hooks/useThemeSwitch";
 
 const ProfilePreferencesTab: React.FC = () => {
+  const { onThemeToggle } = useThemeSwitch();
   return (
     <>
       <TabsContent value="preferences" className="space-y-4">
@@ -75,7 +80,7 @@ const ProfilePreferencesTab: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="dark:bg-gray-800">
+        <Card className="dark:bg-gray-800 md:hidden">
           <CardHeader>
             <CardTitle>Display Preferences</CardTitle>
             <CardDescription>
@@ -86,11 +91,8 @@ const ProfilePreferencesTab: React.FC = () => {
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Palette className="h-4 w-4 text-muted-foreground" />
-                <Label>Theme Preference</Label>
+                <Switch onCheckedChange={onThemeToggle} />
               </div>
-              <p className="text-sm text-muted-foreground">
-                Your theme is currently controlled by the toggle in the header.
-              </p>
             </div>
           </CardContent>
         </Card>

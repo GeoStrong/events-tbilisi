@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import { ArrowLeft } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
@@ -12,13 +12,31 @@ import ProfilePreferencesTab from "./profilePreferencesTab";
 import ProfileAccountTab from "./profileAccountTab";
 import ProfileLayoutLoading from "./profileLayoutLoading";
 import { redirect } from "next/navigation";
+import { handleUploadUserInformation } from "@/lib/profile/profile";
 
 const ProfileLayout: React.FC = () => {
-  const [editing, setEditing] = useState(false);
   const { userProfile } = useGetUserProfile();
   const user = userProfile && userProfile[0];
+  const [name, setName] = useState<string>(user?.name || "");
+  const [phone, setPhone] = useState<string>(user?.phone || "");
+  const [bio, setBio] = useState<string>(user?.additionalInfo || "");
+  const [editing, setEditing] = useState(false);
 
   if (user === undefined) redirect("/");
+
+  const handleSave = async () => {
+    await handleUploadUserInformation(user!, name, phone, bio);
+    setEditing(false);
+  };
+
+  useEffect(() => {
+    setName(user?.name || "");
+    setPhone(user?.phone || "");
+    setBio(user?.additionalInfo || "");
+  }, [user]);
+
+  const userDataValues = [name, phone, bio];
+  const userDataSetFunctions = [setName, setPhone, setBio];
 
   return (
     <>
@@ -35,6 +53,7 @@ const ProfileLayout: React.FC = () => {
                 user={user}
                 edit={editing}
                 onEditHandle={setEditing}
+                onSaveHandle={handleSave}
               />
               <Tabs defaultValue="about" className="w-full">
                 <TabsList className="grid w-full grid-cols-4">
@@ -44,7 +63,12 @@ const ProfileLayout: React.FC = () => {
                   <TabsTrigger value="account">Account</TabsTrigger>
                 </TabsList>
 
-                <ProfileAboutTab user={user} edit={editing} />
+                <ProfileAboutTab
+                  user={user}
+                  edit={editing}
+                  userDataValues={userDataValues}
+                  onSetUserDataFunctions={userDataSetFunctions}
+                />
 
                 <ProfileSavedTab />
 
