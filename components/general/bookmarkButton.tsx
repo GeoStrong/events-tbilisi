@@ -5,12 +5,15 @@ import { handleSavedEvents, isEventSaved } from "@/lib/profile/profile";
 import React, { useEffect, useState } from "react";
 import { BsFillBookmarkFill } from "react-icons/bs";
 import Spinner from "./spinner";
+import { useDispatch } from "react-redux";
+import { authActions } from "@/lib/store/authSlice";
 
 const BookmarkButton: React.FC<{ eventId: string }> = ({ eventId }) => {
   const [isSaved, setIsSaved] = useState(false);
   const [loading, setLoading] = useState(true);
   const { userProfile } = useGetUserProfile();
   const user = userProfile && userProfile[0];
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchSaved = async () => {
@@ -34,7 +37,9 @@ const BookmarkButton: React.FC<{ eventId: string }> = ({ eventId }) => {
   }, [user, eventId]);
 
   const toggleSave = async () => {
-    if (!user) return;
+    if (!user) {
+      return dispatch(authActions.setAuthDialogOpen(true));
+    }
 
     const newState = !isSaved;
     setIsSaved(newState);

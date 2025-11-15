@@ -14,8 +14,8 @@ const myFont = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Events Tbilisi",
-  description: "Events in Tbilisi",
+  title: "What’sOnTbilisi",
+  description: "Every event. Every Tbilisi resident",
 };
 
 export default function RootLayout({

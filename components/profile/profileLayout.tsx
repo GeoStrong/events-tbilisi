@@ -11,8 +11,9 @@ import ProfileSavedTab from "./profileSavedTab";
 import ProfilePreferencesTab from "./profilePreferencesTab";
 import ProfileAccountTab from "./profileAccountTab";
 import ProfileLayoutLoading from "./profileLayoutLoading";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { handleUploadUserInformation } from "@/lib/profile/profile";
+import { useLocation } from "react-use";
 
 const ProfileLayout: React.FC = () => {
   const { userProfile } = useGetUserProfile();
@@ -21,6 +22,7 @@ const ProfileLayout: React.FC = () => {
   const [phone, setPhone] = useState<string>(user?.phone || "");
   const [bio, setBio] = useState<string>(user?.additionalInfo || "");
   const [editing, setEditing] = useState(false);
+  const router = useRouter();
 
   if (user === undefined) redirect("/");
 
@@ -37,6 +39,13 @@ const ProfileLayout: React.FC = () => {
 
   const userDataValues = [name, phone, bio];
   const userDataSetFunctions = [setName, setPhone, setBio];
+
+  const { pathname, hash } = useLocation();
+  const activetab = hash?.split("#")[1];
+
+  const goToHash = (tabName: string) => {
+    router.push(`${pathname}#${tabName}`);
+  };
 
   return (
     <>
@@ -55,12 +64,40 @@ const ProfileLayout: React.FC = () => {
                 onEditHandle={setEditing}
                 onSaveHandle={handleSave}
               />
-              <Tabs defaultValue="about" className="w-full">
+              <Tabs defaultValue={activetab || "about"} className="w-full">
                 <TabsList className="grid w-full grid-cols-4">
-                  <TabsTrigger value="about">About</TabsTrigger>
-                  <TabsTrigger value="saved">Saved</TabsTrigger>
-                  <TabsTrigger value="preferences">Preferences</TabsTrigger>
-                  <TabsTrigger value="account">Account</TabsTrigger>
+                  <TabsTrigger
+                    value="about"
+                    onClick={() => {
+                      goToHash("");
+                    }}
+                  >
+                    About
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="saved"
+                    onClick={() => {
+                      goToHash("saved");
+                    }}
+                  >
+                    Saved
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="preferences"
+                    onClick={() => {
+                      goToHash("preferences");
+                    }}
+                  >
+                    Preferences
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="account"
+                    onClick={() => {
+                      goToHash("account");
+                    }}
+                  >
+                    Account
+                  </TabsTrigger>
                 </TabsList>
 
                 <ProfileAboutTab

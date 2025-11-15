@@ -17,7 +17,7 @@ const ProfileAvatar: React.FC<{ image?: string }> = ({ image }) => {
       <Avatar>
         {image ? (
           <AvatarImage
-            className={`h-10 w-10 rounded-full border-2 border-gray-300 ${activeProfile && "border-primary"}`}
+            className={`h-10 w-10 rounded-full border-2 border-gray-300 object-cover ${activeProfile && "border-primary"}`}
             src={image}
             alt="profile"
           />

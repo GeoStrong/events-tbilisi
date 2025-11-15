@@ -17,7 +17,7 @@ const SearchSection: React.FC = () => {
       />
       <div className="absolute top-1/2 flex w-full flex-col items-center gap-3">
         <h1 className="text-center text-4xl font-bold text-white">
-          Discover Events in Tbilisi
+          Discover Social Activities in Tbilisi
         </h1>
         <div className="flex items-center md:w-1/2">
           <Input

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import { IoMdMegaphone } from "react-icons/io";
 import HeaderNav from "./headerNav";
 import { useLocation } from "react-use";
@@ -11,10 +11,16 @@ import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import HeaderProfileLoader from "./headerProfileLoader";
 import { Button } from "../ui/button";
 import ProfileAvatar from "../general/profileAvatar";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { RootState } from "@/lib/store/store";
+import { authActions } from "@/lib/store/authSlice";
 
 const Header: React.FC = () => {
+  const dispatch = useDispatch();
+  const { authDialogOpen } = useSelector((state: RootState) => state.auth);
   const { userProfile } = useGetUserProfile();
-  const [authDialogOpen, setAuthDialogOpen] = useState<boolean>(false);
+
   const { pathname } = useLocation();
   const { isMobile } = useScreenSize();
 
@@ -22,6 +28,10 @@ const Header: React.FC = () => {
     (pathname === "/map" || pathname === "/create-event") && isMobile
       ? "bg-transparent border-none"
       : "bg-white dark:bg-gray-900";
+
+  const setAuthDialogOpen = async (value: boolean) => {
+    dispatch(authActions.setAuthDialogOpen(value));
+  };
 
   const openAuthDialog = () => setAuthDialogOpen(true);
 
@@ -31,7 +41,9 @@ const Header: React.FC = () => {
     >
       <Link href="/" className="linear-yellow flex items-center gap-2">
         <IoMdMegaphone className="text-4xl text-primary" />
-        <span className="hidden md:inline">Events-Tbilisi</span>
+        <span className="linear-dark hidden md:inline">
+          What&apos;sOnTbilisi
+        </span>
       </Link>
       <HeaderNav userProfile={userProfile} onAuthClick={openAuthDialog} />
       <div className="md:hidden">
