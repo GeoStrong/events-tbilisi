@@ -4,11 +4,11 @@ import Link from "next/link";
 import EventParticipation from "../events/eventParticipation";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { FiShare } from "react-icons/fi";
-import { BiBookmark } from "react-icons/bi";
 import Share from "../general/share";
 import { EventEntity } from "@/lib/types";
 import defaultEventImg from "@/public/images/default-event-img.png";
 import { getEventImageUrl } from "@/lib/functions/supabaseFunctions";
+import BookmarkButton from "../general/bookmarkButton";
 
 const EventHeader: React.FC<{
   event: EventEntity;
@@ -37,7 +37,7 @@ const EventHeader: React.FC<{
         <div className="flex w-full items-center justify-between gap-3 md:flex-col md:items-start md:justify-start">
           <h2 className="text-xl font-bold md:text-3xl">{event.title}</h2>
           <div className="flex gap-3">
-            <BiBookmark className="text-lg md:text-2xl" />
+            <BookmarkButton eventId={event.id} />
             <Share event={event}>
               <FiShare className="text-lg md:text-2xl" />
             </Share>

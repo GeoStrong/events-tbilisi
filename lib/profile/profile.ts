@@ -1,5 +1,6 @@
+import { getEventById } from "../functions/supabaseFunctions";
 import { supabase } from "../supabase/supabaseClient";
-import { UserProfile } from "../types";
+import { EventEntity, SavedEventEntity, UserProfile } from "../types";
 
 export const handleUploadUserAvatar = async (user: UserProfile, file: File) => {
   if (!user) throw new Error("User ID is required");
@@ -50,4 +51,63 @@ export const handleUploadUserInformation = async (
   if (error) throw error;
 
   return data;
+};
+
+export const handleSavedEvents = async (
+  user: UserProfile,
+  eventId: string,
+  save: boolean,
+) => {
+  if (save) {
+    const { error } = await supabase.from("saved_events").insert([
+      {
+        user_id: user.id,
+        event_id: eventId,
+      },
+    ]);
+    if (error) throw error;
+  } else {
+    const { error } = await supabase
+      .from("saved_events")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("event_id", eventId);
+
+    if (error) throw error;
+  }
+};
+
+export const fetchSavedEvents = async (userId: string) => {
+  const { data: savedEventsId, error: savedEventsError } = await supabase
+    .from("saved_events")
+    .select("*")
+    .eq("user_id", userId);
+
+  if (savedEventsError) throw savedEventsError;
+
+  const savedEvents = (
+    await Promise.all(
+      savedEventsId.map(
+        async (event: SavedEventEntity) => await getEventById(event.event_id),
+      ),
+    )
+  ).flat() as EventEntity[];
+
+  return savedEvents;
+  // const savedEvents  = await getEventById()
+};
+
+export const isEventSaved = async (userId: string, eventId: string) => {
+  const { data, error } = await supabase
+    .from("saved_events")
+    .select("event_id")
+    .eq("user_id", userId)
+    .eq("event_id", eventId)
+    .single();
+
+  if (error && error.code !== "PGRST116") {
+    throw error;
+  }
+
+  return !!data;
 };

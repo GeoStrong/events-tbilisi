@@ -70,7 +70,7 @@ const ProfileLayout: React.FC = () => {
                   onSetUserDataFunctions={userDataSetFunctions}
                 />
 
-                <ProfileSavedTab />
+                <ProfileSavedTab userId={user.id} />
 
                 <ProfilePreferencesTab />
 

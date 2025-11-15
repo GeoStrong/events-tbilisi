@@ -11,6 +11,8 @@ import {
 } from "../ui/card";
 import { Label } from "../ui/label";
 import { UserProfile } from "@/lib/types";
+import { Button } from "../ui/button";
+import { signOut } from "@/lib/auth/auth";
 
 interface ProfileAboutTabProps {
   user: UserProfile | null;
@@ -94,6 +96,16 @@ const ProfileAboutTab: React.FC<ProfileAboutTabProps> = ({
                 }}
               />
             </div>
+
+            <Button
+              variant="destructive"
+              onClick={async () => {
+                await signOut();
+                window.location.reload();
+              }}
+            >
+              Log out
+            </Button>
           </CardContent>
         </Card>
       </TabsContent>

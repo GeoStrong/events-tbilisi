@@ -45,7 +45,7 @@ export interface ParticipantValues {
 }
 
 export interface EventEntity {
-  id: string | number;
+  id: string;
   title: string;
   description: string;
   date: Date;
@@ -76,6 +76,11 @@ export interface EventEntity {
   createdAt?: Date;
   updatedAt?: Date;
   participants?: ParticipantValues[];
+}
+
+export interface SavedEventEntity {
+  user_id: string;
+  event_id: string;
 }
 
 export type Poi = { key: string; location: google.maps.LatLngLiteral };
