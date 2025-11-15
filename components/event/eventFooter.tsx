@@ -45,7 +45,7 @@ const EventFooter: React.FC<{
         <Carousel opts={{ dragFree: true }}>
           <CarouselContent>
             {firstEvents.map((event) => {
-              if (event.id === +eventId) return null;
+              if (event.id === eventId) return null;
               return (
                 <CarouselItem key={event.id} className="md:basis-1/3">
                   <Link href={`/events/${event.id}`}>
@@ -71,7 +71,7 @@ const EventFooter: React.FC<{
           <Carousel>
             <CarouselContent>
               {secondEvents.map((event) => {
-                if (event.id === +eventId) return null;
+                if (event.id === eventId) return null;
                 return (
                   <CarouselItem key={event.id} className="md:basis-1/3">
                     <Link href={`/events/${event.id}`}>
