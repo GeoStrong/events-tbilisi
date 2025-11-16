@@ -142,7 +142,7 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
                     />
                   )}
                   <div className="mt-3 flex items-center justify-evenly gap-2">
-                    <p className="text-md text-center">
+                    {/* <p className="text-md text-center">
                       Start Date:{" "}
                       <span className="linear-yellow block text-base">
                         {new Date(event.startDate).toLocaleString("en-US", {
@@ -154,8 +154,8 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
                           minute: "2-digit",
                         })}
                       </span>
-                    </p>
-                    <p className="text-md text-center">
+                    </p> */}
+                    {/* <p className="text-md text-center">
                       End Date:{" "}
                       <span className="linear-yellow block text-base">
                         {new Date(event.endDate).toLocaleString("en-US", {
@@ -167,7 +167,7 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
                           minute: "2-digit",
                         })}
                       </span>
-                    </p>
+                    </p> */}
                   </div>
                   <p className="de mt-4 flex items-center justify-between gap-2 md:justify-start">
                     Share this event with friends:

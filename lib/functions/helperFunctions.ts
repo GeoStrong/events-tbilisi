@@ -5,6 +5,10 @@ export const isString = (value: unknown) => {
   return typeof value === "string";
 };
 
+export const isFile = (value: unknown) => {
+  return value instanceof File;
+};
+
 export const zoomToLocation = (map: google.maps.Map | null, location: Poi) => {
   map?.setZoom(10);
   map?.setCenter(location.location);

@@ -1,5 +1,5 @@
 import { supabase } from "../supabase/supabaseClient";
-import { EventEntity, ImageType } from "../types";
+import { ImageType, NewEventEntity } from "../types";
 import { isString } from "./helperFunctions";
 
 export const getCategories = async () => {
@@ -50,7 +50,10 @@ export const getCategoriesByEventId = async (eventId: number | string) => {
 };
 
 export const getEvents = async () => {
-  const { data, error } = await supabase.from("events").select("*");
+  const { data, error } = await supabase
+    .from("events")
+    .select("*")
+    .order("updated_at", { ascending: false });
 
   if (error) {
     console.error("Error fetching events:", error);
@@ -107,7 +110,7 @@ export const getEventImageUrl = async (imageLocation: ImageType) => {
   return eventImage;
 };
 
-export const postNewEvent = async (activity: EventEntity) => {
+export const postNewEvent = async (activity: NewEventEntity) => {
   const { data, error } = await supabase
     .from("events")
     .insert([activity])

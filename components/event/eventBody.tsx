@@ -79,7 +79,7 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
             Event Details:
           </h3>
           <div className="mt-2">
-            <EventDetails
+            {/* <EventDetails
               detail="📅 Date"
               value={new Date(event.startDate).toLocaleString("en-US", {
                 month: "long",
@@ -87,7 +87,7 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
                 weekday: "short",
                 day: "numeric",
               })}
-            />
+            /> */}
             <EventDetails
               detail="⌚ Time"
               // value={new Date(event.startDate).toLocaleString("en-US", {
@@ -149,7 +149,7 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
               value={event.maxAttendees}
             />
             <EventDetails detail="Status" value={event.status} />
-            <EventDetails
+            {/* <EventDetails
               detail="End Date"
               value={new Date(event.endDate).toLocaleString("en-US", {
                 month: "long",
@@ -157,7 +157,7 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
                 weekday: "short",
                 day: "numeric",
               })}
-            />
+            /> */}
             <EventDetails
               detail="Participants"
               value={event.participants?.length}
@@ -182,14 +182,14 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
             <div key={event.id} className="flex justify-between gap-2">
               <div className="flex flex-col">
                 <h3 className="text-sm font-semibold">{event.title}</h3>
-                <p className="text-xs text-muted-foreground">
+                {/* <p className="text-xs text-muted-foreground">
                   {new Date(event.startDate).toLocaleString("en-US", {
                     month: "long",
                     year: "numeric",
                     weekday: "short",
                     day: "numeric",
                   })}
-                </p>
+                </p> */}
               </div>
               <Link href={`/${event.id}`}>
                 <CiShare1 />

@@ -7,28 +7,28 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import { EventEntity } from "@/lib/types";
+import { NewEventEntity } from "@/lib/types";
+import { toast } from "sonner";
 
 interface CreateActivityProps {
-  onSubmit: (values: EventEntity) => void;
+  onSubmit: (values: NewEventEntity) => void;
 }
 
 const CreateActivityForm: React.FC<CreateActivityProps> = ({ onSubmit }) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const initialValues: EventEntity = {
-    id: "",
+  const initialValues: NewEventEntity = {
     title: "",
     description: "",
-    date: new Date(),
-    startDate: new Date(),
+    date: null,
     time: "",
-    endDate: "ongoing",
+    endTime: "",
     location: "",
-    link: "",
+    link: null,
     image: "",
-    targetAudience: "",
-    maxAttendees: undefined,
+    targetAudience: null,
+    maxAttendees: null,
+    host: "individual",
   };
 
   const validationSchema = Yup.object({
@@ -59,149 +59,162 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({ onSubmit }) => {
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={async (values, { setSubmitting, resetForm }) => {
-        onSubmit(values);
-        // try {
-        //   await onSubmit(values);
-        //   resetForm();
-        //   setImagePreview(null);
-        // } catch (err) {
-        //   console.error(err);
-        // } finally {
-        //   setSubmitting(false);
-        // }
+        try {
+          onSubmit(values);
+          resetForm();
+          setImagePreview(null);
+          toast.success("You posted a new activity");
+        } catch (err) {
+          console.error(err);
+        } finally {
+          setSubmitting(false);
+        }
       }}
     >
       {({ isSubmitting, setFieldValue }) => (
-        <Form className="space-y-4">
-          {/* Title */}
-          <div>
-            <label htmlFor="title">Title *</label>
-            <Field
-              as={Input}
-              id="title"
-              name="title"
-              placeholder="Event title"
-            />
-            <ErrorMessage
-              name="title"
-              component="div"
-              className="text-sm text-red-500"
-            />
-          </div>
-
-          {/* Description */}
-          <div>
-            <label htmlFor="description">Description *</label>
-            <Field
-              as={Textarea}
-              id="description"
-              name="description"
-              placeholder="Event description"
-            />
-            <ErrorMessage
-              name="description"
-              component="div"
-              className="text-sm text-red-500"
-            />
-          </div>
-
-          {/* Date */}
-          <div>
-            <label htmlFor="date">Date *</label>
-            <Field as={Input} id="date" name="date" type="date" />
-            <ErrorMessage
-              name="date"
-              component="div"
-              className="text-sm text-red-500"
-            />
-          </div>
-
-          {/* Time */}
-          <div>
-            <label htmlFor="time">Time *</label>
-            <Field as={Input} id="time" name="time" type="time" />
-            <ErrorMessage
-              name="time"
-              component="div"
-              className="text-sm text-red-500"
-            />
-          </div>
-
-          {/* End Date */}
-          <div>
-            <label htmlFor="endDate">End Date</label>
-            <Field as={Input} id="endDate" name="endDate" type="date" />
-          </div>
-
-          {/* Location */}
-          <div>
-            <label htmlFor="location">Location *</label>
-            <Field
-              as={Input}
-              id="location"
-              name="location"
-              placeholder="Event location"
-            />
-            <ErrorMessage
-              name="location"
-              component="div"
-              className="text-sm text-red-500"
-            />
-          </div>
-
-          {/* Link */}
-          <div>
-            <label htmlFor="link">Link</label>
-            <Field
-              as={Input}
-              id="link"
-              name="link"
-              placeholder="Optional URL"
-              type="url"
-            />
-          </div>
-
-          {/* Target Audience */}
-          <div>
-            <label htmlFor="targetAudience">Target Audience</label>
-            <Field
-              as={Input}
-              id="targetAudience"
-              name="targetAudience"
-              placeholder="e.g., Adults, Students"
-            />
-          </div>
-
-          {/* Max Attendees */}
-          <div>
-            <label htmlFor="maxAttendees">Max Attendees</label>
-            <Field
-              as={Input}
-              id="maxAttendees"
-              name="maxAttendees"
-              type="number"
-              min={1}
-            />
-          </div>
-
-          {/* Image */}
-          <div>
-            <label htmlFor="image">Image</label>
-            <input
-              id="image"
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleImageChange(e, setFieldValue)}
-            />
-            {imagePreview && (
-              <Image
-                src={imagePreview}
-                alt="Preview"
-                width={100}
-                height={100}
-                className="mt-2 h-32 w-32 rounded-md object-cover"
+        <Form className="h-full">
+          <div className="mb-3 h-1/2 space-y-4 overflow-y-scroll p-3">
+            {/* Title */}
+            <div>
+              <label htmlFor="title">Title *</label>
+              <Field
+                as={Input}
+                id="title"
+                name="title"
+                placeholder="Event title"
               />
-            )}
+              <ErrorMessage
+                name="title"
+                component="div"
+                className="text-sm text-red-500"
+              />
+            </div>
+
+            {/* Description */}
+            <div>
+              <label htmlFor="description">Description *</label>
+              <Field
+                as={Textarea}
+                id="description"
+                name="description"
+                placeholder="Event description"
+              />
+              <ErrorMessage
+                name="description"
+                component="div"
+                className="text-sm text-red-500"
+              />
+            </div>
+
+            {/* Date */}
+            <div>
+              <label htmlFor="date">Date *</label>
+              <Field
+                as={Input}
+                id="date"
+                name="date"
+                type="date"
+                min={new Date().toISOString().split("T")[0]}
+              />
+              <ErrorMessage
+                name="date"
+                component="div"
+                className="text-sm text-red-500"
+              />
+            </div>
+
+            {/* Time */}
+            <div>
+              <label htmlFor="time">Time *</label>
+              <Field as={Input} id="time" name="time" type="time" />
+              <ErrorMessage
+                name="time"
+                component="div"
+                className="text-sm text-red-500"
+              />
+            </div>
+
+            {/* End Time */}
+            <div>
+              <label htmlFor="endTime">End Time</label>
+              <Field as={Input} id="endTime" name="endTime" type="time" />
+              <ErrorMessage
+                name="endTime"
+                component="div"
+                className="text-sm text-red-500"
+              />
+            </div>
+
+            {/* Location */}
+            <div>
+              <label htmlFor="location">Location *</label>
+              <Field
+                as={Input}
+                id="location"
+                name="location"
+                placeholder="Event location"
+              />
+              <ErrorMessage
+                name="location"
+                component="div"
+                className="text-sm text-red-500"
+              />
+            </div>
+
+            {/* Link */}
+            <div>
+              <label htmlFor="link">Link</label>
+              <Field
+                as={Input}
+                id="link"
+                name="link"
+                placeholder="Optional URL"
+                type="url"
+              />
+            </div>
+
+            {/* Target Audience */}
+            <div>
+              <label htmlFor="targetAudience">Target Audience</label>
+              <Field
+                as={Input}
+                id="targetAudience"
+                name="targetAudience"
+                placeholder="e.g., Adults, Students"
+              />
+            </div>
+
+            {/* Max Attendees */}
+            <div>
+              <label htmlFor="maxAttendees">Max Attendees</label>
+              <Field
+                as={Input}
+                id="maxAttendees"
+                name="maxAttendees"
+                type="number"
+                min={1}
+              />
+            </div>
+
+            {/* Image */}
+            <div>
+              <label htmlFor="image">Image</label>
+              <input
+                id="image"
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleImageChange(e, setFieldValue)}
+              />
+              {imagePreview && (
+                <Image
+                  src={imagePreview}
+                  alt="Preview"
+                  width={100}
+                  height={100}
+                  className="mt-2 h-32 w-32 rounded-md object-cover"
+                />
+              )}
+            </div>
           </div>
 
           {/* Submit */}

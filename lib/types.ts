@@ -48,16 +48,16 @@ export interface ParticipantValues {
 
 export interface EventEntity {
   id: string;
+  user_id?: string;
   title: string;
   description: string;
-  date: Date;
-  startDate: Date;
-  endDate: Date | "ongoing";
+  date: Date | null;
   time: Date | string;
+  endTime: Date | string | null;
   location: string;
   googleLocation?: google.maps.LatLngLiteral;
   categories?: EventCategories[];
-  targetAudience?: string;
+  targetAudience?: string | null;
   host?: "organization" | "individual";
   entryFee?: boolean;
   hostName?: string;
@@ -68,7 +68,7 @@ export interface EventEntity {
     image?: string;
   };
   image: ImageType;
-  link?: string;
+  link?: string | null;
   maxAttendees?: number | null;
   tags?: string[];
   maxTags?: 10;
@@ -80,6 +80,8 @@ export interface EventEntity {
   updatedAt?: Date;
   participants?: ParticipantValues[];
 }
+
+export type NewEventEntity = Omit<EventEntity, "id">;
 
 export interface SavedEventEntity {
   user_id: string;

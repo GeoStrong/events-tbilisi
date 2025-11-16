@@ -10,9 +10,9 @@ const Map: React.FC = () => {
       <h1 className="mt-5 text-center text-3xl font-bold">
         Create a New Public Activity
       </h1>
-      <div className="mt-3 flex w-full flex-col gap-2 rounded-md bg-white dark:bg-gray-800 lg:flex-row">
-        <div className="absolute -top-12 left-0 w-full rounded-2xl md:static">
-          <MapWrapper API_KEY={key} />
+      <div className="mt-3 flex w-full flex-col justify-between gap-2 rounded-md bg-white dark:bg-gray-800 lg:flex-row">
+        <div className="hidden w-full rounded-2xl md:block">
+          <MapWrapper API_KEY={key} height="h-96" />
         </div>
         <CreateActivityLayout />
       </div>
