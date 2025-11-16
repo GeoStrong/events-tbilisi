@@ -126,14 +126,14 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
         )}
       </CardContent>
       <CardFooter>
-        <p className="text-xs text-muted-foreground">
+        {/* <p className="text-xs text-muted-foreground">
           {new Date(event.startDate).toLocaleDateString("en-US", {
             month: "long",
             year: "numeric",
             weekday: "short",
             day: "numeric",
           })}
-        </p>
+        </p> */}
       </CardFooter>
     </Card>
   );
