@@ -17,8 +17,7 @@ import { useLocation } from "react-use";
 import { toast } from "sonner";
 
 const ProfileLayout: React.FC = () => {
-  const { userProfile } = useGetUserProfile();
-  const user = userProfile && userProfile[0];
+  const { user } = useGetUserProfile();
   const [name, setName] = useState<string>(user?.name || "");
   const [phone, setPhone] = useState<string>(user?.phone || "");
   const [bio, setBio] = useState<string>(user?.additionalInfo || "");

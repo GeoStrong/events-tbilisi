@@ -7,6 +7,7 @@ export type UserProfile = {
   created_at: Date;
   additionalInfo?: string;
 };
+
 export type EventCategories =
   | "music"
   | "sport"
@@ -29,6 +30,8 @@ export type EventCategories =
   | "workshop"
   | "other";
 
+export type ImageType = string | File | null;
+
 export interface Category {
   id: string;
   name: string;
@@ -48,10 +51,9 @@ export interface EventEntity {
   id: string;
   title: string;
   description: string;
-  date: Date;
-  startDate: Date;
-  endDate: Date | "ongoing";
+  date: Date | null;
   time: Date | string;
+  endTime?: Date | string;
   location: string;
   googleLocation?: google.maps.LatLngLiteral;
   categories?: EventCategories[];
@@ -65,9 +67,9 @@ export interface EventEntity {
     name: string;
     image?: string;
   };
-  image: string;
+  image: ImageType;
   link?: string;
-  maxAttendees?: number;
+  maxAttendees?: number | null;
   tags?: string[];
   maxTags?: 10;
   comments?: string[];

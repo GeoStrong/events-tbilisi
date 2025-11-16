@@ -12,8 +12,7 @@ import { toast } from "sonner";
 const BookmarkButton: React.FC<{ eventId: string }> = ({ eventId }) => {
   const [isSaved, setIsSaved] = useState(false);
   const [loading, setLoading] = useState(true);
-  const { userProfile } = useGetUserProfile();
-  const user = userProfile && userProfile[0];
+  const { user } = useGetUserProfile();
   const dispatch = useDispatch();
 
   useEffect(() => {

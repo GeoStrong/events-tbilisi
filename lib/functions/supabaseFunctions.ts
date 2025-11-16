@@ -1,4 +1,6 @@
+import { isString } from "formik";
 import { supabase } from "../supabase/supabaseClient";
+import { EventEntity, ImageType } from "../types";
 
 export const getCategories = async () => {
   const { data, error } = await supabase.from("categories").select("*");
@@ -94,11 +96,24 @@ export const getEventsByCategoryId = async (categoryId: string) => {
   return events;
 };
 
-export const getEventImageUrl = async (imageLocation: string) => {
+export const getEventImageUrl = async (imageLocation: ImageType) => {
+  const image = isString(imageLocation) ? imageLocation : "";
+
   const { data: imageData } = supabase.storage
     .from("Events-Tbilisi media")
-    .getPublicUrl(imageLocation);
+    .getPublicUrl(image);
   const eventImage = imageData?.publicUrl;
 
   return eventImage;
+};
+
+export const postNewEvent = async (activity: EventEntity) => {
+  const { data, error } = await supabase
+    .from("events")
+    .insert([activity])
+    .single();
+
+  if (error) throw error;
+
+  return data;
 };
