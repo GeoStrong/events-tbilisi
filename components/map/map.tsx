@@ -15,7 +15,9 @@ import { mapActions } from "@/lib/store/mapSlice";
 import { useLocalStorage } from "react-use";
 import { zoomToLocation } from "@/lib/functions/helperFunctions";
 
-const MapComponent: React.FC = () => {
+const MapComponent: React.FC<{ mapHeight?: string }> = ({
+  mapHeight = "h-screen md:min-h-[500px]",
+}) => {
   const map = useMap();
   const [eventsLocations, setEventsLocations] = useState<Poi[]>(locations);
   const dispatch = useDispatch();
@@ -54,7 +56,7 @@ const MapComponent: React.FC = () => {
       disableDefaultUI={true}
       defaultZoom={8}
       minZoom={12}
-      className="h-screen w-full md:min-h-[500px]"
+      className={`${mapHeight} w-full`}
       onClick={addNewEventLocation}
     >
       <PoiMarkers pois={eventsLocations} />
@@ -62,10 +64,13 @@ const MapComponent: React.FC = () => {
   );
 };
 
-const MapWrapper: React.FC<{ API_KEY: string }> = ({ API_KEY }) => {
+const MapWrapper: React.FC<{ API_KEY: string; height?: string }> = ({
+  API_KEY,
+  height,
+}) => {
   return (
     <APIProvider apiKey={API_KEY}>
-      <MapComponent />
+      <MapComponent mapHeight={height} />
     </APIProvider>
   );
 };

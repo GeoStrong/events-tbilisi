@@ -17,7 +17,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (
     <>
-      <Toaster position="top-right" richColors style={{ opacity: "100" }} />
+      <Toaster position="top-right" richColors />
       <Header />
       {displayCategories && <EventCategoriesCarousel categories={categories} />}
       {displaySearchSection && <SearchSection />}

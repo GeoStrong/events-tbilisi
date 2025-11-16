@@ -4,6 +4,7 @@ import { UserProfile } from "../types";
 
 const useGetUserProfile = () => {
   const [userProfile, setUserProfile] = useState<UserProfile[] | null>(null);
+  const user = userProfile && userProfile[0];
   useEffect(() => {
     (async () => {
       const user = await fetchUserProfile();
@@ -11,7 +12,7 @@ const useGetUserProfile = () => {
     })();
   }, []);
 
-  return { userProfile };
+  return { userProfile, user };
 };
 
 export default useGetUserProfile;

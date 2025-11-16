@@ -29,6 +29,8 @@ export type EventCategories =
   | "workshop"
   | "other";
 
+export type ImageType = string | File | null;
+
 export interface Category {
   id: string;
   name: string;
@@ -65,9 +67,9 @@ export interface EventEntity {
     name: string;
     image?: string;
   };
-  image: string;
+  image: ImageType;
   link?: string;
-  maxAttendees?: number;
+  maxAttendees?: number | null;
   tags?: string[];
   maxTags?: 10;
   comments?: string[];
