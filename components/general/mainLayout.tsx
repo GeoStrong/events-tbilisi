@@ -7,6 +7,7 @@ import EventCategoriesCarousel from "@/components/events/eventCategoriesCarousel
 import { categories } from "@/lib/data/categories";
 import { useLocation } from "react-use";
 import SearchSection from "./searchSection";
+import { Toaster } from "../ui/sonner";
 
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { pathname } = useLocation();
@@ -16,6 +17,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (
     <>
+      <Toaster position="top-right" richColors style={{ opacity: "100" }} />
       <Header />
       {displayCategories && <EventCategoriesCarousel categories={categories} />}
       {displaySearchSection && <SearchSection />}

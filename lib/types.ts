@@ -57,6 +57,7 @@ export interface EventEntity {
   categories?: EventCategories[];
   targetAudience?: string;
   host?: "organization" | "individual";
+  entryFee?: boolean;
   hostName?: string;
   hostContact?: {
     email?: string;

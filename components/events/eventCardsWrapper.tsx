@@ -65,7 +65,7 @@ const EventCards: React.FC = () => {
   }, [categoryId]);
 
   useEffect(() => {
-    const eventId = searchParams.get("event")!;
+    const eventId = searchParams.get("activity")!;
     if (eventId || events) {
       const event = events?.find((event) => event.id === eventId);
       setActiveEvent(event || null);

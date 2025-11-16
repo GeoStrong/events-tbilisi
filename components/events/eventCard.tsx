@@ -54,7 +54,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
       removeValue();
     }, 500);
     if (setSearchParams) {
-      return setSearchParams("display-events", "");
+      return setSearchParams("display-activities", "");
     }
   };
 
@@ -78,7 +78,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
       className="cursor-pointer duration-300 dark:border-gray-600 dark:bg-slate-800"
       onClick={() => {
         if (setSearchParams)
-          return setSearchParams("event", event.id.toString());
+          return setSearchParams("activity", event.id.toString());
       }}
       key={event.id}
     >

@@ -34,7 +34,7 @@ const DisplayedEvents: React.FC<CreateEventProps> = ({
       <Drawer
         direction={isMobile ? "bottom" : "right"}
         onClose={() => {
-          setSearchParams("display-events", "");
+          setSearchParams("display-activities", "");
         }}
       >
         <DrawerTrigger ref={buttonRef} className="hidden"></DrawerTrigger>

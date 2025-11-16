@@ -8,6 +8,7 @@ import { Avatar, AvatarImage } from "../ui/avatar";
 import { UserProfile } from "@/lib/types";
 import defaultUserImg from "@/public/images/default-user.png";
 import { handleUploadUserAvatar } from "@/lib/profile/profile";
+import { toast } from "sonner";
 
 interface ProfileHeaderProps {
   user: UserProfile | null;
@@ -48,6 +49,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
       setAvatarUrl(uploadedUrl);
       setPreviewUrl(null);
       onEditHandle(false);
+      toast.success("New profile image has been set");
     } catch (err) {
       console.error("Error uploading avatar:", err);
     } finally {

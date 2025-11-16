@@ -16,7 +16,7 @@ const MapLayout: React.FC<MapLayoutProps> = ({ mapKey }) => {
   const eventButtonRef = useRef<HTMLButtonElement>(null!);
   const { searchParams, handleReplace } = useAddSearchQuery();
 
-  const eventId = searchParams.get("event");
+  const eventId = searchParams.get("activity");
   const activeEvent = eventId ? events.find((e) => e.id === eventId) : null;
 
   useEffect(() => {

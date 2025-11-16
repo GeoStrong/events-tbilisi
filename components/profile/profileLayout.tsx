@@ -14,6 +14,7 @@ import ProfileLayoutLoading from "./profileLayoutLoading";
 import { redirect, useRouter } from "next/navigation";
 import { handleUploadUserInformation } from "@/lib/profile/profile";
 import { useLocation } from "react-use";
+import { toast } from "sonner";
 
 const ProfileLayout: React.FC = () => {
   const { userProfile } = useGetUserProfile();
@@ -29,6 +30,7 @@ const ProfileLayout: React.FC = () => {
   const handleSave = async () => {
     await handleUploadUserInformation(user!, name, phone, bio);
     setEditing(false);
+    toast.success("Changes have been saved");
   };
 
   useEffect(() => {

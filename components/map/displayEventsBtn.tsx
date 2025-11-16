@@ -9,7 +9,7 @@ import Spinner from "../general/spinner";
 const DisplayEventsBtn: React.FC = () => {
   const displayEventsBtnRef = useRef<HTMLButtonElement>(null!);
   const { searchParams, handleSearch } = useAddSearchQuery();
-  const displayIsActive = searchParams.get("display-events");
+  const displayIsActive = searchParams.get("display-activities");
 
   const openDrawer = () => {
     setTimeout(() => {
@@ -31,7 +31,7 @@ const DisplayEventsBtn: React.FC = () => {
       )}
       <Button
         onClick={() => {
-          handleSearch("display-events", "true");
+          handleSearch("display-activities", "true");
         }}
         className="rounded-full px-8 py-6 text-base font-bold text-white md:p-8"
       >

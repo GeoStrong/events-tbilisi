@@ -33,7 +33,7 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick, userProfile }) => {
                 className="mb-1 flex flex-col items-center gap-1 px-3 text-sm"
               >
                 <AiOutlineHome className="text-base" />
-                Events
+                Activities
               </Link>
               {pathname === "/" && (
                 <motion.div
@@ -60,16 +60,16 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick, userProfile }) => {
               )}
             </li>
             <li
-              className={`relative flex flex-col items-center gap-1 hover:text-primary ${pathname === "/create-event" && "border-primary text-primary"}`}
+              className={`relative flex flex-col items-center gap-1 hover:text-primary ${pathname === "/create-activity" && "border-primary text-primary"}`}
             >
               <Link
-                href="/create-event"
+                href="/create-activity"
                 className="mb-1 flex flex-col items-center gap-1 px-3 text-sm"
               >
                 <AiOutlinePlusCircle className="text-base" />
-                Create Event
+                Create Activity
               </Link>
-              {pathname === "/create-event" && (
+              {pathname === "/create-activity" && (
                 <motion.div
                   layoutId="underline"
                   className="absolute bottom-0 h-[2px] w-full bg-primary"

@@ -37,7 +37,7 @@ const ProfileSavedTab: React.FC<{ userId: string }> = ({ userId }) => {
             ) : (
               <>
                 {savedEvents.map((event) => (
-                  <Link key={event.id} href={`/events/${event.id}`}>
+                  <Link key={event.id} href={`/activities/${event.id}`}>
                     <EventCard event={event} />
                   </Link>
                 ))}

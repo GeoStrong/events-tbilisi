@@ -74,7 +74,7 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
         setActiveSnapPoint={setSnap}
         direction={isMobile ? "bottom" : "right"}
         onClose={() => {
-          setSearchParams("event", "");
+          setSearchParams("activity", "");
         }}
       >
         <DrawerTrigger ref={buttonRef} className="hidden"></DrawerTrigger>
@@ -83,7 +83,7 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
           <DrawerContent
             headerChildren={
               <Link
-                href={`/events/${event.id}`}
+                href={`/activities/${event.id}`}
                 className="absolute right-5 top-4"
               >
                 <MdOutlineOpenInNew className="linear-yellow duration-300 hover:text-primary" />

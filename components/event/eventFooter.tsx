@@ -48,7 +48,7 @@ const EventFooter: React.FC<{
               if (event.id === eventId) return null;
               return (
                 <CarouselItem key={event.id} className="md:basis-1/3">
-                  <Link href={`/events/${event.id}`}>
+                  <Link href={`/activities/${event.id}`}>
                     <EventCard event={event} />
                   </Link>
                 </CarouselItem>
@@ -74,7 +74,7 @@ const EventFooter: React.FC<{
                 if (event.id === eventId) return null;
                 return (
                   <CarouselItem key={event.id} className="md:basis-1/3">
-                    <Link href={`/events/${event.id}`}>
+                    <Link href={`/activities/${event.id}`}>
                       <EventCard event={event} />
                     </Link>
                   </CarouselItem>

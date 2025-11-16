@@ -7,6 +7,7 @@ import { BsFillBookmarkFill } from "react-icons/bs";
 import Spinner from "./spinner";
 import { useDispatch } from "react-redux";
 import { authActions } from "@/lib/store/authSlice";
+import { toast } from "sonner";
 
 const BookmarkButton: React.FC<{ eventId: string }> = ({ eventId }) => {
   const [isSaved, setIsSaved] = useState(false);
@@ -45,6 +46,11 @@ const BookmarkButton: React.FC<{ eventId: string }> = ({ eventId }) => {
     setIsSaved(newState);
 
     try {
+      if (newState) {
+        toast.success(`The activity has been saved`);
+      } else {
+        toast.error("The activity has been unsaved");
+      }
       await handleSavedEvents(user, eventId, newState);
     } catch {
       setIsSaved(!newState);
