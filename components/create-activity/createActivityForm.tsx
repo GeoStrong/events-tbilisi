@@ -78,6 +78,7 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({ onSubmit }) => {
             <div>
               <label htmlFor="title">Title *</label>
               <Field
+                className="dark:border-gray-600"
                 as={Input}
                 id="title"
                 name="title"
@@ -94,6 +95,7 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({ onSubmit }) => {
             <div>
               <label htmlFor="description">Description *</label>
               <Field
+                className="dark:border-gray-600"
                 as={Textarea}
                 id="description"
                 name="description"
@@ -110,6 +112,7 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({ onSubmit }) => {
             <div>
               <label htmlFor="date">Date *</label>
               <Field
+                className="dark:border-gray-600"
                 as={Input}
                 id="date"
                 name="date"
@@ -126,7 +129,15 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({ onSubmit }) => {
             {/* Time */}
             <div>
               <label htmlFor="time">Time *</label>
-              <Field as={Input} id="time" name="time" type="time" />
+
+              <Field
+                as={Input}
+                id="time"
+                name="time"
+                type="time"
+                className="dark:border-gray-600"
+              />
+
               <ErrorMessage
                 name="time"
                 component="div"
@@ -137,7 +148,15 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({ onSubmit }) => {
             {/* End Time */}
             <div>
               <label htmlFor="endTime">End Time</label>
-              <Field as={Input} id="endTime" name="endTime" type="time" />
+
+              <Field
+                as={Input}
+                id="endTime"
+                name="endTime"
+                type="time"
+                className="dark:border-gray-600"
+              />
+
               <ErrorMessage
                 name="endTime"
                 component="div"
@@ -149,6 +168,7 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({ onSubmit }) => {
             <div>
               <label htmlFor="location">Location *</label>
               <Field
+                className="dark:border-gray-600"
                 as={Input}
                 id="location"
                 name="location"
@@ -165,6 +185,7 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({ onSubmit }) => {
             <div>
               <label htmlFor="link">Link</label>
               <Field
+                className="dark:border-gray-600"
                 as={Input}
                 id="link"
                 name="link"
@@ -177,6 +198,7 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({ onSubmit }) => {
             <div>
               <label htmlFor="targetAudience">Target Audience</label>
               <Field
+                className="dark:border-gray-600"
                 as={Input}
                 id="targetAudience"
                 name="targetAudience"
@@ -188,6 +210,7 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({ onSubmit }) => {
             <div>
               <label htmlFor="maxAttendees">Max Attendees</label>
               <Field
+                className="dark:border-gray-600"
                 as={Input}
                 id="maxAttendees"
                 name="maxAttendees"

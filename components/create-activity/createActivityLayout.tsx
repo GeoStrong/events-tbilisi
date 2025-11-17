@@ -34,7 +34,7 @@ const CreateActivityLayout: React.FC = () => {
   };
 
   return (
-    <div className="w-full p-3">
+    <div className="w-full p-3 pb-10 md:pb-0">
       <CreateActivityForm onSubmit={submitHandler} />
     </div>
   );

@@ -6,7 +6,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { fetchSavedEvents } from "@/lib/profile/profile";
 import { EventEntity } from "@/lib/types";
 import EventCard from "../events/eventCard";
-import Link from "next/link";
+import { redirect } from "next/navigation";
 
 const ProfileSavedTab: React.FC<{ userId: string }> = ({ userId }) => {
   const [savedEvents, setSavedEvents] = useState<EventEntity[]>([]);
@@ -37,9 +37,14 @@ const ProfileSavedTab: React.FC<{ userId: string }> = ({ userId }) => {
             ) : (
               <>
                 {savedEvents.map((event) => (
-                  <Link key={event.id} href={`/activities/${event.id}`}>
+                  <div
+                    key={event.id}
+                    onClick={() => {
+                      redirect(`/activities/${event.id}`);
+                    }}
+                  >
                     <EventCard event={event} />
-                  </Link>
+                  </div>
                 ))}
               </>
             )}
@@ -71,6 +76,13 @@ const ProfileSavedTab: React.FC<{ userId: string }> = ({ userId }) => {
           </CardContent> */}
         </Card>
       </TabsContent>
+      {/* {activeEvent && (
+        <EventDescription
+          buttonRef={eventButtonRef}
+          event={activeEvent}
+          setSearchParams={setSearchParams}
+        />
+      )} */}
     </>
   );
 };

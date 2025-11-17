@@ -41,11 +41,11 @@ const ProfileLayout: React.FC = () => {
   const userDataValues = [name, phone, bio];
   const userDataSetFunctions = [setName, setPhone, setBio];
 
-  const { pathname, hash } = useLocation();
+  const { hash } = useLocation();
   const activetab = hash?.split("#")[1];
 
   const goToHash = (tabName: string) => {
-    router.push(`${pathname}#${tabName}`);
+    router.push(`profile#${tabName}`);
   };
 
   return (

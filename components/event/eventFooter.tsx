@@ -10,9 +10,8 @@ import {
   // CarouselPrevious,
 } from "@/components/ui/carousel";
 import EventCard from "../events/eventCard";
-import Link from "next/link";
-// import useScreenSize from "@/lib/hooks/useScreenSize";
 import { getEventsByCategoryId } from "@/lib/functions/supabaseFunctions";
+import { redirect } from "next/navigation";
 
 const EventFooter: React.FC<{
   categories: Category[];
@@ -47,10 +46,14 @@ const EventFooter: React.FC<{
             {firstEvents.map((event) => {
               if (event.id === eventId) return null;
               return (
-                <CarouselItem key={event.id} className="md:basis-1/3">
-                  <Link href={`/activities/${event.id}`}>
-                    <EventCard event={event} />
-                  </Link>
+                <CarouselItem
+                  key={event.id}
+                  className="md:basis-1/3"
+                  onClick={() => {
+                    redirect(`/activities/${event.id}`);
+                  }}
+                >
+                  <EventCard event={event} />
                 </CarouselItem>
               );
             })}
@@ -73,10 +76,14 @@ const EventFooter: React.FC<{
               {secondEvents.map((event) => {
                 if (event.id === eventId) return null;
                 return (
-                  <CarouselItem key={event.id} className="md:basis-1/3">
-                    <Link href={`/activities/${event.id}`}>
-                      <EventCard event={event} />
-                    </Link>
+                  <CarouselItem
+                    key={event.id}
+                    className="md:basis-1/3"
+                    onClick={() => {
+                      redirect(`/activities/${event.id}`);
+                    }}
+                  >
+                    <EventCard event={event} />
                   </CarouselItem>
                 );
               })}

@@ -22,6 +22,9 @@ import {
   getCategoriesByEventId,
   getEventImageUrl,
 } from "@/lib/functions/supabaseFunctions";
+import { CiLocationOn } from "react-icons/ci";
+import { BiTimeFive } from "react-icons/bi";
+import { MdDateRange } from "react-icons/md";
 
 interface EventCardProps {
   event: EventEntity;
@@ -105,10 +108,13 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
             ))}
           </div>
         </div>
-        <CardTitle className="px-6 text-lg">{event.title}</CardTitle>
+        <CardTitle className="px-6 text-xl">{event.title}</CardTitle>
         <CardDescription></CardDescription>
       </CardHeader>
-      <CardContent className="flex items-center justify-between">
+      <CardContent className="flex items-center justify-between pb-0">
+        <p className="text-lg">
+          {event.location && event.location.toLocaleString()}
+        </p>
         <p className="text-muted-foreground">{event.hostName}</p>
         {event.googleLocation && (
           <Link
@@ -125,15 +131,21 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
           </Link>
         )}
       </CardContent>
-      <CardFooter>
-        {/* <p className="text-xs text-muted-foreground">
-          {new Date(event.startDate).toLocaleDateString("en-US", {
-            month: "long",
-            year: "numeric",
-            weekday: "short",
-            day: "numeric",
-          })}
-        </p> */}
+      <CardFooter className="flex flex-col items-start gap-3">
+        <p className="flex items-center gap-1 text-base text-muted-foreground">
+          <BiTimeFive />
+          {event.time && event.time.toLocaleString()}
+        </p>
+        <p className="flex items-center gap-1 text-base text-muted-foreground">
+          <MdDateRange />
+          {event.date &&
+            new Date(event.date).toLocaleDateString("en-US", {
+              month: "long",
+              year: "numeric",
+              weekday: "short",
+              day: "numeric",
+            })}
+        </p>
       </CardFooter>
     </Card>
   );
