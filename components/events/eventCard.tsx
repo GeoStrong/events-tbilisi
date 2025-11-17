@@ -33,7 +33,7 @@ interface EventCardProps {
 const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const { map } = useSelector((state: RootState) => state.map);
-  const [eventImage, setEventImage] = useState<string>();
+  const [eventImage, setEventImage] = useState<string | null>();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setValue, removeValue] = useLocalStorage<Poi | null>(

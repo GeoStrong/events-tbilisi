@@ -9,6 +9,16 @@ export const isFile = (value: unknown) => {
   return value instanceof File;
 };
 
+export const isValidImage = (url?: string) => {
+  if (!url) return null;
+
+  if (url.endsWith("/")) return null;
+
+  const validExtensions = [".png", ".jpg", ".jpeg", ".webp", ".gif"];
+  if (validExtensions.some((ext) => url.toLowerCase().includes(ext)))
+    return url;
+};
+
 export const zoomToLocation = (map: google.maps.Map | null, location: Poi) => {
   map?.setZoom(10);
   map?.setCenter(location.location);

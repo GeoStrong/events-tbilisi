@@ -1,8 +1,8 @@
-import { IoIosPin } from "react-icons/io";
 import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
 import { Poi } from "@/lib/types";
 import { AdvancedMarker } from "@vis.gl/react-google-maps";
 import React from "react";
+import HoverPin from "./hoverPin";
 
 const PoiMarkers: React.FC<{ pois: Poi[] }> = ({ pois }) => {
   const { handleReplace } = useAddSearchQuery();
@@ -26,12 +26,7 @@ const PoiMarkers: React.FC<{ pois: Poi[] }> = ({ pois }) => {
           position={poi.location}
           clickable
         >
-          <IoIosPin id={poi.key} className="text-4xl text-red-500" />
-          {/* <Pin
-            background={"#FBBC04"}
-            glyphColor={"#000"}
-            borderColor={"#000"}
-          /> */}
+          <HoverPin id={poi.key} />
         </AdvancedMarker>
       ))}
     </>

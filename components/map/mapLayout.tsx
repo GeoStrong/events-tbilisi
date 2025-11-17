@@ -7,6 +7,8 @@ import EventDescription from "@/components/events/eventDescription";
 import events from "@/lib/data/events";
 import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
 import MapLoadingLayout from "./mapLayoutLoading";
+import { useDispatch } from "react-redux";
+import { mapActions } from "@/lib/store/mapSlice";
 
 interface MapLayoutProps {
   mapKey: string;
@@ -15,9 +17,14 @@ interface MapLayoutProps {
 const MapLayout: React.FC<MapLayoutProps> = ({ mapKey }) => {
   const eventButtonRef = useRef<HTMLButtonElement>(null!);
   const { searchParams, handleReplace } = useAddSearchQuery();
+  const dispatch = useDispatch();
 
   const eventId = searchParams.get("activity");
   const activeEvent = eventId ? events.find((e) => e.id === eventId) : null;
+
+  useEffect(() => {
+    dispatch(mapActions.setIsFloatingEnabled(false));
+  }, [dispatch]);
 
   useEffect(() => {
     if (activeEvent && eventButtonRef.current) {

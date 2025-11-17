@@ -1,6 +1,6 @@
 import { supabase } from "../supabase/supabaseClient";
-import { ImageType, NewEventEntity } from "../types";
-import { isString } from "./helperFunctions";
+import { EventEntity, ImageType, NewEventEntity } from "../types";
+import { isString, isValidImage } from "./helperFunctions";
 
 export const getCategories = async () => {
   const { data, error } = await supabase.from("categories").select("*");
@@ -105,7 +105,8 @@ export const getEventImageUrl = async (imageLocation: ImageType) => {
   const { data: imageData } = supabase.storage
     .from("Events-Tbilisi media")
     .getPublicUrl(image);
-  const eventImage = imageData?.publicUrl;
+
+  const eventImage = isValidImage(imageData.publicUrl);
 
   return eventImage;
 };
@@ -114,11 +115,11 @@ export const postNewEvent = async (activity: NewEventEntity) => {
   const { data, error } = await supabase
     .from("events")
     .insert([activity])
-    .single();
+    .select("*");
 
   if (error) throw error;
 
-  return data;
+  return data as EventEntity[];
 };
 
 export const postEventCategory = async (eventId: string, category: string) => {
