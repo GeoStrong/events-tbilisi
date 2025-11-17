@@ -80,7 +80,11 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick, userProfile }) => {
               {userProfile === null && <HeaderProfileLoader />}
               {userProfile?.length === 0 ||
               (userProfile && userProfile[0] === null) ? (
-                <Button onClick={onAuthClick} variant="ghost" className="gap-2">
+                <Button
+                  onClick={onAuthClick}
+                  variant="ghost"
+                  className="gap-2 border"
+                >
                   <User className="h-5 w-5" />
                   <span className="md:inline">Sign In</span>
                 </Button>

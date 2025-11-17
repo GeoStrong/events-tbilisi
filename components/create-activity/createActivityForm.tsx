@@ -7,8 +7,9 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import { NewEventEntity } from "@/lib/types";
+import { EventCategories, NewEventEntity } from "@/lib/types";
 import { toast } from "sonner";
+import { categories } from "@/lib/data/categories";
 
 interface CreateActivityProps {
   onSubmit: (values: NewEventEntity) => void;
@@ -29,6 +30,7 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({ onSubmit }) => {
     targetAudience: null,
     maxAttendees: null,
     host: "individual",
+    categories: [],
   };
 
   const validationSchema = Yup.object({
@@ -37,6 +39,9 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({ onSubmit }) => {
     date: Yup.string().required("Date is required"),
     time: Yup.string().required("Time is required"),
     location: Yup.string().required("Location is required"),
+    categories: Yup.array()
+      .min(1, "Category is required")
+      .max(3, "Maximum 3 categories allowed"),
   });
 
   const handleImageChange = (
@@ -59,6 +64,7 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({ onSubmit }) => {
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={async (values, { setSubmitting, resetForm }) => {
+        console.log(values);
         try {
           onSubmit(values);
           resetForm();
@@ -71,9 +77,9 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({ onSubmit }) => {
         }
       }}
     >
-      {({ isSubmitting, setFieldValue }) => (
+      {({ values, isSubmitting, setFieldValue }) => (
         <Form className="h-full">
-          <div className="mb-3 h-1/2 space-y-4 overflow-y-scroll p-3">
+          <div className="mb-3 space-y-4 overflow-y-scroll p-3 md:h-1/3">
             {/* Title */}
             <div>
               <label htmlFor="title">Title *</label>
@@ -176,6 +182,61 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({ onSubmit }) => {
               />
               <ErrorMessage
                 name="location"
+                component="div"
+                className="text-sm text-red-500"
+              />
+            </div>
+
+            {/* Categories */}
+            <div>
+              <label htmlFor="categories">Select categories * (max 3)</label>
+
+              <div className="flex flex-wrap gap-3">
+                {categories.map((category) => {
+                  const selected =
+                    values.categories &&
+                    values.categories.includes(category.id as EventCategories);
+
+                  return (
+                    <Button
+                      key={category.id}
+                      type="button"
+                      className={`${
+                        selected &&
+                        "bg-primary text-white hover:bg-primary/90 hover:text-white"
+                      } border text-sm`}
+                      variant="ghost"
+                      onClick={() => {
+                        if (selected) {
+                          setFieldValue(
+                            "categories",
+                            values.categories &&
+                              values.categories.filter(
+                                (c) => c !== category.id,
+                              ),
+                          );
+                        } else {
+                          // Add category (max 3)
+                          if (
+                            values.categories &&
+                            values.categories.length < 3
+                          ) {
+                            setFieldValue("categories", [
+                              ...(values.categories && values.categories),
+                              category.id,
+                            ]);
+                          }
+                        }
+                      }}
+                    >
+                      {category.name}
+                    </Button>
+                  );
+                })}
+              </div>
+
+              <ErrorMessage
+                name="categories"
                 component="div"
                 className="text-sm text-red-500"
               />

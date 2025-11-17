@@ -120,3 +120,34 @@ export const postNewEvent = async (activity: NewEventEntity) => {
 
   return data;
 };
+
+export const postEventCategory = async (eventId: string, category: string) => {
+  const { data, error } = await supabase
+    .from("event_categories")
+    .insert([
+      {
+        event_id: eventId,
+        category_id: category,
+      },
+    ])
+    .select("*");
+
+  if (error) return error;
+
+  return data;
+};
+
+export const postNewEventCategories = async (
+  eventId: string,
+  categories: string[],
+) => {
+  const data = (
+    await Promise.all(
+      categories!.map((category) =>
+        postEventCategory(eventId, category).then((category) => category),
+      ),
+    )
+  ).flat();
+
+  return data;
+};

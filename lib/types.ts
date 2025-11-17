@@ -56,7 +56,7 @@ export interface EventEntity {
   endTime: Date | string | null;
   location: string;
   googleLocation?: google.maps.LatLngLiteral;
-  categories?: EventCategories[];
+  categories?: EventCategories[] | string[];
   targetAudience?: string | null;
   host?: "organization" | "individual";
   entryFee?: boolean;

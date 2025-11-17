@@ -2,13 +2,20 @@
 
 import React from "react";
 import CreateActivityForm from "./createActivityForm";
-import { NewEventEntity } from "@/lib/types";
+import { EventEntity, NewEventEntity } from "@/lib/types";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import { handleUploadFile, isFile } from "@/lib/functions/helperFunctions";
-import { postNewEvent } from "@/lib/functions/supabaseFunctions";
+import {
+  postNewEvent,
+  postNewEventCategories,
+} from "@/lib/functions/supabaseFunctions";
+import { Button } from "../ui/button";
+import { useDispatch } from "react-redux";
+import { authActions } from "@/lib/store/authSlice";
 
 const CreateActivityLayout: React.FC = () => {
   const { user } = useGetUserProfile();
+  const dispatch = useDispatch();
 
   const submitHandler = async (values: NewEventEntity) => {
     const imageUrl =
@@ -30,12 +37,32 @@ const CreateActivityLayout: React.FC = () => {
       image: imageUrl || null,
     };
 
-    await postNewEvent(newActivity);
+    const newEvent = (await postNewEvent(newActivity)) as EventEntity;
+
+    if (values.categories)
+      await postNewEventCategories(newEvent.id, values.categories);
   };
 
   return (
     <div className="w-full p-3 pb-10 md:pb-0">
-      <CreateActivityForm onSubmit={submitHandler} />
+      {user ? (
+        <CreateActivityForm onSubmit={submitHandler} />
+      ) : (
+        <div className="flex flex-col items-center gap-4">
+          <p className="text-center text-xl">
+            Please sign up or log in to your account to create an activity
+          </p>
+          <Button
+            className="border"
+            variant="ghost"
+            onClick={() => {
+              dispatch(authActions.setAuthDialogOpen(true));
+            }}
+          >
+            Sign in
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

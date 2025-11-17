@@ -22,7 +22,6 @@ import {
   getCategoriesByEventId,
   getEventImageUrl,
 } from "@/lib/functions/supabaseFunctions";
-import { CiLocationOn } from "react-icons/ci";
 import { BiTimeFive } from "react-icons/bi";
 import { MdDateRange } from "react-icons/md";
 
