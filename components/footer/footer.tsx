@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
         <div className="hidden w-full md:block">
           <div className="flex flex-col items-center justify-around md:items-start">
             <Link className="text-lg" href="/">
-              Events
+              Activities
             </Link>
             <Link className="text-lg" href="/map">
               Map
@@ -22,7 +22,7 @@ const Footer: React.FC = () => {
           <div className="flex flex-col items-center justify-evenly gap-3 md:flex-row">
             <div className=""></div>
             <p className="text-center text-sm text-gray-500 dark:text-gray-400">
-              © 2025 Events-Tbilisi. All rights reserved.
+              © 2025 What&apos;sOn-Tbilisi. All rights reserved.
             </p>
             <div className="flex gap-2">
               <Link href="https://github.com/GeoStrong" target="_blank">

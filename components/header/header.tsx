@@ -25,7 +25,7 @@ const Header: React.FC = () => {
   const { isMobile } = useScreenSize();
 
   const headerBg =
-    (pathname === "/map" || pathname === "/create-activity") && isMobile
+    pathname === "/map" && isMobile
       ? "bg-transparent border-none"
       : "bg-white dark:bg-gray-900";
 

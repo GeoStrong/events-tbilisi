@@ -76,7 +76,7 @@ const EventCards: React.FC = () => {
     <>
       <h2 className="section-title mt-3 md:mt-1">
         {categoryId && category.length !== 0 ? category[0].name : "Recent"}{" "}
-        events in Tbilisi
+        activities in Tbilisi
       </h2>
       {events === null && (
         <div className="mt-5">
@@ -85,7 +85,7 @@ const EventCards: React.FC = () => {
       )}
       {events?.length === 0 ? (
         <p className="mt-3 text-center">
-          No events found for the selected category. Try another{" "}
+          No activities found for the selected category. Try another{" "}
           <span className="text-primary">category</span>.
         </p>
       ) : (

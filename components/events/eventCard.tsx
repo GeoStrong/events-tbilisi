@@ -96,11 +96,11 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
           />
         </div>
         <div className="absolute top-0 h-4 w-full px-2 text-right">
-          <div className="flex justify-end gap-2">
+          <div className="grid grid-cols-2 gap-2 justify-self-end md:grid-cols-3">
             {categories.map((category) => (
               <span
                 key={category.id}
-                className={`rounded-full bg-${category.color} px-3 py-1 text-base text-white`}
+                className={`rounded-full text-center bg-${category.color} px-3 py-1 text-sm text-white`}
               >
                 {category.name}
               </span>

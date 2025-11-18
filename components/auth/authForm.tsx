@@ -60,7 +60,7 @@ const AuthDialog: React.FC<AuthDialogProps> = ({ open, onOpenChange }) => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Welcome to Events-Tbilisi</DialogTitle>
+          <DialogTitle>Welcome to What&apos;sOn-Tbilisi</DialogTitle>
           <DialogDescription>
             {isSignin
               ? "Sign in to your account"

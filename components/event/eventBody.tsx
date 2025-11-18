@@ -15,6 +15,7 @@ import {
   getEventImageUrl,
   getEventsByCategoryId,
 } from "@/lib/functions/supabaseFunctions";
+import { Badge } from "../ui/badge";
 
 interface EventBodyProps {
   categories: Category[];
@@ -62,15 +63,22 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
           <h3 className="my-3 text-base font-semibold md:text-xl">
             About the Event
           </h3>
-          <div className="flex gap-2">
-            {categories.map((category) => (
-              <span
-                key={category.id}
-                className={`rounded-full bg-${category.color} px-2 text-xs text-white`}
-              >
-                {category.name}
-              </span>
-            ))}
+          <div className="flex items-end justify-between">
+            <div className="flex gap-2">
+              {categories.map((category) => (
+                <span
+                  key={category.id}
+                  className={`rounded-full bg-${category.color} px-2 py-1 text-sm text-white`}
+                >
+                  {category.name}
+                </span>
+              ))}
+            </div>
+            <Badge
+              variant={`${event.status === "active" ? "success" : event.status === "inactive" ? "destructive" : "default"}`}
+            >
+              {event.status?.toUpperCase()}
+            </Badge>
           </div>
           <p className="mt-3 text-sm text-muted-foreground md:text-lg">
             {event.description}
@@ -78,26 +86,36 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
           <h3 className="mt-3 text-base font-semibold md:text-xl">
             Event Details:
           </h3>
-          <div className="mt-2">
-            {/* <EventDetails
-              detail="📅 Date"
-              value={new Date(event.startDate).toLocaleString("en-US", {
-                month: "long",
-                year: "numeric",
-                weekday: "short",
-                day: "numeric",
-              })}
-            /> */}
-            <EventDetails
-              detail="⌚ Time"
-              // value={new Date(event.startDate).toLocaleString("en-US", {
-              //   hour: "2-digit",
-              //   minute: "2-digit",
-              // })}
-              value={event.time as string}
-            />
-            <EventDetails detail="📍 Address" value={event.location} />
+          <div className="mt-2 flex w-full flex-col justify-between md:flex-row">
+            <div className="space-y-1">
+              <EventDetails detail="📍 Address" value={event.location} />
+              <EventDetails detail="⌚ Time" value={event.time as string} />
+              <EventDetails
+                detail="📅 Date"
+                value={
+                  event.date &&
+                  new Date(event.date).toLocaleString("en-US", {
+                    month: "long",
+                    year: "numeric",
+                    weekday: "short",
+                    day: "numeric",
+                  })
+                }
+              />
+            </div>
+            <div className="space-y-1">
+              <EventDetails detail="🔗 Link" value={event.link} />
+              <EventDetails
+                detail="👥 Target Audience"
+                value={event.targetAudience}
+              />
+              <EventDetails
+                detail="🔢 Max Attendees"
+                value={event.maxAttendees}
+              />
+            </div>
           </div>
+
           {event.link && (
             <Link
               href={event.link}
@@ -148,16 +166,6 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
               detail="Maximum Attendees"
               value={event.maxAttendees}
             />
-            <EventDetails detail="Status" value={event.status} />
-            {/* <EventDetails
-              detail="End Date"
-              value={new Date(event.endDate).toLocaleString("en-US", {
-                month: "long",
-                year: "numeric",
-                weekday: "short",
-                day: "numeric",
-              })}
-            /> */}
             <EventDetails
               detail="Participants"
               value={event.participants?.length}
@@ -179,17 +187,21 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
         </h3>
         <div className="mt-3 flex flex-col gap-2">
           {similarEvents.map((event) => (
-            <div key={event.id} className="flex justify-between gap-2">
+            <div
+              key={event.id}
+              className="flex justify-between gap-2 rounded-lg border p-2 dark:border-gray-600"
+            >
               <div className="flex flex-col">
                 <h3 className="text-sm font-semibold">{event.title}</h3>
-                {/* <p className="text-xs text-muted-foreground">
-                  {new Date(event.startDate).toLocaleString("en-US", {
-                    month: "long",
-                    year: "numeric",
-                    weekday: "short",
-                    day: "numeric",
-                  })}
-                </p> */}
+                <p className="text-xs text-muted-foreground">
+                  {event.date &&
+                    new Date(event.date).toLocaleString("en-US", {
+                      month: "long",
+                      year: "numeric",
+                      weekday: "short",
+                      day: "numeric",
+                    })}
+                </p>
               </div>
               <Link href={`/${event.id}`}>
                 <CiShare1 />

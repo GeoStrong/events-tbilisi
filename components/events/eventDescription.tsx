@@ -27,6 +27,8 @@ import {
   getCategoriesByEventId,
   getEventImageUrl,
 } from "@/lib/functions/supabaseFunctions";
+import { isString } from "@/lib/functions/helperFunctions";
+import BookmarkButton from "../general/bookmarkButton";
 
 const snapPoints = [0.5, 1];
 
@@ -46,7 +48,6 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffectOnce(() => {
-    // Always open at full height when mounted
     setSnap(1);
   });
   const [eventImage, setEventImage] = useState<string>();
@@ -93,20 +94,23 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
           >
             <div className="flex h-screen w-full flex-col overflow-y-auto">
               <DrawerHeader className="relative">
-                <div className="absolute left-5 top-0 z-20 flex gap-2">
-                  {categories.map((category) => (
-                    <span
-                      key={category.id}
-                      className={`rounded-full bg-${category.color} px-2 text-xs text-white`}
-                    >
-                      {category.name}
-                    </span>
-                  ))}
+                <div className="absolute left-5 top-0 z-20 flex w-[91%] items-center justify-between">
+                  <div className="flex gap-2">
+                    {categories.map((category) => (
+                      <span
+                        key={category.id}
+                        className={`rounded-full bg-${category.color} px-2 py-1 text-xs text-white`}
+                      >
+                        {category.name}
+                      </span>
+                    ))}
+                  </div>
+                  <BookmarkButton eventId={event.id} />
                 </div>
                 <DrawerTitle className="mt-3 text-center text-xl font-bold">
                   {event.title}
                 </DrawerTitle>
-                <DrawerDescription className="text-left text-base">
+                <DrawerDescription className="text-left text-lg">
                   {event.description}
                 </DrawerDescription>
                 <div className="mt-5 text-left">
@@ -119,18 +123,45 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
                     </p>
                   )}
                   <p className="">
-                    Location:{" "}
-                    <span className="linear-yellow text-base">
-                      {event.location}
+                    Address:{" "}
+                    <span className="text-lg font-bold">{event.location}</span>
+                  </p>
+
+                  <p className="text-md">
+                    Time:{" "}
+                    <span className="text-lg font-bold">
+                      {isString(event?.time) ? event.time : ""}
                     </span>
                   </p>
-                  <p className="">
-                    Target Audience:
-                    <span className="linear-yellow text-base">
-                      {" "}
-                      {event.targetAudience}
+                  {event.endTime && (
+                    <p className="text-md">
+                      End Time:{" "}
+                      <span className="text-lg font-bold">
+                        {isString(event?.endTime) ? event.endTime : ""}
+                      </span>
+                    </p>
+                  )}
+                  <p className="text-md">
+                    Start Date:{" "}
+                    <span className="text-lg font-bold">
+                      {event.date &&
+                        new Date(event.date).toLocaleString("en-US", {
+                          month: "long",
+                          year: "numeric",
+                          weekday: "short",
+                          day: "numeric",
+                        })}
                     </span>
                   </p>
+                  {event.targetAudience && (
+                    <p className="">
+                      Target Audience:
+                      <span className="text-lg font-bold">
+                        {" "}
+                        {event.targetAudience}
+                      </span>
+                    </p>
+                  )}
                   {event?.image && (
                     <Image
                       src={eventImage || defaultEventImg.src}
@@ -141,34 +172,6 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
                       unoptimized
                     />
                   )}
-                  <div className="mt-3 flex items-center justify-evenly gap-2">
-                    {/* <p className="text-md text-center">
-                      Start Date:{" "}
-                      <span className="linear-yellow block text-base">
-                        {new Date(event.startDate).toLocaleString("en-US", {
-                          month: "long",
-                          year: "numeric",
-                          weekday: "short",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </span>
-                    </p> */}
-                    {/* <p className="text-md text-center">
-                      End Date:{" "}
-                      <span className="linear-yellow block text-base">
-                        {new Date(event.endDate).toLocaleString("en-US", {
-                          month: "long",
-                          year: "numeric",
-                          weekday: "short",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </span>
-                    </p> */}
-                  </div>
                   <p className="de mt-4 flex items-center justify-between gap-2 md:justify-start">
                     Share this event with friends:
                     <Share event={event}>

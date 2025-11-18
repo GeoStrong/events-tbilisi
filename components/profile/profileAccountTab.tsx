@@ -1,4 +1,6 @@
 import React from "react";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
 import { TabsContent } from "../ui/tabs";
 import {
   Card,
@@ -8,62 +10,102 @@ import {
   CardTitle,
 } from "../ui/card";
 import { Label } from "../ui/label";
-import { Separator } from "@radix-ui/react-dropdown-menu";
-import { Lock } from "lucide-react";
-import { Button } from "../ui/button";
 import { UserProfile } from "@/lib/types";
+import { Button } from "../ui/button";
+import { signOut } from "@/lib/auth/auth";
 
-const ProfileAccountTab: React.FC<{ user: UserProfile | null }> = ({
+interface ProfileAccountTabProps {
+  user: UserProfile | null;
+  edit: boolean;
+  userDataValues: string[];
+  onSetUserDataFunctions: React.Dispatch<React.SetStateAction<string>>[];
+}
+
+const ProfileAccountTab: React.FC<ProfileAccountTabProps> = ({
   user,
+  edit,
+  userDataValues,
+  onSetUserDataFunctions,
 }) => {
+  const [nameValue, phoneValue, bioValue] = userDataValues;
+  const [handleName, handlePhone, handleBio] = onSetUserDataFunctions;
+
   return (
     <>
       <TabsContent value="account" className="space-y-4">
         <Card className="dark:bg-gray-800">
           <CardHeader>
-            <CardTitle>Account Settings</CardTitle>
+            <CardTitle>Profile Information</CardTitle>
             <CardDescription>
-              Manage your account security and preferences.
+              Update your personal information and bio.
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            {user ? (
-              <>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Lock className="h-4 w-4 text-muted-foreground" />
-                    <Label>Password</Label>
-                  </div>
-                  <p className="mb-2 text-sm text-muted-foreground">
-                    Keep your account secure by updating your password
-                    regularly.
-                  </p>
-                  <Button variant="outline">Change Password</Button>
-                </div>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="profile-name">Name</Label>
+              <Input
+                id="profile-name"
+                disabled={!edit}
+                placeholder="Enter your name"
+                className="dark:border-gray-500"
+                value={nameValue}
+                onChange={(event) => {
+                  handleName(event.target.value);
+                }}
+              />
+            </div>
 
-                <Separator />
-
-                <div className="space-y-2">
-                  <Label className="text-destructive">Danger Zone</Label>
-                  <p className="mb-2 text-sm text-muted-foreground">
-                    Permanently delete your account and all associated data.
-                  </p>
-                  <Button variant="destructive">Delete Account</Button>
-                </div>
-              </>
-            ) : (
-              <div className="space-y-4 py-8 text-center">
-                <div>
-                  <p className="mb-2">
-                    You&apos;re currently using a guest profile.
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    Sign in to access account settings and sync your profile
-                    across devices.
-                  </p>
-                </div>
+            {user && (
+              <div className="space-y-2">
+                <Label htmlFor="profile-email">Email</Label>
+                <Input
+                  id="profile-email"
+                  value={user.email}
+                  disabled
+                  className="dark:border-gray-500"
+                />
               </div>
             )}
+
+            <div className="space-y-2">
+              <Label htmlFor="profile-website">Phone</Label>
+              <Input
+                id="profile-website"
+                disabled={!edit}
+                placeholder="+123456789"
+                className="dark:border-gray-500"
+                type="tel"
+                value={phoneValue}
+                onChange={(event) => {
+                  handlePhone(event.target.value);
+                }}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="profile-bio">Bio</Label>
+              <Textarea
+                id="profile-bio"
+                placeholder="Tell us about yourself..."
+                disabled={!edit}
+                className="dark:border-gray-500"
+                rows={4}
+                value={bioValue}
+                onChange={(event) => {
+                  handleBio(event.target.value);
+                }}
+              />
+            </div>
+
+            <Button
+              variant="destructive"
+              onClick={async () => {
+                await signOut();
+                window.location.reload();
+              }}
+            >
+              Log out
+            </Button>
           </CardContent>
         </Card>
       </TabsContent>

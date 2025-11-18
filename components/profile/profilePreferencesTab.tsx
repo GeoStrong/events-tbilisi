@@ -9,11 +9,12 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { Bell, Globe, Mail, Palette } from "lucide-react";
+import { Bell, Globe, Lock, Mail, Palette } from "lucide-react";
 import { Label } from "../ui/label";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Switch } from "../ui/switch";
 import useThemeSwitch from "@/lib/hooks/useThemeSwitch";
+import { Button } from "../ui/button";
 
 const ProfilePreferencesTab: React.FC = () => {
   const { onThemeToggle } = useThemeSwitch();
@@ -52,11 +53,6 @@ const ProfilePreferencesTab: React.FC = () => {
                   Get reminders before your saved events start.
                 </p>
               </div>
-              {/* <Switch
-                        id="event-reminders"
-                        checked={eventReminders}
-                        onCheckedChange={setEventReminders}
-                      /> */}
             </div>
 
             <Separator />
@@ -71,11 +67,6 @@ const ProfilePreferencesTab: React.FC = () => {
                   Subscribe to our weekly newsletter with curated events.
                 </p>
               </div>
-              {/* <Switch
-                        id="newsletter"
-                        checked={newsletterSubscription}
-                        onCheckedChange={setNewsletterSubscription}
-                      /> */}
             </div>
           </CardContent>
         </Card>
@@ -93,6 +84,37 @@ const ProfilePreferencesTab: React.FC = () => {
                 <Palette className="h-4 w-4 text-muted-foreground" />
                 <Switch onCheckedChange={onThemeToggle} />
               </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="dark:bg-gray-800">
+          <CardHeader>
+            <CardTitle>Account Settings</CardTitle>
+            <CardDescription>
+              Customize your viewing experience.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Lock className="h-4 w-4 text-muted-foreground" />
+                <Label>Password</Label>
+              </div>
+              <p className="mb-2 text-sm text-muted-foreground">
+                Keep your account secure by updating your password regularly.
+              </p>
+              <Button variant="outline">Change Password</Button>
+            </div>
+
+            <Separator />
+
+            <div className="space-y-2">
+              <Label className="text-destructive">Danger Zone</Label>
+              <p className="mb-2 text-sm text-muted-foreground">
+                Permanently delete your account and all associated data.
+              </p>
+              <Button variant="destructive">Delete Account</Button>
             </div>
           </CardContent>
         </Card>

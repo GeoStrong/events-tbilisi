@@ -204,7 +204,7 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
                   className={`${
                     selected &&
                     "bg-primary text-white hover:bg-primary/90 hover:text-white"
-                  } border text-sm`}
+                  } border text-sm dark:border-gray-600`}
                   variant="ghost"
                   onClick={() => {
                     if (selected) {
@@ -289,6 +289,7 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
             type="file"
             accept="image/*"
             onChange={(e) => handleImageChange(e)}
+            className="dark:border-gray-600"
           />
           {imagePreview && (
             <Image

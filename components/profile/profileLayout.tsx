@@ -6,15 +6,17 @@ import { ArrowLeft } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import Link from "next/link";
 import ProfileHeader from "./profileHeader";
-import ProfileAboutTab from "./profileAboutTab";
-import ProfileSavedTab from "./profileSavedTab";
 import ProfilePreferencesTab from "./profilePreferencesTab";
-import ProfileAccountTab from "./profileAccountTab";
 import ProfileLayoutLoading from "./profileLayoutLoading";
 import { redirect, useRouter } from "next/navigation";
 import { handleUploadUserInformation } from "@/lib/profile/profile";
 import { useLocation } from "react-use";
+import { AiOutlineUser } from "react-icons/ai";
+import { BsCalendar2Event } from "react-icons/bs";
+import { FiSettings } from "react-icons/fi";
 import { toast } from "sonner";
+import ProfileActivitiesTab from "./profileActivitiesTab";
+import ProfileAccountTab from "./profileAccountTab";
 
 const ProfileLayout: React.FC = () => {
   const { user } = useGetUserProfile();
@@ -55,7 +57,7 @@ const ProfileLayout: React.FC = () => {
           <div className="w-full px-5 py-8">
             <Link href="/" className="mb-6 flex items-center gap-3">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Events
+              Back to Activities
             </Link>
 
             <div className="grid gap-6">
@@ -66,30 +68,17 @@ const ProfileLayout: React.FC = () => {
                 onSaveHandle={handleSave}
               />
               <Tabs defaultValue={activetab || "about"} className="w-full">
-                <TabsList className="grid w-full grid-cols-4">
+                <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger
-                    value="about"
+                    value="activities"
                     onClick={() => {
                       goToHash("");
                     }}
                   >
-                    About
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="saved"
-                    onClick={() => {
-                      goToHash("saved");
-                    }}
-                  >
-                    Saved
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="preferences"
-                    onClick={() => {
-                      goToHash("preferences");
-                    }}
-                  >
-                    Preferences
+                    <div className="md:hidden">
+                      <BsCalendar2Event />
+                    </div>
+                    <p className="hidden md:block">Activities</p>
                   </TabsTrigger>
                   <TabsTrigger
                     value="account"
@@ -97,22 +86,34 @@ const ProfileLayout: React.FC = () => {
                       goToHash("account");
                     }}
                   >
-                    Account
+                    <div className="md:hidden">
+                      <AiOutlineUser />
+                    </div>
+                    <p className="hidden md:block">Account</p>
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="preferences"
+                    onClick={() => {
+                      goToHash("preferences");
+                    }}
+                  >
+                    <div className="md:hidden">
+                      <FiSettings />
+                    </div>
+                    <p className="hidden md:block">Preferences</p>
                   </TabsTrigger>
                 </TabsList>
 
-                <ProfileAboutTab
+                <ProfileActivitiesTab userId={user.id} />
+
+                <ProfileAccountTab
                   user={user}
                   edit={editing}
                   userDataValues={userDataValues}
                   onSetUserDataFunctions={userDataSetFunctions}
                 />
 
-                <ProfileSavedTab userId={user.id} />
-
                 <ProfilePreferencesTab />
-
-                <ProfileAccountTab user={user} />
               </Tabs>
             </div>
           </div>
