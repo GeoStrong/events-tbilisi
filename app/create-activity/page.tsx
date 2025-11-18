@@ -1,5 +1,4 @@
 import React from "react";
-import MapWrapper from "@/components/map/map";
 import CreateActivityLayout from "@/components/create-activity/createActivityLayout";
 
 const Map: React.FC = () => {
@@ -10,12 +9,7 @@ const Map: React.FC = () => {
       <h1 className="mt-5 text-center text-3xl font-bold">
         Create a New Public Activity
       </h1>
-      <div className="mt-3 flex w-full flex-col justify-between gap-2 rounded-md bg-white dark:bg-gray-800 md:max-h-[500px] lg:flex-row">
-        <div className="w-full rounded-2xl md:block">
-          <MapWrapper API_KEY={key} height="h-96" />
-        </div>
-        <CreateActivityLayout />
-      </div>
+      <CreateActivityLayout mapKey={key} />
     </>
   );
 };

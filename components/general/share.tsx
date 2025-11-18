@@ -36,7 +36,7 @@ const Share: React.FC<{ children: React.ReactNode; event: EventEntity }> = ({
     (async () => {
       const imageUrl = await getEventImageUrl(event.image);
 
-      setEventImage(imageUrl);
+      setEventImage(imageUrl!);
     })();
   }, [event.image]);
 

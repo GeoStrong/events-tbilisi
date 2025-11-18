@@ -41,7 +41,7 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
     (async () => {
       const imageUrl = await getEventImageUrl(event.image);
 
-      setEventImage(imageUrl);
+      setEventImage(imageUrl!);
     })();
   }, [event.image]);
 

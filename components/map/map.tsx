@@ -19,7 +19,13 @@ import useMapPinFloat from "@/lib/hooks/useMapPinFloat";
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/store/store";
 
-const MapComponent: React.FC<{ mapHeight?: string }> = ({
+interface MapProps {
+  displayEvents?: boolean;
+  mapHeight?: string;
+}
+
+const MapComponent: React.FC<MapProps> = ({
+  displayEvents = true,
   mapHeight = "h-screen md:min-h-[500px]",
 }) => {
   const map = useMap();
@@ -63,7 +69,7 @@ const MapComponent: React.FC<{ mapHeight?: string }> = ({
           onClickHandler(e);
         }}
       >
-        <PoiMarkers pois={eventsLocations} />
+        {displayEvents && <PoiMarkers pois={eventsLocations} />}
 
         {clickedLatLng && (
           <AdvancedMarker position={clickedLatLng}>
@@ -90,13 +96,14 @@ const MapComponent: React.FC<{ mapHeight?: string }> = ({
   );
 };
 
-const MapWrapper: React.FC<{ API_KEY: string; height?: string }> = ({
-  API_KEY,
-  height,
-}) => {
+const MapWrapper: React.FC<{
+  API_KEY: string;
+  height?: string;
+  displayEvents?: boolean;
+}> = ({ API_KEY, height, displayEvents }) => {
   return (
     <APIProvider apiKey={API_KEY}>
-      <MapComponent mapHeight={height} />
+      <MapComponent mapHeight={height} displayEvents={displayEvents} />
     </APIProvider>
   );
 };

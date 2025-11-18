@@ -8,12 +8,15 @@ import Image from "next/image";
 import { EventCategories, NewEventEntity } from "@/lib/types";
 import { categories } from "@/lib/data/categories";
 import { useEffect } from "react";
+import useScreenSize from "@/lib/hooks/useScreenSize";
+import { FaMapMarkedAlt } from "react-icons/fa";
 
 interface CreateActivityProps {
   formik: FormikProps<NewEventEntity>;
   imagePreview: string | null;
   handleImagePreview: React.Dispatch<React.SetStateAction<string | null>>;
   latLng: google.maps.LatLngLiteral | null;
+  handleOpenMobileMap: () => void;
 }
 
 const CreateActivityForm: React.FC<CreateActivityProps> = ({
@@ -21,7 +24,9 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
   imagePreview,
   handleImagePreview,
   latLng,
+  handleOpenMobileMap,
 }) => {
+  const { isMobile } = useScreenSize();
   useEffect(() => {
     if (latLng) {
       formik.setFieldValue("googleLocation", latLng);
@@ -36,8 +41,6 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
       handleImagePreview(URL.createObjectURL(file));
     }
   };
-
-  console.log(latLng);
 
   return (
     <Form className="h-full">
@@ -152,18 +155,29 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
         {/* Google Location */}
         <div className="flex flex-col">
           <label htmlFor="googleLocation">Google Coordinates *</label>
-          <Input
-            className="p-3 dark:border-gray-600"
-            id="googleLocation"
-            name="googleLocation"
-            placeholder="Please select on the map"
-            disabled={true}
-            value={
-              latLng
-                ? `lat: ${latLng?.lat}, lng: ${latLng?.lng}`
-                : "Please select on the map"
-            }
-          />
+          <div className="relative">
+            <Input
+              className="p-3 dark:border-gray-600"
+              id="googleLocation"
+              name="googleLocation"
+              placeholder="Please select on the map"
+              disabled={true}
+              value={
+                latLng
+                  ? `lat: ${latLng?.lat}, lng: ${latLng?.lng}`
+                  : "Please select on the map"
+              }
+            />
+            {isMobile && (
+              <button
+                type="button"
+                className="absolute right-4 top-[0.35rem] rounded-lg border bg-primary px-2 py-1"
+                onClick={handleOpenMobileMap}
+              >
+                <FaMapMarkedAlt className="text-white" />
+              </button>
+            )}
+          </div>
           <ErrorMessage
             name="googleLocation"
             component="div"

@@ -5,7 +5,7 @@ export const locations: Poi[] = events
   .filter((event) => event.googleLocation !== undefined)
   .map((event) => {
     return {
-      key: `event-${event.id}`,
+      key: `activity-${event.id}`,
       location: event.googleLocation!,
     };
   });

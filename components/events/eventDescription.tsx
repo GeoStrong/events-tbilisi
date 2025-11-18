@@ -55,7 +55,7 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
     (async () => {
       const imageUrl = await getEventImageUrl(event.image);
 
-      setEventImage(imageUrl);
+      setEventImage(imageUrl!);
     })();
   }, [event.image]);
 

@@ -1,6 +1,4 @@
 import { EventEntity } from "../types";
-// import stockImg1 from "@/public/images/R.jpeg";
-// import stockImg2 from "@/public/images/R (1).jpeg";
 import { getEvents } from "../functions/supabaseFunctions";
 
 // const events2: EventEntity[] = [

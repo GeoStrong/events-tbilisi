@@ -1,0 +1,44 @@
+import React from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import Link from "next/link";
+
+interface CreateActivityAlertProps {
+  buttonRef: React.RefObject<HTMLButtonElement | null>;
+}
+
+const CreateActivityAlert: React.FC<CreateActivityAlertProps> = ({
+  buttonRef,
+}) => {
+  return (
+    <>
+      <AlertDialog>
+        <AlertDialogTrigger ref={buttonRef} className="hidden">
+          Open
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>You created Activity!</AlertDialogTitle>
+            <AlertDialogDescription>
+              You have successfully created an Activity 🎉.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction>
+              <Link href="/">Main Menu</Link>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
+  );
+};
+export default CreateActivityAlert;
