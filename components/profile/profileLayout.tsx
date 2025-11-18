@@ -67,7 +67,7 @@ const ProfileLayout: React.FC = () => {
                 onEditHandle={setEditing}
                 onSaveHandle={handleSave}
               />
-              <Tabs defaultValue={activetab || "about"} className="w-full">
+              <Tabs defaultValue={activetab || "activities"} className="w-full">
                 <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger
                     value="activities"

@@ -100,3 +100,15 @@ export const isEventSaved = async (userId: string, eventId: string) => {
 
   return !!data;
 };
+
+export const fetchUserInfo = async (userId: string) => {
+  const { data, error } = await supabase
+    .from("users")
+    .select("name, avatar_path")
+    .eq("id", userId)
+    .single();
+
+  if (error) throw error;
+
+  return data;
+};

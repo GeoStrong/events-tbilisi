@@ -9,6 +9,15 @@ import { UserProfile } from "@/lib/types";
 import defaultUserImg from "@/public/images/default-user.png";
 import { handleUploadUserAvatar } from "@/lib/profile/profile";
 import { toast } from "sonner";
+import Image from "next/image";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
 
 interface ProfileHeaderProps {
   user: UserProfile | null;
@@ -80,11 +89,32 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                   className="hidden"
                 />
                 <Avatar className="h-32 w-32 border dark:border-gray-600">
-                  <AvatarImage
-                    src={previewUrl || avatarUrl || defaultUserImg.src}
-                    alt={user?.name}
-                    className="object-cover"
-                  />
+                  <Dialog>
+                    <DialogTrigger>
+                      <AvatarImage
+                        src={previewUrl || avatarUrl || defaultUserImg.src}
+                        alt={user?.name}
+                        className="object-cover"
+                      />
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle className="text-center">
+                          Your Profile Picture
+                        </DialogTitle>
+                        <DialogDescription>
+                          <Image
+                            src={previewUrl || avatarUrl || defaultUserImg.src}
+                            width={100}
+                            height={100}
+                            alt="profile"
+                            className="h-full w-full"
+                            unoptimized
+                          />
+                        </DialogDescription>
+                      </DialogHeader>
+                    </DialogContent>
+                  </Dialog>
                 </Avatar>
                 {edit && (
                   <Button

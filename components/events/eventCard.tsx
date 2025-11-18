@@ -11,19 +11,16 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import defaultEventImg from "@/public/images/default-event-img.png";
-import { Category, EventEntity, Poi } from "@/lib/types";
-import { zoomToLocation } from "@/lib/functions/helperFunctions";
-import { useSelector } from "react-redux";
-import type { RootState } from "@/lib/store/store";
+import { Category, EventEntity } from "@/lib/types";
 import Link from "next/link";
 import { ImLocation2 } from "react-icons/im";
-import { useLocalStorage } from "react-use";
 import {
   getCategoriesByEventId,
   getEventImageUrl,
 } from "@/lib/functions/supabaseFunctions";
 import { BiTimeFive } from "react-icons/bi";
 import { MdDateRange } from "react-icons/md";
+import useMapZoom from "@/lib/hooks/useMapZoom";
 
 interface EventCardProps {
   event: EventEntity;
@@ -32,33 +29,8 @@ interface EventCardProps {
 
 const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
   const [categories, setCategories] = useState<Category[]>([]);
-  const { map } = useSelector((state: RootState) => state.map);
   const [eventImage, setEventImage] = useState<string | null>();
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setValue, removeValue] = useLocalStorage<Poi | null>(
-    "location",
-    null,
-  );
-
-  const setLocationToLocalStorage = (location: Poi) => {
-    setValue(location);
-  };
-
-  const handleLocationClick = (location: google.maps.LatLngLiteral) => {
-    const poi: Poi = {
-      key: `event-${event.id}`,
-      location: location,
-    };
-    setLocationToLocalStorage(poi);
-    zoomToLocation(map, poi);
-    setTimeout(() => {
-      removeValue();
-    }, 500);
-    if (setSearchParams) {
-      return setSearchParams("display-activities", "");
-    }
-  };
+  const { handleLocationClick } = useMapZoom(event.id);
 
   useEffect(() => {
     (async () => {

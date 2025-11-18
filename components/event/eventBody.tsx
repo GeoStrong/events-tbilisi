@@ -1,6 +1,6 @@
 "use client";
 
-import { Category, EventEntity } from "@/lib/types";
+import { Category, EventEntity, ImageType, UserProfile } from "@/lib/types";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import defaultEventImg from "@/public/images/default-event-img.png";
@@ -16,6 +16,8 @@ import {
   getEventsByCategoryId,
 } from "@/lib/functions/supabaseFunctions";
 import { Badge } from "../ui/badge";
+import useMapZoom from "@/lib/hooks/useMapZoom";
+import { fetchUserInfo } from "@/lib/profile/profile";
 
 interface EventBodyProps {
   categories: Category[];
@@ -25,26 +27,36 @@ interface EventBodyProps {
 const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
   const [eventImage, setEventImage] = useState<string>();
   const [similarEvents, setSimilarEvents] = useState<EventEntity[]>([]);
+  const { handleLocationClick } = useMapZoom(event.id);
+  const [hostName, setHostName] = useState<string>("");
+  const [hostProfileImg, setHostProfileImg] = useState<ImageType>(null);
 
   // const twoEvents = events.slice(0, 2);
 
-  useEffect(() => {
-    (async () => {
-      const events = await getEventsByCategoryId(
-        categories[0].id.toLocaleString(),
-      );
+  // useEffect(() => {
+  //   (async () => {
+  //     const events = await getEventsByCategoryId(
+  //       categories[0].id.toLocaleString(),
+  //     );
 
-      setSimilarEvents(events);
-    })();
-  }, [categories]);
+  //     setSimilarEvents(events);
+  //   })();
+  // }, [categories]);
 
   useEffect(() => {
     (async () => {
       const imageUrl = await getEventImageUrl(event.image);
+      const events = await getEventsByCategoryId(
+        categories[0].id.toLocaleString(),
+      );
+      const host = (await fetchUserInfo(event.user_id!)) as UserProfile;
 
       setEventImage(imageUrl!);
+      setSimilarEvents(events);
+      setHostName(host.name);
+      setHostProfileImg(host.avatar_path!);
     })();
-  }, [event.image]);
+  }, [categories, event.image, event.user_id]);
 
   return (
     <div className="mb-10 mt-5 grid grid-cols-1 grid-rows-3 gap-5 lg:grid-cols-4">
@@ -63,7 +75,7 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
           <h3 className="my-3 text-base font-semibold md:text-xl">
             About the Event
           </h3>
-          <div className="flex items-end justify-between">
+          <div className="flex items-center justify-between">
             <div className="flex gap-2">
               {categories.map((category) => (
                 <span
@@ -87,8 +99,22 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
             Event Details:
           </h3>
           <div className="mt-2 flex w-full flex-col justify-between md:flex-row">
-            <div className="space-y-1">
-              <EventDetails detail="📍 Address" value={event.location} />
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <EventDetails detail="📍 Address" value={event.location} />
+                <Link
+                  href="/map"
+                  className="text-sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (event.googleLocation) {
+                      handleLocationClick(event.googleLocation);
+                    }
+                  }}
+                >
+                  See Map ↗️
+                </Link>
+              </div>
               <EventDetails detail="⌚ Time" value={event.time as string} />
               <EventDetails
                 detail="📅 Date"
@@ -143,13 +169,16 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
         <h3 className="font-bold md:text-lg">Host</h3>
         <div className="flex items-center gap-2">
           <Avatar className="h-12 w-12">
-            <AvatarImage src={event.hostContact?.image} />
+            <AvatarImage
+              src={hostProfileImg?.toString()}
+              className="object-cover object-top"
+            />
             <AvatarFallback>
               <BiUser />
             </AvatarFallback>
           </Avatar>
           <div className="flex w-full flex-row items-center justify-between gap-2 lg:flex-col">
-            <span className="linear-yellow text-base">{event.hostName}</span>
+            <span className="text-base">{hostName}</span>
             <Button>Follow</Button>
           </div>
         </div>
