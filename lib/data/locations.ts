@@ -1,5 +1,7 @@
-import { Poi } from "../types";
-import events from "./events";
+import { getEvents } from "../functions/supabaseFunctions";
+import { EventEntity, Poi } from "../types";
+
+const events = (await getEvents()) as EventEntity[];
 
 export const locations: Poi[] = events
   .filter((event) => event.googleLocation !== undefined)

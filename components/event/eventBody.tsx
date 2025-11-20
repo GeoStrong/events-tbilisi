@@ -147,7 +147,7 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
           </Avatar>
           <div className="flex w-full flex-row items-center justify-between gap-2 lg:flex-col">
             <span className="text-center text-base">{hostName}</span>
-            <Button>Follow</Button>
+            <Button className="text">Follow</Button>
           </div>
         </div>
       </div>

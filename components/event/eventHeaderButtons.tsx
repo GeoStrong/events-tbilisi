@@ -29,7 +29,7 @@ const EventHeaderButtons: React.FC<{
 
   const deleteEventHandler = async () => {
     if (!user?.id) return;
-    await deleteEventByUser(user.id);
+    await deleteEventByUser(user.id, event.id);
     redirect("/");
   };
 
@@ -44,10 +44,10 @@ const EventHeaderButtons: React.FC<{
     <>
       <div className="fixed bottom-16 left-0 flex w-full justify-center md:static md:bottom-0 md:justify-end">
         {isUserHost ? (
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center gap-2 md:flex-row">
             <EventUpdate user={user!} event={updatedEvent} />
             <Dialog>
-              <DialogTrigger className="rounded-md bg-red-600 px-6 py-1 text-white shadow-lg">
+              <DialogTrigger className="h-12 rounded-md bg-red-600 px-8 py-1 text-white shadow-lg">
                 Delete
               </DialogTrigger>
               <DialogContent>

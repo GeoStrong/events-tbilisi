@@ -1,6 +1,7 @@
 import React from "react";
 import Event from "@/components/event/event";
-import events from "@/lib/data/events";
+import { getEvents } from "@/lib/functions/supabaseFunctions";
+import { EventEntity } from "@/lib/types";
 
 interface EventPageProps {
   params: Promise<{ activityId: string }>;
@@ -8,6 +9,8 @@ interface EventPageProps {
 
 const EventPage: React.FC<EventPageProps> = async ({ params }) => {
   const { activityId } = await params;
+
+  const events = (await getEvents()) as EventEntity[];
 
   const activeEvent = events.find((event) => event.id === activityId);
 

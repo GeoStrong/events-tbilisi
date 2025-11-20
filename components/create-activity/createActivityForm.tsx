@@ -27,7 +27,7 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
   latLng,
   handleOpenMobileMap,
   displayOpenMapButton,
-  styles = "md:h-[80%]",
+  styles,
 }) => {
   useEffect(() => {
     if (latLng) {

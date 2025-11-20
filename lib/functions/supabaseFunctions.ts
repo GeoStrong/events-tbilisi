@@ -167,10 +167,11 @@ export const postNewEventCategories = async (
   return data;
 };
 
-export const deleteEventByUser = async (userId: string) => {
+export const deleteEventByUser = async (userId: string, eventId: string) => {
   const { data, error } = await supabase
     .from("events")
     .delete()
+    .eq("id", eventId)
     .eq("user_id", userId);
 
   if (error) {

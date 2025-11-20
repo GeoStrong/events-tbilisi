@@ -1,14 +1,15 @@
 "use client";
 
-import React, { Suspense, useEffect, useRef } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import MapWrapper from "@/components/map/map";
 import DisplayEventsBtnWrapper from "@/components/map/displayEventsBtn";
 import EventDescription from "@/components/events/eventDescription";
-import events from "@/lib/data/events";
 import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
 import MapLoadingLayout from "./mapLayoutLoading";
 import { useDispatch } from "react-redux";
 import { mapActions } from "@/lib/store/mapSlice";
+import { EventEntity } from "@/lib/types";
+import { getEvents } from "@/lib/functions/supabaseFunctions";
 
 interface MapLayoutProps {
   mapKey: string;
@@ -18,6 +19,14 @@ const MapLayout: React.FC<MapLayoutProps> = ({ mapKey }) => {
   const eventButtonRef = useRef<HTMLButtonElement>(null!);
   const { searchParams, handleReplace } = useAddSearchQuery();
   const dispatch = useDispatch();
+  const [events, setEvents] = useState<EventEntity[] | []>([]);
+
+  useEffect(() => {
+    (async () => {
+      const events = (await getEvents()) as EventEntity[];
+      setEvents(events);
+    })();
+  }, []);
 
   const eventId = searchParams.get("activity");
   const activeEvent = eventId ? events.find((e) => e.id === eventId) : null;
