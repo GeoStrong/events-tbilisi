@@ -1,55 +1,50 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { TabsContent } from "../ui/tabs";
-import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { fetchSavedEvents } from "@/lib/profile/profile";
 import { EventEntity } from "@/lib/types";
-import EventCard from "../events/eventCard";
-import { redirect } from "next/navigation";
+import { getEventsByUserId } from "@/lib/functions/supabaseFunctions";
+import ProfileActivitiesCard from "./profileActivitiesCard";
 
 const ProfileActivitiesTab: React.FC<{ userId: string }> = ({ userId }) => {
-  const [savedEvents, setSavedEvents] = useState<EventEntity[]>([]);
+  const [myActivities, setMyActivities] = useState<EventEntity[]>([]);
+  const [savedActivities, setSavedActivities] = useState<EventEntity[]>([]);
 
   useEffect(() => {
     (async () => {
-      const events = await fetchSavedEvents(userId);
-      setSavedEvents(events);
+      const savedActivities = await fetchSavedEvents(userId);
+      setSavedActivities(savedActivities);
+      const myActivities = await getEventsByUserId(userId);
+      setMyActivities(myActivities);
     })();
   }, [userId]);
 
   return (
     <>
       <TabsContent value="activities" className="space-y-4">
-        <Card className="dark:bg-gray-800">
-          <CardHeader>
-            <CardTitle>Saved Events</CardTitle>
-            <CardDescription>
-              Activities you&apos;ve bookmarked for later.
-            </CardDescription>
-          </CardHeader>
-          <CardDescription className="grid grid-cols-1 gap-3 p-3 sm:grid-cols-2 md:grid-cols-3">
-            {savedEvents.length === 0 ? (
-              <p className="py-8 text-center text-muted-foreground">
-                No saved activities yet. Start exploring activities to save your
-                favorites!
-              </p>
-            ) : (
-              <>
-                {savedEvents.map((event) => (
-                  <div
-                    key={event.id}
-                    onClick={() => {
-                      redirect(`/activities/${event.id}`);
-                    }}
-                  >
-                    <EventCard event={event} />
-                  </div>
-                ))}
-              </>
-            )}
-          </CardDescription>
-        </Card>
+        <Tabs defaultValue="my-activities">
+          <div className="flex w-full justify-center">
+            <TabsList>
+              <TabsTrigger value="my-activities">My Actviities</TabsTrigger>
+              <TabsTrigger value="my-bookmarks">My Bookmarks</TabsTrigger>
+            </TabsList>
+          </div>
+          <TabsContent value="my-activities">
+            <ProfileActivitiesCard
+              activities={myActivities}
+              title="Activities you posted"
+              description="You can explore activities you posted"
+            />
+          </TabsContent>
+          <TabsContent value="my-bookmarks">
+            <ProfileActivitiesCard
+              activities={savedActivities}
+              title="Activities you've bookmarked for later."
+              description="You can explore your bookmarked activities here."
+            />
+          </TabsContent>
+        </Tabs>
       </TabsContent>
     </>
   );

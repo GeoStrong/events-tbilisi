@@ -18,12 +18,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
+import { redirect } from "next/navigation";
 
 interface ProfileHeaderProps {
   user: UserProfile | null;
   edit: boolean;
   onEditHandle: React.Dispatch<React.SetStateAction<boolean>>;
   onSaveHandle: () => void;
+  onTabChange: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({
@@ -31,6 +33,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   edit,
   onEditHandle,
   onSaveHandle,
+  onTabChange,
 }) => {
   const [avatarUrl, setAvatarUrl] = useState<string>(user?.avatar_path || "");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -156,7 +159,13 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                     <Button onClick={onSaveHandle}>Save Changes</Button>
                   </>
                 ) : (
-                  <Button onClick={() => onEditHandle(true)}>
+                  <Button
+                    onClick={() => {
+                      onEditHandle(true);
+                      onTabChange("account");
+                      redirect("#account");
+                    }}
+                  >
                     Edit Profile
                   </Button>
                 )}

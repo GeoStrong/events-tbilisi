@@ -51,7 +51,7 @@ export interface EventEntity {
   user_id?: string;
   title: string;
   description: string;
-  date: Date | null;
+  date: Date | string | null;
   time: Date | string;
   endTime: Date | string | null;
   location: string;

@@ -25,6 +25,10 @@ const ProfileLayout: React.FC = () => {
   const [bio, setBio] = useState<string>(user?.additionalInfo || "");
   const [editing, setEditing] = useState(false);
   const router = useRouter();
+  const { hash } = useLocation();
+  const [activetab, setActiveTab] = useState<string | undefined>(
+    hash?.split("#")[1],
+  );
 
   if (user === undefined) redirect("/");
 
@@ -43,9 +47,6 @@ const ProfileLayout: React.FC = () => {
   const userDataValues = [name, phone, bio];
   const userDataSetFunctions = [setName, setPhone, setBio];
 
-  const { hash } = useLocation();
-  const activetab = hash?.split("#")[1];
-
   const goToHash = (tabName: string) => {
     router.push(`profile#${tabName}`);
   };
@@ -54,7 +55,7 @@ const ProfileLayout: React.FC = () => {
     <>
       {user ? (
         <div className="min-h-screen w-full dark:bg-gray-900">
-          <div className="w-full px-5 py-8">
+          <div className="w-full px-2 py-8">
             <Link href="/" className="mb-6 flex items-center gap-3">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Activities
@@ -66,13 +67,20 @@ const ProfileLayout: React.FC = () => {
                 edit={editing}
                 onEditHandle={setEditing}
                 onSaveHandle={handleSave}
+                onTabChange={setActiveTab}
               />
-              <Tabs defaultValue={activetab || "activities"} className="w-full">
+              <Tabs
+                defaultValue={activetab || "activities"}
+                value={activetab || "activities"}
+                className="w-full"
+              >
                 <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger
                     value="activities"
                     onClick={() => {
                       goToHash("");
+                      setActiveTab("");
+                      setEditing(false);
                     }}
                   >
                     <div className="md:hidden">
@@ -84,6 +92,7 @@ const ProfileLayout: React.FC = () => {
                     value="account"
                     onClick={() => {
                       goToHash("account");
+                      setActiveTab("account");
                     }}
                   >
                     <div className="md:hidden">
@@ -95,6 +104,8 @@ const ProfileLayout: React.FC = () => {
                     value="preferences"
                     onClick={() => {
                       goToHash("preferences");
+                      setActiveTab("preferences");
+                      setEditing(false);
                     }}
                   >
                     <div className="md:hidden">

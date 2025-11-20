@@ -1,19 +1,25 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import EventParticipation from "../events/eventParticipation";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { FiShare } from "react-icons/fi";
 import Share from "../general/share";
-import { EventEntity } from "@/lib/types";
+import { Category, EventEntity } from "@/lib/types";
 import defaultEventImg from "@/public/images/default-event-img.png";
 import { getEventImageUrl } from "@/lib/functions/supabaseFunctions";
 import BookmarkButton from "../general/bookmarkButton";
+import EventHeaderButtons from "./eventHeaderButtons";
 
 const EventHeader: React.FC<{
   event: EventEntity;
-}> = async ({ event }) => {
-  const imageUrl = await getEventImageUrl(event.image);
+  categories: Category[];
+}> = async ({ event, categories }) => {
+  const imageUrl = (await getEventImageUrl(event.image)) as string;
+
+  const eventWithImage = {
+    ...event,
+    image: imageUrl,
+  };
 
   return (
     <>
@@ -30,7 +36,7 @@ const EventHeader: React.FC<{
             alt="event"
             width={100}
             height={100}
-            className="hidden w-64 rounded-md bg-white md:block"
+            className="hidden max-h-24 w-64 rounded-md bg-white object-cover md:block"
             unoptimized
           />
         </div>
@@ -43,9 +49,7 @@ const EventHeader: React.FC<{
             </Share>
           </div>
         </div>
-        <div className="fixed bottom-16 left-0 flex w-full justify-center md:static md:bottom-0 md:justify-end">
-          <EventParticipation isBtnLarge />
-        </div>
+        <EventHeaderButtons event={eventWithImage} categories={categories} />
       </header>
     </>
   );

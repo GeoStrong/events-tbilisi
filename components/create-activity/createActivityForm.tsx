@@ -8,7 +8,6 @@ import Image from "next/image";
 import { EventCategories, NewEventEntity } from "@/lib/types";
 import { categories } from "@/lib/data/categories";
 import { useEffect } from "react";
-import useScreenSize from "@/lib/hooks/useScreenSize";
 import { FaMapMarkedAlt } from "react-icons/fa";
 
 interface CreateActivityProps {
@@ -17,6 +16,8 @@ interface CreateActivityProps {
   handleImagePreview: React.Dispatch<React.SetStateAction<string | null>>;
   latLng: google.maps.LatLngLiteral | null;
   handleOpenMobileMap: () => void;
+  displayOpenMapButton: boolean;
+  styles?: string;
 }
 
 const CreateActivityForm: React.FC<CreateActivityProps> = ({
@@ -25,8 +26,9 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
   handleImagePreview,
   latLng,
   handleOpenMobileMap,
+  displayOpenMapButton,
+  styles = "md:h-[80%]",
 }) => {
-  const { isMobile } = useScreenSize();
   useEffect(() => {
     if (latLng) {
       formik.setFieldValue("googleLocation", latLng);
@@ -44,7 +46,7 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
 
   return (
     <Form className="h-full">
-      <div className="mb-3 space-y-4 overflow-y-scroll p-3 md:h-[80%]">
+      <div className={`mb-3 space-y-4 overflow-y-scroll p-3 ${styles}`}>
         {/* Title */}
         <div>
           <label htmlFor="title">Title *</label>
@@ -168,7 +170,7 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
                   : "Please select on the map"
               }
             />
-            {isMobile && (
+            {displayOpenMapButton && (
               <button
                 type="button"
                 className="absolute right-4 top-[0.35rem] rounded-lg border bg-primary px-2 py-1"
@@ -189,7 +191,7 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
         <div>
           <label htmlFor="categories">Select categories * (max 3)</label>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="mt-2 flex flex-wrap gap-3">
             {categories.map((category) => {
               const selected =
                 formik.values.categories &&
@@ -293,7 +295,7 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
           />
           {imagePreview && (
             <Image
-              src={imagePreview}
+              src={imagePreview || ""}
               alt="Preview"
               width={100}
               height={100}

@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogClose,
@@ -12,14 +14,20 @@ import { Button } from "../ui/button";
 import { DialogDescription } from "@radix-ui/react-dialog";
 
 interface CreateActivityMobileMapProps {
-  API_KEY: string;
   buttonRef: React.RefObject<HTMLButtonElement | null>;
 }
 
 const CreateActivityMobileMap: React.FC<CreateActivityMobileMapProps> = ({
-  API_KEY,
   buttonRef,
 }) => {
+  const [mapKey, setMapKey] = useState<string>("");
+
+  useEffect(() => {
+    fetch("/api/use-secret")
+      .then((res) => res.json())
+      .then((data) => setMapKey(data));
+  }, []);
+
   return (
     <>
       <Dialog>
@@ -35,7 +43,7 @@ const CreateActivityMobileMap: React.FC<CreateActivityMobileMapProps> = ({
               Simply Click on the Map to put your pinpoint
             </DialogDescription>
           </DialogHeader>
-          <MapWrapper API_KEY={API_KEY} height="h-96" displayEvents={false} />
+          <MapWrapper API_KEY={mapKey} height="h-96" displayEvents={false} />
           <DialogClose>
             <Button type="button">Confirm Location</Button>
           </DialogClose>

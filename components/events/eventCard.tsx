@@ -67,8 +67,8 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
             unoptimized
           />
         </div>
-        <div className="absolute top-0 h-4 w-full px-2 text-right">
-          <div className="grid grid-cols-2 gap-2 justify-self-end md:grid-cols-3">
+        <div className="absolute top-0 flex h-4 w-full justify-end px-2 text-right">
+          <div className="flex w-2/3 flex-wrap items-center justify-end gap-2">
             {categories.map((category) => (
               <span
                 key={category.id}

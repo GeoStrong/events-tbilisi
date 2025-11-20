@@ -31,18 +31,6 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
   const [hostName, setHostName] = useState<string>("");
   const [hostProfileImg, setHostProfileImg] = useState<ImageType>(null);
 
-  // const twoEvents = events.slice(0, 2);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const events = await getEventsByCategoryId(
-  //       categories[0].id.toLocaleString(),
-  //     );
-
-  //     setSimilarEvents(events);
-  //   })();
-  // }, [categories]);
-
   useEffect(() => {
     (async () => {
       const imageUrl = await getEventImageUrl(event.image);
@@ -67,7 +55,7 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
             width={100}
             height={100}
             alt="event"
-            className={`max-h-56 w-full rounded-md object-center ${event.image ? "object-cover" : "object-contain"}`}
+            className={`max-h-96 w-full rounded-md object-center ${event.image ? "object-cover" : "object-contain"}`}
             unoptimized
           />
         </div>
@@ -129,28 +117,8 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
                 }
               />
             </div>
-            <div className="space-y-1">
-              <EventDetails detail="🔗 Link" value={event.link} />
-              <EventDetails
-                detail="👥 Target Audience"
-                value={event.targetAudience}
-              />
-              <EventDetails
-                detail="🔢 Max Attendees"
-                value={event.maxAttendees}
-              />
-            </div>
           </div>
 
-          {event.link && (
-            <Link
-              href={event.link}
-              className="mt-2 block text-blue-500 underline"
-              target="_blank"
-            >
-              Learn More
-            </Link>
-          )}
           <div className="mt-2">
             {event.tags &&
               event.tags.map((tag) => (
@@ -178,7 +146,7 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
             </AvatarFallback>
           </Avatar>
           <div className="flex w-full flex-row items-center justify-between gap-2 lg:flex-col">
-            <span className="text-base">{hostName}</span>
+            <span className="text-center text-base">{hostName}</span>
             <Button>Follow</Button>
           </div>
         </div>
@@ -187,25 +155,31 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
         <h3 className="font-bold md:text-lg">Additional Info</h3>
         <div className="flex items-center gap-2">
           <div className="mt-2 flex flex-col">
+            {event.link && (
+              <EventDetails
+                detail="🔗 Link"
+                value={
+                  <Link
+                    href={event.link}
+                    className="text-blue-500 underline"
+                    target="_blank"
+                  >
+                    Learn More
+                  </Link>
+                }
+              />
+            )}
             <EventDetails
-              detail="Target Audience"
+              detail="👥 Target Audience"
               value={event.targetAudience}
             />
             <EventDetails
-              detail="Maximum Attendees"
+              detail="🔢 Max Attendees"
               value={event.maxAttendees}
             />
             <EventDetails
               detail="Participants"
               value={event.participants?.length}
-            />
-            <EventDetails
-              detail="Host Email"
-              value={event.hostContact?.email}
-            />
-            <EventDetails
-              detail="Host Phone"
-              value={event.hostContact?.phone}
             />
           </div>
         </div>

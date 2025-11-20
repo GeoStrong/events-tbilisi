@@ -12,7 +12,7 @@ const Event: React.FC<{ event: EventEntity; eventId: string }> = async ({
   const categories = await getCategoriesByEventId(eventId);
   return (
     <>
-      <EventHeader event={event} />
+      <EventHeader categories={categories} event={event} />
       <EventBody categories={categories} event={event} />
       <EventFooter categories={categories} eventId={eventId} />
     </>

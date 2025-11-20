@@ -104,10 +104,7 @@ const CreateActivityLayout: React.FC<{ mapKey: string }> = ({ mapKey }) => {
     <div className="mt-3 flex w-full flex-col justify-between gap-2 rounded-md bg-white dark:bg-gray-800 md:max-h-[500px] lg:flex-row">
       {isMobile ? (
         <div className="md:hidden">
-          <CreateActivityMobileMap
-            API_KEY={mapKey}
-            buttonRef={openMobileMapRef}
-          />
+          <CreateActivityMobileMap buttonRef={openMobileMapRef} />
         </div>
       ) : (
         <div className="hidden w-full rounded-2xl md:block">
@@ -154,10 +151,11 @@ const CreateActivityLayout: React.FC<{ mapKey: string }> = ({ mapKey }) => {
               {(formik) => (
                 <CreateActivityForm
                   formik={formik}
-                  handleImagePreview={setImagePreview}
                   latLng={latLng}
                   imagePreview={imagePreview}
+                  handleImagePreview={setImagePreview}
                   handleOpenMobileMap={onOpenMobileMap}
+                  displayOpenMapButton={isMobile}
                 />
               )}
             </Formik>

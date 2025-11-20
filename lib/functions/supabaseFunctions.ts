@@ -99,6 +99,20 @@ export const getEventsByCategoryId = async (categoryId: string) => {
   return events;
 };
 
+export const getEventsByUserId = async (userId: string) => {
+  const { data, error: eventIdsError } = await supabase
+    .from("events")
+    .select("*")
+    .eq("user_id", userId);
+
+  if (eventIdsError) {
+    console.error("Error fetching event categories:", eventIdsError);
+    return [];
+  }
+
+  return data;
+};
+
 export const getEventImageUrl = async (imageLocation: ImageType) => {
   const image = isString(imageLocation) ? imageLocation : "";
 
@@ -149,6 +163,37 @@ export const postNewEventCategories = async (
       ),
     )
   ).flat();
+
+  return data;
+};
+
+export const deleteEventByUser = async (userId: string) => {
+  const { data, error } = await supabase
+    .from("events")
+    .delete()
+    .eq("user_id", userId);
+
+  if (error) {
+    console.error("Error deleting an event:", error);
+    return [];
+  }
+
+  return data;
+};
+
+export const updateEvent = async (
+  eventId: string,
+  updates: Partial<EventEntity>,
+) => {
+  const { data, error } = await supabase
+    .from("events")
+    .update(updates)
+    .eq("id", eventId)
+    .eq("user_id", updates.user_id)
+    .select("*")
+    .single();
+
+  if (error) throw error;
 
   return data;
 };
