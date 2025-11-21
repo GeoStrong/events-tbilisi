@@ -306,7 +306,11 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
       </div>
 
       {/* Submit */}
-      <Button type="submit" disabled={formik.isSubmitting}>
+      <Button
+        type="submit"
+        disabled={formik.isSubmitting}
+        className="h-12 w-full"
+      >
         {formik.isSubmitting ? "Submitting..." : "Create Activity"}
       </Button>
     </Form>

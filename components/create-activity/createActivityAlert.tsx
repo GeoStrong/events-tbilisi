@@ -13,10 +13,12 @@ import Link from "next/link";
 
 interface CreateActivityAlertProps {
   buttonRef: React.RefObject<HTMLButtonElement | null>;
+  isActivityCreated: boolean;
 }
 
 const CreateActivityAlert: React.FC<CreateActivityAlertProps> = ({
   buttonRef,
+  isActivityCreated,
 }) => {
   return (
     <>
@@ -26,9 +28,15 @@ const CreateActivityAlert: React.FC<CreateActivityAlertProps> = ({
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>You created Activity!</AlertDialogTitle>
+            <AlertDialogTitle>
+              {isActivityCreated
+                ? "You created Activity!"
+                : "You updated Activity"}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              You have successfully created an Activity 🎉.
+              {isActivityCreated
+                ? "You have successfully created an Activity 🎉."
+                : "You have successfully updated an Activity 🎉"}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

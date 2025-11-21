@@ -44,20 +44,20 @@ const EventHeaderButtons: React.FC<{
     <>
       <div className="fixed bottom-16 left-0 flex w-full justify-center md:static md:bottom-0 md:justify-end">
         {isUserHost ? (
-          <div className="flex flex-col items-center gap-2 md:flex-row">
+          <div className="flex w-3/4 flex-col gap-2 md:flex-row md:justify-end">
             <EventUpdate user={user!} event={updatedEvent} />
             <Dialog>
               <DialogTrigger className="h-12 rounded-md bg-red-600 px-8 py-1 text-white shadow-lg">
                 Delete
               </DialogTrigger>
               <DialogContent>
-                <DialogHeader>
+                <DialogHeader className="w-2/3 text-center">
                   <DialogTitle>
                     Are you absolutely sure you want to delete?
                   </DialogTitle>
                   <DialogDescription>
                     This action cannot be undone. This will permanently delete
-                    your account and remove your data from our servers.
+                    your activity and remove your data from our servers.
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter className="flex-row justify-end gap-3">

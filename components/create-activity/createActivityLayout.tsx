@@ -78,7 +78,10 @@ const CreateActivityLayout: React.FC<{ mapKey: string }> = ({ mapKey }) => {
           userProfile && <>{formikComponent}</>
         )}
       </div>
-      <CreateActivityAlert buttonRef={openCreateActivityAlertRef} />
+      <CreateActivityAlert
+        buttonRef={openCreateActivityAlertRef}
+        isActivityCreated={true}
+      />
     </div>
   );
 };

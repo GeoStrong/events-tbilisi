@@ -71,7 +71,7 @@ const EventUpdate: React.FC<{ user: UserProfile; event: EventEntity }> = ({
         <DrawerTrigger className="h-12 rounded-md border bg-white px-8 text-black">
           Edit
         </DrawerTrigger>
-        <DrawerContent className="w-full">
+        <DrawerContent className="h-1/2 w-full">
           <DrawerHeader>
             <DrawerTitle className="mb-3 text-center text-xl">
               Edit Activity
@@ -79,8 +79,11 @@ const EventUpdate: React.FC<{ user: UserProfile; event: EventEntity }> = ({
             <div className="">
               <CreateActivityMobileMap buttonRef={openMobileMapRef} />
             </div>
-            <div className="h-[85%]">{formikComponent}</div>
-            <CreateActivityAlert buttonRef={openCreateActivityAlertRef} />
+            <div className="h-[85%] overflow-y-scroll">{formikComponent}</div>
+            <CreateActivityAlert
+              buttonRef={openCreateActivityAlertRef}
+              isActivityCreated={false}
+            />
           </DrawerHeader>
         </DrawerContent>
       </Drawer>

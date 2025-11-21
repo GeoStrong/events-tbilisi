@@ -99,8 +99,6 @@ const useModifyActivity: (props: useModifyActivityProps) => {
       );
   };
 
-  console.log(image);
-
   useEffect(() => {
     if (image) setImagePreview(image.toString());
   }, [image]);
@@ -115,18 +113,17 @@ const useModifyActivity: (props: useModifyActivityProps) => {
       validationSchema={validationSchema}
       onSubmit={async (values, { setSubmitting, resetForm }) => {
         try {
+          if (JSON.stringify(values) === JSON.stringify(initialValues)) {
+            toast.info("You have not made any changes");
+            return;
+          }
           submitHandler(values);
           resetForm();
           setImagePreview(null);
-          toast.success(
-            isUpdatingActivity
-              ? "You edited your activity"
-              : "You posted a new activity",
-          );
           displayCreateActivityAlert();
         } catch (err) {
           console.error(err);
-          toast.success(
+          toast.error(
             isUpdatingActivity
               ? "There was an error editing your activity"
               : "There was an error posting your activity",
