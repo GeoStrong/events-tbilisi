@@ -149,7 +149,6 @@ const useModifyActivity: (props: useModifyActivityProps) => {
           handleImagePreview={setImagePreview}
           handleOpenMobileMap={onOpenMobileMap}
           displayOpenMapButton={isUpdatingActivity ? true : isMobile}
-          styles={`${isUpdatingActivity ? "h-1/2" : "md:max-h-[80%]"}`}
         />
       )}
     </Formik>

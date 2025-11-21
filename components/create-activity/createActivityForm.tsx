@@ -9,6 +9,7 @@ import { ActivityCategories, NewActivityEntity } from "@/lib/types";
 import { categories } from "@/lib/data/categories";
 import { useEffect } from "react";
 import { FaMapMarkedAlt } from "react-icons/fa";
+import { useLocation } from "react-use";
 
 interface CreateActivityProps {
   formik: FormikProps<NewActivityEntity>;
@@ -17,7 +18,6 @@ interface CreateActivityProps {
   latLng: google.maps.LatLngLiteral | null;
   handleOpenMobileMap: () => void;
   displayOpenMapButton: boolean;
-  styles?: string;
 }
 
 const CreateActivityForm: React.FC<CreateActivityProps> = ({
@@ -27,8 +27,11 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
   latLng,
   handleOpenMobileMap,
   displayOpenMapButton,
-  styles,
 }) => {
+  const { pathname } = useLocation();
+
+  const isCreatePage = pathname === "/create-activity";
+
   useEffect(() => {
     if (latLng) {
       formik.setFieldValue("googleLocation", latLng);
@@ -46,7 +49,9 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
 
   return (
     <Form className="h-full">
-      <div className={`mb-3 space-y-4 overflow-y-scroll p-3 ${styles}`}>
+      <div
+        className={`mb-3 flex w-full flex-col gap-4 overflow-x-hidden overflow-y-scroll p-3 ${isCreatePage ? "md:max-h-[80%]" : "h-1/2"}`}
+      >
         {/* Title */}
         <div>
           <label htmlFor="title">Title *</label>
