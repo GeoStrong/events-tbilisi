@@ -2,20 +2,20 @@
 
 import React, { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { fetchSavedEvents } from "@/lib/profile/profile";
-import { EventEntity } from "@/lib/types";
-import { getEventsByUserId } from "@/lib/functions/supabaseFunctions";
+import { fetchSavedActivities } from "@/lib/profile/profile";
+import { ActivityEntity } from "@/lib/types";
+import { getActivitiesByUserId } from "@/lib/functions/supabaseFunctions";
 import ProfileActivitiesCard from "./profileActivitiesCard";
 
 const ProfileActivitiesTab: React.FC<{ userId: string }> = ({ userId }) => {
-  const [myActivities, setMyActivities] = useState<EventEntity[]>([]);
-  const [savedActivities, setSavedActivities] = useState<EventEntity[]>([]);
+  const [myActivities, setMyActivities] = useState<ActivityEntity[]>([]);
+  const [savedActivities, setSavedActivities] = useState<ActivityEntity[]>([]);
 
   useEffect(() => {
     (async () => {
-      const savedActivities = await fetchSavedEvents(userId);
+      const savedActivities = await fetchSavedActivities(userId);
       setSavedActivities(savedActivities);
-      const myActivities = await getEventsByUserId(userId);
+      const myActivities = await getActivitiesByUserId(userId);
       setMyActivities(myActivities);
     })();
   }, [userId]);

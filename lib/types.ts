@@ -7,7 +7,7 @@ export type UserProfile = {
   created_at: Date;
   additionalInfo?: string;
 };
-export type EventCategories =
+export type ActivityCategories =
   | "music"
   | "sport"
   | "theater"
@@ -36,7 +36,7 @@ export interface Category {
   name: string;
   icon: string;
   color: string;
-  category: EventCategories;
+  category: ActivityCategories;
 }
 
 export interface ParticipantValues {
@@ -46,7 +46,7 @@ export interface ParticipantValues {
   additionalInfo?: string;
 }
 
-export interface EventEntity {
+export interface ActivityEntity {
   id: string;
   user_id?: string;
   title: string;
@@ -56,7 +56,7 @@ export interface EventEntity {
   endTime: Date | string | null;
   location: string;
   googleLocation?: google.maps.LatLngLiteral | null;
-  categories?: EventCategories[] | string[];
+  categories?: ActivityCategories[] | string[];
   targetAudience?: string | null;
   host?: "organization" | "individual";
   entryFee?: boolean;
@@ -81,11 +81,11 @@ export interface EventEntity {
   participants?: ParticipantValues[];
 }
 
-export type NewEventEntity = Omit<EventEntity, "id">;
+export type NewActivityEntity = Omit<ActivityEntity, "id">;
 
-export interface SavedEventEntity {
+export interface SavedActivityEntity {
   user_id: string;
-  event_id: string;
+  activity_id: string;
 }
 
 export type Poi = { key: string; location: google.maps.LatLngLiteral };

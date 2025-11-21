@@ -1,10 +1,10 @@
 "use client";
 
-import { Category, EventEntity, ImageType, UserProfile } from "@/lib/types";
+import { Category, ActivityEntity, ImageType, UserProfile } from "@/lib/types";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import defaultEventImg from "@/public/images/default-event-img.png";
-import EventDetails from "./eventDetails";
+import defaultActivityImg from "@/public/images/default-activity-img.png";
+import ActivityDetails from "./activityDetails";
 import Link from "next/link";
 import Socials from "../general/socials";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -12,56 +12,61 @@ import { BiUser } from "react-icons/bi";
 import { Button } from "../ui/button";
 import { CiShare1 } from "react-icons/ci";
 import {
-  getEventImageUrl,
-  getEventsByCategoryId,
+  getActivityImageUrl,
+  getActivitiesByCategoryId,
 } from "@/lib/functions/supabaseFunctions";
 import { Badge } from "../ui/badge";
 import useMapZoom from "@/lib/hooks/useMapZoom";
 import { fetchUserInfo } from "@/lib/profile/profile";
 
-interface EventBodyProps {
+interface ActivityBodyProps {
   categories: Category[];
-  event: EventEntity;
+  activity: ActivityEntity;
 }
 
-const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
-  const [eventImage, setEventImage] = useState<string>();
-  const [similarEvents, setSimilarEvents] = useState<EventEntity[]>([]);
-  const { handleLocationClick } = useMapZoom(event.id);
+const ActivityBody: React.FC<ActivityBodyProps> = ({
+  activity,
+  categories,
+}) => {
+  const [activityImage, setActivityImage] = useState<string>();
+  const [similarActivities, setSimilarActivities] = useState<ActivityEntity[]>(
+    [],
+  );
+  const { handleLocationClick } = useMapZoom(activity.id);
   const [hostName, setHostName] = useState<string>("");
   const [hostProfileImg, setHostProfileImg] = useState<ImageType>(null);
 
   useEffect(() => {
     (async () => {
-      const imageUrl = await getEventImageUrl(event.image);
-      const events = await getEventsByCategoryId(
+      const imageUrl = await getActivityImageUrl(activity.image);
+      const activities = await getActivitiesByCategoryId(
         categories[0].id.toLocaleString(),
       );
-      const host = (await fetchUserInfo(event.user_id!)) as UserProfile;
+      const host = (await fetchUserInfo(activity.user_id!)) as UserProfile;
 
-      setEventImage(imageUrl!);
-      setSimilarEvents(events);
+      setActivityImage(imageUrl!);
+      setSimilarActivities(activities);
       setHostName(host.name);
       setHostProfileImg(host.avatar_path!);
     })();
-  }, [categories, event.image, event.user_id]);
+  }, [categories, activity.image, activity.user_id]);
 
   return (
     <div className="mb-10 mt-5 grid grid-cols-1 grid-rows-3 gap-5 lg:grid-cols-4">
       <div className="col-span-3 row-span-3 flex flex-col gap-5 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 md:px-6">
         <div className="rounded-md bg-white">
           <Image
-            src={eventImage || defaultEventImg.src}
+            src={activityImage || defaultActivityImg.src}
             width={100}
             height={100}
-            alt="event"
-            className={`max-h-96 w-full rounded-md object-center ${event.image ? "object-cover" : "object-contain"}`}
+            alt="activity"
+            className={`max-h-96 w-full rounded-md object-center ${activity.image ? "object-cover" : "object-contain"}`}
             unoptimized
           />
         </div>
         <div className="w-full">
           <h3 className="my-3 text-base font-semibold md:text-xl">
-            About the Event
+            About the activity
           </h3>
           <div className="flex items-center justify-between">
             <div className="flex gap-2">
@@ -75,40 +80,46 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
               ))}
             </div>
             <Badge
-              variant={`${event.status === "active" ? "success" : event.status === "inactive" ? "destructive" : "default"}`}
+              variant={`${activity.status === "active" ? "success" : activity.status === "inactive" ? "destructive" : "default"}`}
             >
-              {event.status?.toUpperCase()}
+              {activity.status?.toUpperCase()}
             </Badge>
           </div>
           <p className="mt-3 text-sm text-muted-foreground md:text-lg">
-            {event.description}
+            {activity.description}
           </p>
           <h3 className="mt-3 text-base font-semibold md:text-xl">
-            Event Details:
+            Activity Details:
           </h3>
           <div className="mt-2 flex w-full flex-col justify-between md:flex-row">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <EventDetails detail="📍 Address" value={event.location} />
+                <ActivityDetails
+                  detail="📍 Address"
+                  value={activity.location}
+                />
                 <Link
                   href="/map"
                   className="text-sm"
                   onClick={(e) => {
                     e.stopPropagation();
-                    if (event.googleLocation) {
-                      handleLocationClick(event.googleLocation);
+                    if (activity.googleLocation) {
+                      handleLocationClick(activity.googleLocation);
                     }
                   }}
                 >
                   See Map ↗️
                 </Link>
               </div>
-              <EventDetails detail="⌚ Time" value={event.time as string} />
-              <EventDetails
+              <ActivityDetails
+                detail="⌚ Time"
+                value={activity.time as string}
+              />
+              <ActivityDetails
                 detail="📅 Date"
                 value={
-                  event.date &&
-                  new Date(event.date).toLocaleString("en-US", {
+                  activity.date &&
+                  new Date(activity.date).toLocaleString("en-US", {
                     month: "long",
                     year: "numeric",
                     weekday: "short",
@@ -120,8 +131,8 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
           </div>
 
           <div className="mt-2">
-            {event.tags &&
-              event.tags.map((tag) => (
+            {activity.tags &&
+              activity.tags.map((tag) => (
                 <span key={tag} className="font-bold">
                   #{tag}
                 </span>
@@ -155,12 +166,12 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
         <h3 className="font-bold md:text-lg">Additional Info</h3>
         <div className="flex items-center gap-2">
           <div className="mt-2 flex flex-col">
-            {event.link && (
-              <EventDetails
+            {activity.link && (
+              <ActivityDetails
                 detail="🔗 Link"
                 value={
                   <Link
-                    href={event.link}
+                    href={activity.link}
                     className="text-blue-500 underline"
                     target="_blank"
                   >
@@ -169,36 +180,36 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
                 }
               />
             )}
-            <EventDetails
+            <ActivityDetails
               detail="👥 Target Audience"
-              value={event.targetAudience}
+              value={activity.targetAudience}
             />
-            <EventDetails
+            <ActivityDetails
               detail="🔢 Max Attendees"
-              value={event.maxAttendees}
+              value={activity.maxAttendees}
             />
-            <EventDetails
+            <ActivityDetails
               detail="Participants"
-              value={event.participants?.length}
+              value={activity.participants?.length}
             />
           </div>
         </div>
       </div>
       <div className="col-span-3 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">
         <h3 className="font-bold md:text-lg">
-          Explore More {categories[0].name} Events
+          Explore More {categories[0].name} Activities
         </h3>
         <div className="mt-3 flex flex-col gap-2">
-          {similarEvents.map((event) => (
+          {similarActivities.map((activity) => (
             <div
-              key={event.id}
+              key={activity.id}
               className="flex justify-between gap-2 rounded-lg border p-2 dark:border-gray-600"
             >
               <div className="flex flex-col">
-                <h3 className="text-sm font-semibold">{event.title}</h3>
+                <h3 className="text-sm font-semibold">{activity.title}</h3>
                 <p className="text-xs text-muted-foreground">
-                  {event.date &&
-                    new Date(event.date).toLocaleString("en-US", {
+                  {activity.date &&
+                    new Date(activity.date).toLocaleString("en-US", {
                       month: "long",
                       year: "numeric",
                       weekday: "short",
@@ -206,7 +217,7 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
                     })}
                 </p>
               </div>
-              <Link href={`/${event.id}`}>
+              <Link href={`/${activity.id}`}>
                 <CiShare1 />
               </Link>
             </div>
@@ -216,4 +227,4 @@ const EventBody: React.FC<EventBodyProps> = ({ event, categories }) => {
     </div>
   );
 };
-export default EventBody;
+export default ActivityBody;

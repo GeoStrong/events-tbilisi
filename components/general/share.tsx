@@ -9,19 +9,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { EventEntity } from "@/lib/types";
+import { ActivityEntity } from "@/lib/types";
 import Image from "next/image";
-import defaultEventImg from "@/public/images/default-event-img.png";
+import defaultActivityImg from "@/public/images/default-activity-img.png";
 import Socials from "./socials";
 import { useLocation } from "react-use";
 import { Button } from "../ui/button";
-import { getEventImageUrl } from "@/lib/functions/supabaseFunctions";
+import { getActivityImageUrl } from "@/lib/functions/supabaseFunctions";
 
-const Share: React.FC<{ children: React.ReactNode; event: EventEntity }> = ({
-  children,
-  event,
-}) => {
-  const [eventImage, setEventImage] = useState<string>();
+const Share: React.FC<{
+  children: React.ReactNode;
+  activity: ActivityEntity;
+}> = ({ children, activity }) => {
+  const [activityImage, setActivityImage] = useState<string>();
   const { href } = useLocation();
   const [copied, setCopied] = useState(false);
 
@@ -34,11 +34,11 @@ const Share: React.FC<{ children: React.ReactNode; event: EventEntity }> = ({
 
   useEffect(() => {
     (async () => {
-      const imageUrl = await getEventImageUrl(event.image);
+      const imageUrl = await getActivityImageUrl(activity.image);
 
-      setEventImage(imageUrl!);
+      setActivityImage(imageUrl!);
     })();
-  }, [event.image]);
+  }, [activity.image]);
 
   return (
     <>
@@ -48,22 +48,22 @@ const Share: React.FC<{ children: React.ReactNode; event: EventEntity }> = ({
           <DialogHeader>
             <DialogTitle>Share with your friends</DialogTitle>
             <DialogDescription>
-              There are number of ways to share the Event with other people.
+              There are number of ways to share the Activity with other people.
             </DialogDescription>
             <div className="flex items-center gap-3 rounded-md border shadow-lg">
               <div className="bg-white">
                 <Image
-                  src={eventImage || defaultEventImg.src}
-                  alt="event"
+                  src={activityImage || defaultActivityImg.src}
+                  alt="activity"
                   width={100}
                   height={100}
                   unoptimized
                 />
               </div>
               <div className="flex flex-col">
-                <h3 className="">{event.title}</h3>
+                <h3 className="">{activity.title}</h3>
                 <p className="text-sm text-muted-foreground">
-                  {event.description}
+                  {activity.description}
                 </p>
               </div>
             </div>

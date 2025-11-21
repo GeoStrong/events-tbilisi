@@ -10,60 +10,63 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
-import defaultEventImg from "@/public/images/default-event-img.png";
-import { Category, EventEntity } from "@/lib/types";
+import defaultActivityImg from "@/public/images/default-activity-img.png";
+import { Category, ActivityEntity } from "@/lib/types";
 import Link from "next/link";
 import { ImLocation2 } from "react-icons/im";
 import {
-  getCategoriesByEventId,
-  getEventImageUrl,
+  getCategoriesByActivityId,
+  getActivityImageUrl,
 } from "@/lib/functions/supabaseFunctions";
 import { BiTimeFive } from "react-icons/bi";
 import { MdDateRange } from "react-icons/md";
 import useMapZoom from "@/lib/hooks/useMapZoom";
 
-interface EventCardProps {
-  event: EventEntity;
+interface ActivityCardProps {
+  activity: ActivityEntity;
   setSearchParams?: (query: string, value: string) => void;
 }
 
-const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
+const ActivityCard: React.FC<ActivityCardProps> = ({
+  activity,
+  setSearchParams,
+}) => {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [eventImage, setEventImage] = useState<string | null>();
-  const { handleLocationClick } = useMapZoom(event.id);
+  const [activityImage, setActivityImage] = useState<string | null>();
+  const { handleLocationClick } = useMapZoom(activity.id);
 
   useEffect(() => {
     (async () => {
-      const categories = await getCategoriesByEventId(event.id);
+      const categories = await getCategoriesByActivityId(activity.id);
       setCategories(categories || []);
     })();
-  }, [event.id]);
+  }, [activity.id]);
 
   useEffect(() => {
     (async () => {
-      const imageUrl = await getEventImageUrl(event.image);
+      const imageUrl = await getActivityImageUrl(activity.image);
 
-      setEventImage(imageUrl);
+      setActivityImage(imageUrl);
     })();
-  }, [event.image]);
+  }, [activity.image]);
 
   return (
     <Card
       className="cursor-pointer duration-300 dark:border-gray-600 dark:bg-slate-800"
       onClick={() => {
         if (setSearchParams)
-          return setSearchParams("activity", event.id.toString());
+          return setSearchParams("activity", activity.id.toString());
       }}
-      key={event.id}
+      key={activity.id}
     >
       <CardHeader className="relative p-0">
         <div className="group relative h-48 w-full overflow-hidden rounded-t-xl bg-white">
           <Image
-            src={eventImage || defaultEventImg.src}
+            src={activityImage || defaultActivityImg.src}
             width={100}
             height={100}
-            alt="event"
-            className={`h-full w-full transform rounded-t-xl transition-transform duration-300 group-hover:scale-105 ${!eventImage ? "object-contain" : "object-cover"}`}
+            alt="activity"
+            className={`h-full w-full transform rounded-t-xl transition-transform duration-300 group-hover:scale-105 ${!activityImage ? "object-contain" : "object-cover"}`}
             unoptimized
           />
         </div>
@@ -79,21 +82,21 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
             ))}
           </div>
         </div>
-        <CardTitle className="px-6 text-xl">{event.title}</CardTitle>
+        <CardTitle className="px-6 text-xl">{activity.title}</CardTitle>
         <CardDescription></CardDescription>
       </CardHeader>
       <CardContent className="flex items-center justify-between pb-0">
         <p className="text-lg">
-          {event.location && event.location.toLocaleString()}
+          {activity.location && activity.location.toLocaleString()}
         </p>
-        <p className="text-muted-foreground">{event.hostName}</p>
-        {event.googleLocation && (
+        <p className="text-muted-foreground">{activity.hostName}</p>
+        {activity.googleLocation && (
           <Link
             href="/map"
             onClick={(e) => {
               e.stopPropagation();
-              if (event.googleLocation) {
-                handleLocationClick(event.googleLocation);
+              if (activity.googleLocation) {
+                handleLocationClick(activity.googleLocation);
               }
             }}
             className="rounded-md border border-primary bg-transparent p-2"
@@ -105,12 +108,12 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
       <CardFooter className="flex flex-col items-start gap-3">
         <p className="flex items-center gap-1 text-base text-muted-foreground">
           <BiTimeFive />
-          {event.time && event.time.toLocaleString()}
+          {activity.time && activity.time.toLocaleString()}
         </p>
         <p className="flex items-center gap-1 text-base text-muted-foreground">
           <MdDateRange />
-          {event.date &&
-            new Date(event.date).toLocaleDateString("en-US", {
+          {activity.date &&
+            new Date(activity.date).toLocaleDateString("en-US", {
               month: "long",
               year: "numeric",
               weekday: "short",
@@ -121,4 +124,4 @@ const EventCard: React.FC<EventCardProps> = ({ event, setSearchParams }) => {
     </Card>
   );
 };
-export default EventCard;
+export default ActivityCard;

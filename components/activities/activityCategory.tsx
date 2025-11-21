@@ -5,16 +5,16 @@ import { Category } from "@/lib/types";
 import React, { useEffect, useState } from "react";
 import DynamicIcon from "../ui/dynamicIcon";
 import { Badge } from "../ui/badge";
-import { getEventsByCategoryId } from "@/lib/functions/supabaseFunctions";
+import { getActivitiesByCategoryId } from "@/lib/functions/supabaseFunctions";
 
-const EventCategory: React.FC<{ category: Category }> = ({ category }) => {
+const ActivityCategory: React.FC<{ category: Category }> = ({ category }) => {
   const { handleSearch, searchParams } = useAddSearchQuery();
-  const [eventQuantity, setEventQuantity] = useState<number>(0);
+  const [activityQuantity, setActivityQuantity] = useState<number>(0);
 
   useEffect(() => {
     (async () => {
-      const eventsByCategory = await getEventsByCategoryId(category.id);
-      setEventQuantity(eventsByCategory.length);
+      const activitiesByCategory = await getActivitiesByCategoryId(category.id);
+      setActivityQuantity(activitiesByCategory.length);
     })();
   }, [category.id]);
 
@@ -37,11 +37,11 @@ const EventCategory: React.FC<{ category: Category }> = ({ category }) => {
           return handleSearch("category", category.id.toLocaleString());
         }}
       >
-        {eventQuantity > 0 && (
+        {activityQuantity > 0 && (
           <Badge
             className={`${cateogryIsActive ? `border-[1px] border-${category.color}/80 bg-white text-${category.color}` : `bg-${category.color} text-white`} hover:bg-${category.color} absolute -right-3 -top-0 flex w-1 items-center justify-center rounded-full text-[10px] font-medium`}
           >
-            {eventQuantity}
+            {activityQuantity}
           </Badge>
         )}
         <DynamicIcon name={category.icon} />
@@ -50,4 +50,4 @@ const EventCategory: React.FC<{ category: Category }> = ({ category }) => {
     </div>
   );
 };
-export default EventCategory;
+export default ActivityCategory;

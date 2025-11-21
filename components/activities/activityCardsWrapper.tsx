@@ -1,23 +1,25 @@
 "use client";
 
 import React, { Suspense, useEffect, useRef, useState } from "react";
-import { Category, EventEntity } from "@/lib/types";
-import EventCard from "./eventCard";
-import EventDescription from "./eventDescription";
+import { Category, ActivityEntity } from "@/lib/types";
+import ActivityCard from "./activityCard";
+import ActivityDescription from "./activityDescription";
 import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
 import { usePathname } from "next/navigation";
 import Spinner from "../general/spinner";
 import {
-  getEvents,
+  getActivities,
   getCategoryById,
-  getEventsByCategoryId,
+  getActivitiesByCategoryId,
 } from "@/lib/functions/supabaseFunctions";
-import EventCardsLoading from "./eventCardsLoading";
+import ActivityCardsLoading from "./activityCardsLoading";
 
-const EventCards: React.FC = () => {
-  const [events, setEvents] = useState<EventEntity[] | null>(null);
+const ActivityCards: React.FC = () => {
+  const [activities, setActivities] = useState<ActivityEntity[] | null>(null);
   const [category, setCategory] = useState<Category[]>([]);
-  const [activeEvent, setActiveEvent] = useState<EventEntity | null>(null);
+  const [activeActivity, setActiveActivity] = useState<ActivityEntity | null>(
+    null,
+  );
   const [gridStyles, setGridStyles] = useState<string>("");
   const pathname = usePathname();
   const { searchParams, handleSearch } = useAddSearchQuery();
@@ -31,8 +33,8 @@ const EventCards: React.FC = () => {
   };
 
   useEffect(() => {
-    if (activeEvent) openDrawer();
-  }, [activeEvent]);
+    if (activeActivity) openDrawer();
+  }, [activeActivity]);
 
   useEffect(() => {
     setGridStyles(
@@ -45,13 +47,13 @@ const EventCards: React.FC = () => {
   useEffect(() => {
     if (categoryId) {
       (async () => {
-        const events = await getEventsByCategoryId(categoryId);
-        setEvents(events);
+        const activities = await getActivitiesByCategoryId(categoryId);
+        setActivities(activities);
       })();
     } else {
       (async () => {
-        const events = await getEvents();
-        setEvents(events);
+        const activities = await getActivities();
+        setActivities(activities);
       })();
     }
   }, [categoryId]);
@@ -65,12 +67,14 @@ const EventCards: React.FC = () => {
   }, [categoryId]);
 
   useEffect(() => {
-    const eventId = searchParams.get("activity")!;
-    if (eventId || events) {
-      const event = events?.find((event) => event.id === eventId);
-      setActiveEvent(event || null);
+    const activityId = searchParams.get("activity")!;
+    if (activityId || activities) {
+      const activity = activities?.find(
+        (activity) => activity.id === activityId,
+      );
+      setActiveActivity(activity || null);
     }
-  }, [events, searchParams]);
+  }, [activities, searchParams]);
 
   return (
     <>
@@ -78,29 +82,29 @@ const EventCards: React.FC = () => {
         {categoryId && category.length !== 0 ? category[0].name : "Recent"}{" "}
         activities in Tbilisi
       </h2>
-      {events === null && (
+      {activities === null && (
         <div className="mt-5">
           <Spinner />
         </div>
       )}
-      {events?.length === 0 ? (
+      {activities?.length === 0 ? (
         <p className="mt-3 text-center">
           No activities found for the selected category. Try another{" "}
           <span className="text-primary">category</span>.
         </p>
       ) : (
         <div className={`mt-3 grid gap-5 ${gridStyles}`}>
-          {events?.map((event) => (
-            <EventCard
-              key={event.id}
-              event={event}
+          {activities?.map((activity) => (
+            <ActivityCard
+              key={activity.id}
+              activity={activity}
               setSearchParams={handleSearch}
             />
           ))}
-          {activeEvent && pathname !== "/map" && (
-            <EventDescription
+          {activeActivity && pathname !== "/map" && (
+            <ActivityDescription
               buttonRef={triggerRef}
-              event={activeEvent}
+              activity={activeActivity}
               setSearchParams={handleSearch}
             />
           )}
@@ -110,10 +114,10 @@ const EventCards: React.FC = () => {
   );
 };
 
-const EventCardsWrapper: React.FC = () => (
-  <Suspense fallback={<EventCardsLoading />}>
-    <EventCards />
+const ActivityCardsWrapper: React.FC = () => (
+  <Suspense fallback={<ActivityCardsLoading />}>
+    <ActivityCards />
   </Suspense>
 );
 
-export default EventCardsWrapper;
+export default ActivityCardsWrapper;

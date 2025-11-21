@@ -41,6 +41,7 @@ const useMapPinFloat = (
     const mouseEvent = event.domEvent as MouseEvent;
     setCursorPos({ x: mouseEvent.clientX, y: mouseEvent.clientY });
   };
+
   const onClickHandler = (event: MapMouseEvent) => {
     if (!event.detail.latLng) return;
     setClickedLatLng(event.detail.latLng);

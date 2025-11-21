@@ -1,7 +1,7 @@
 "use client";
 
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
-import { handleSavedEvents, isEventSaved } from "@/lib/profile/profile";
+import { handleSavedActivities, isActivitySaved } from "@/lib/profile/profile";
 import React, { useEffect, useState } from "react";
 import { BsFillBookmarkFill } from "react-icons/bs";
 import Spinner from "./spinner";
@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import { authActions } from "@/lib/store/authSlice";
 import { toast } from "sonner";
 
-const BookmarkButton: React.FC<{ eventId: string }> = ({ eventId }) => {
+const BookmarkButton: React.FC<{ activityId: string }> = ({ activityId }) => {
   const [isSaved, setIsSaved] = useState(false);
   const [loading, setLoading] = useState(true);
   const { user } = useGetUserProfile();
@@ -24,7 +24,7 @@ const BookmarkButton: React.FC<{ eventId: string }> = ({ eventId }) => {
       }
 
       try {
-        const saved = await isEventSaved(user.id, eventId);
+        const saved = await isActivitySaved(user.id, activityId);
         setIsSaved(saved);
       } catch (error) {
         console.error("Error fetching saved:", error);
@@ -34,7 +34,7 @@ const BookmarkButton: React.FC<{ eventId: string }> = ({ eventId }) => {
     };
 
     fetchSaved();
-  }, [user, eventId]);
+  }, [user, activityId]);
 
   const toggleSave = async () => {
     if (!user) {
@@ -50,7 +50,7 @@ const BookmarkButton: React.FC<{ eventId: string }> = ({ eventId }) => {
       } else {
         toast.error("The activity has been unsaved");
       }
-      await handleSavedEvents(user, eventId, newState);
+      await handleSavedActivities(user, activityId, newState);
     } catch {
       setIsSaved(!newState);
     }

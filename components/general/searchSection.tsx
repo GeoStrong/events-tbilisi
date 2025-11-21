@@ -23,7 +23,7 @@ const SearchSection: React.FC = () => {
           <Input
             type="text"
             className="rounded-full rounded-r-none border-none bg-white p-6 focus:placeholder:text-primary"
-            placeholder="Search Events, Places"
+            placeholder="Search Activities, Places"
           />
           <Button
             type="submit"

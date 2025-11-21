@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import EventParticipation from "../events/eventParticipation";
+import ActivityParticipation from "../activities/activityParticipation";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import { Button } from "../ui/button";
-import { deleteEventByUser } from "@/lib/functions/supabaseFunctions";
+import { deleteActivityByUser } from "@/lib/functions/supabaseFunctions";
 import {
   Dialog,
   DialogClose,
@@ -16,27 +16,27 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { redirect } from "next/navigation";
-import EventUpdate from "./eventUpdate";
-import { Category, EventEntity } from "@/lib/types";
+import ActivityUpdate from "./activityUpdate";
+import { Category, ActivityEntity } from "@/lib/types";
 
-const EventHeaderButtons: React.FC<{
-  event: EventEntity;
+const ActivityHeaderButtons: React.FC<{
+  activity: ActivityEntity;
   categories: Category[];
-}> = ({ event, categories }) => {
+}> = ({ activity, categories }) => {
   const { user } = useGetUserProfile();
 
-  const isUserHost = event.user_id === user?.id;
+  const isUserHost = activity.user_id === user?.id;
 
-  const deleteEventHandler = async () => {
+  const deleteActivityHandler = async () => {
     if (!user?.id) return;
-    await deleteEventByUser(user.id, event.id);
+    await deleteActivityByUser(user.id, activity.id);
     redirect("/");
   };
 
   const categoryIds = categories.map((category) => category.id);
 
-  const updatedEvent = {
-    ...event,
+  const updatedActivity = {
+    ...activity,
     categories: categoryIds,
   };
 
@@ -45,7 +45,7 @@ const EventHeaderButtons: React.FC<{
       <div className="fixed bottom-16 left-0 flex w-full justify-center md:static md:bottom-0 md:justify-end">
         {isUserHost ? (
           <div className="flex w-3/4 flex-col gap-2 md:flex-row md:justify-end">
-            <EventUpdate user={user!} event={updatedEvent} />
+            <ActivityUpdate user={user!} activity={updatedActivity} />
             <Dialog>
               <DialogTrigger className="h-12 rounded-md bg-red-600 px-8 py-1 text-white shadow-lg">
                 Delete
@@ -62,7 +62,7 @@ const EventHeaderButtons: React.FC<{
                 </DialogHeader>
                 <DialogFooter className="flex-row justify-end gap-3">
                   <DialogClose>Close</DialogClose>
-                  <Button variant="destructive" onClick={deleteEventHandler}>
+                  <Button variant="destructive" onClick={deleteActivityHandler}>
                     Delete
                   </Button>
                 </DialogFooter>
@@ -70,10 +70,10 @@ const EventHeaderButtons: React.FC<{
             </Dialog>
           </div>
         ) : (
-          <EventParticipation isBtnLarge />
+          <ActivityParticipation isBtnLarge />
         )}
       </div>
     </>
   );
 };
-export default EventHeaderButtons;
+export default ActivityHeaderButtons;

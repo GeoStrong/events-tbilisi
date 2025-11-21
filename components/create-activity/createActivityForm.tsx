@@ -5,13 +5,13 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import { EventCategories, NewEventEntity } from "@/lib/types";
+import { ActivityCategories, NewActivityEntity } from "@/lib/types";
 import { categories } from "@/lib/data/categories";
 import { useEffect } from "react";
 import { FaMapMarkedAlt } from "react-icons/fa";
 
 interface CreateActivityProps {
-  formik: FormikProps<NewEventEntity>;
+  formik: FormikProps<NewActivityEntity>;
   imagePreview: string | null;
   handleImagePreview: React.Dispatch<React.SetStateAction<string | null>>;
   latLng: google.maps.LatLngLiteral | null;
@@ -55,7 +55,7 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
             as={Input}
             id="title"
             name="title"
-            placeholder="Event title"
+            placeholder="Activity title"
           />
           <ErrorMessage
             name="title"
@@ -72,7 +72,7 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
             as={Textarea}
             id="description"
             name="description"
-            placeholder="Event description"
+            placeholder="Activity description"
           />
           <ErrorMessage
             name="description"
@@ -145,7 +145,7 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
             as={Input}
             id="location"
             name="location"
-            placeholder="Event location"
+            placeholder="Activity location"
           />
           <ErrorMessage
             name="location"
@@ -196,7 +196,7 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
               const selected =
                 formik.values.categories &&
                 formik.values.categories.includes(
-                  category.id as EventCategories,
+                  category.id as ActivityCategories,
                 );
 
               return (

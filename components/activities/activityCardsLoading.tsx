@@ -1,7 +1,7 @@
 import { Skeleton } from "@mui/material";
 import React from "react";
 
-const EventCardsLoading: React.FC = () => {
+const ActivityCardsLoading: React.FC = () => {
   return (
     <div className="mt-3 w-full">
       <div className="">
@@ -66,4 +66,4 @@ const EventCardsLoading: React.FC = () => {
     </div>
   );
 };
-export default EventCardsLoading;
+export default ActivityCardsLoading;

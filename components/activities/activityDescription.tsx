@@ -14,33 +14,33 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Category, EventEntity } from "@/lib/types";
+import { Category, ActivityEntity } from "@/lib/types";
 import useScreenSize from "@/lib/hooks/useScreenSize";
 import Link from "next/link";
 import Image from "next/image";
-import defaultEventImg from "@/public/images/default-event-img.png";
-import EventParticipation from "./eventParticipation";
+import defaultActivityImg from "@/public/images/default-activity-img.png";
+import ActivityParticipation from "./activityParticipation";
 import Share from "../general/share";
 
 import { useEffectOnce } from "react-use";
 import {
-  getCategoriesByEventId,
-  getEventImageUrl,
+  getCategoriesByActivityId,
+  getActivityImageUrl,
 } from "@/lib/functions/supabaseFunctions";
 import { isString } from "@/lib/functions/helperFunctions";
 import BookmarkButton from "../general/bookmarkButton";
 
 const snapPoints = [0.5, 1];
 
-interface EventDescriptionProps {
+interface ActivityDescriptionProps {
   buttonRef: React.RefObject<HTMLButtonElement>;
-  event: EventEntity;
+  activity: ActivityEntity;
   setSearchParams: (query: string, value: string) => void;
 }
 
-const EventDescription: React.FC<EventDescriptionProps> = ({
+const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
   buttonRef,
-  event,
+  activity,
   setSearchParams,
 }) => {
   const { isMobile } = useScreenSize();
@@ -50,22 +50,22 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
   useEffectOnce(() => {
     setSnap(1);
   });
-  const [eventImage, setEventImage] = useState<string>();
+  const [activityImage, setActivityImage] = useState<string>();
 
   useEffect(() => {
     (async () => {
-      const imageUrl = await getEventImageUrl(event.image);
+      const imageUrl = await getActivityImageUrl(activity.image);
 
-      setEventImage(imageUrl!);
+      setActivityImage(imageUrl!);
     })();
-  }, [event.image]);
+  }, [activity.image]);
 
   useEffect(() => {
     (async () => {
-      const categories = await getCategoriesByEventId(event.id);
+      const categories = await getCategoriesByActivityId(activity.id);
       setCategories(categories || []);
     })();
-  }, [event.id]);
+  }, [activity.id]);
 
   return (
     <>
@@ -84,7 +84,7 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
           <DrawerContent
             headerChildren={
               <Link
-                href={`/activities/${event.id}`}
+                href={`/activities/${activity.id}`}
                 className="absolute right-5 top-4"
               >
                 <MdOutlineOpenInNew className="linear-yellow duration-300 hover:text-primary" />
@@ -105,47 +105,49 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
                       </span>
                     ))}
                   </div>
-                  <BookmarkButton eventId={event.id} />
+                  <BookmarkButton activityId={activity.id} />
                 </div>
                 <DrawerTitle className="mt-3 text-center text-xl font-bold">
-                  {event.title}
+                  {activity.title}
                 </DrawerTitle>
                 <DrawerDescription className="text-left text-lg">
-                  {event.description}
+                  {activity.description}
                 </DrawerDescription>
                 <div className="mt-5 text-left">
-                  {event?.hostName && (
+                  {activity?.hostName && (
                     <p className="text-base">
                       Hosted by:{" "}
                       <span className="linear-yellow text-base">
-                        {event?.hostName}
+                        {activity?.hostName}
                       </span>
                     </p>
                   )}
                   <p className="">
                     Address:{" "}
-                    <span className="text-lg font-bold">{event.location}</span>
+                    <span className="text-lg font-bold">
+                      {activity.location}
+                    </span>
                   </p>
 
                   <p className="text-md">
                     Time:{" "}
                     <span className="text-lg font-bold">
-                      {isString(event?.time) ? event.time : ""}
+                      {isString(activity?.time) ? activity.time : ""}
                     </span>
                   </p>
-                  {event.endTime && (
+                  {activity.endTime && (
                     <p className="text-md">
                       End Time:{" "}
                       <span className="text-lg font-bold">
-                        {isString(event?.endTime) ? event.endTime : ""}
+                        {isString(activity?.endTime) ? activity.endTime : ""}
                       </span>
                     </p>
                   )}
                   <p className="text-md">
                     Start Date:{" "}
                     <span className="text-lg font-bold">
-                      {event.date &&
-                        new Date(event.date).toLocaleString("en-US", {
+                      {activity.date &&
+                        new Date(activity.date).toLocaleString("en-US", {
                           month: "long",
                           year: "numeric",
                           weekday: "short",
@@ -153,35 +155,35 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
                         })}
                     </span>
                   </p>
-                  {event.targetAudience && (
+                  {activity.targetAudience && (
                     <p className="">
                       Target Audience:
                       <span className="text-lg font-bold">
                         {" "}
-                        {event.targetAudience}
+                        {activity.targetAudience}
                       </span>
                     </p>
                   )}
-                  {event?.image && (
+                  {activity?.image && (
                     <Image
-                      src={eventImage || defaultEventImg.src}
+                      src={activityImage || defaultActivityImg.src}
                       width={100}
                       height={100}
-                      alt="event"
+                      alt="activity"
                       className="mt-5 h-44 w-full rounded-xl object-cover"
                       unoptimized
                     />
                   )}
                   <p className="de mt-4 flex items-center justify-between gap-2 md:justify-start">
-                    Share this event with friends:
-                    <Share event={event}>
+                    Share this activity with friends:
+                    <Share activity={activity}>
                       <FiShare className="text-xl" />
                     </Share>
                   </p>
                 </div>
               </DrawerHeader>
               <DrawerFooter className="flex flex-col gap-2 md:flex-row-reverse">
-                <EventParticipation isNested />
+                <ActivityParticipation isNested />
                 <DrawerClose className="h-12 bg-transparent p-2">
                   Cancel
                 </DrawerClose>
@@ -196,4 +198,4 @@ const EventDescription: React.FC<EventDescriptionProps> = ({
     </>
   );
 };
-export default EventDescription;
+export default ActivityDescription;

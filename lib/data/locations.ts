@@ -1,13 +1,13 @@
-import { getEvents } from "../functions/supabaseFunctions";
-import { EventEntity, Poi } from "../types";
+import { getActivities } from "../functions/supabaseFunctions";
+import { ActivityEntity, Poi } from "../types";
 
-const events = (await getEvents()) as EventEntity[];
+const activities = (await getActivities()) as ActivityEntity[];
 
-export const locations: Poi[] = events
-  .filter((event) => event.googleLocation !== undefined)
-  .map((event) => {
+export const locations: Poi[] = activities
+  .filter((activity) => activity.googleLocation !== undefined)
+  .map((activity) => {
     return {
-      key: `activity-${event.id}`,
-      location: event.googleLocation!,
+      key: `activity-${activity.id}`,
+      location: activity.googleLocation!,
     };
   });

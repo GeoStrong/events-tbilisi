@@ -4,20 +4,20 @@ import Link from "next/link";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { FiShare } from "react-icons/fi";
 import Share from "../general/share";
-import { Category, EventEntity } from "@/lib/types";
-import defaultEventImg from "@/public/images/default-event-img.png";
-import { getEventImageUrl } from "@/lib/functions/supabaseFunctions";
+import { Category, ActivityEntity } from "@/lib/types";
+import defaultActivityImg from "@/public/images/default-activity-img.png";
+import { getActivityImageUrl } from "@/lib/functions/supabaseFunctions";
 import BookmarkButton from "../general/bookmarkButton";
-import EventHeaderButtons from "./eventHeaderButtons";
+import ActivityHeaderButtons from "./activityHeaderButtons";
 
-const EventHeader: React.FC<{
-  event: EventEntity;
+const ActivityHeader: React.FC<{
+  activity: ActivityEntity;
   categories: Category[];
-}> = async ({ event, categories }) => {
-  const imageUrl = (await getEventImageUrl(event.image)) as string;
+}> = async ({ activity, categories }) => {
+  const imageUrl = (await getActivityImageUrl(activity.image)) as string;
 
-  const eventWithImage = {
-    ...event,
+  const activityWithImage = {
+    ...activity,
     image: imageUrl,
   };
 
@@ -32,8 +32,8 @@ const EventHeader: React.FC<{
             <IoMdArrowRoundBack />
           </Link>
           <Image
-            src={imageUrl || defaultEventImg.src}
-            alt="event"
+            src={imageUrl || defaultActivityImg.src}
+            alt="activity"
             width={100}
             height={100}
             className="hidden max-h-24 w-64 rounded-md bg-white object-cover md:block"
@@ -41,17 +41,20 @@ const EventHeader: React.FC<{
           />
         </div>
         <div className="flex w-full items-center justify-between gap-3 md:flex-col md:items-start md:justify-start">
-          <h2 className="text-xl font-bold md:text-3xl">{event.title}</h2>
+          <h2 className="text-xl font-bold md:text-3xl">{activity.title}</h2>
           <div className="flex gap-3">
-            <BookmarkButton eventId={event.id} />
-            <Share event={event}>
+            <BookmarkButton activityId={activity.id} />
+            <Share activity={activity}>
               <FiShare className="text-lg md:text-2xl" />
             </Share>
           </div>
         </div>
-        <EventHeaderButtons event={eventWithImage} categories={categories} />
+        <ActivityHeaderButtons
+          activity={activityWithImage}
+          categories={categories}
+        />
       </header>
     </>
   );
 };
-export default EventHeader;
+export default ActivityHeader;

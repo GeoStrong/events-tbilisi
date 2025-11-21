@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { NewEventEntity } from "@/lib/types";
+import { NewActivityEntity } from "@/lib/types";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import { Button } from "../ui/button";
 import { useDispatch } from "react-redux";
@@ -21,7 +21,7 @@ const CreateActivityLayout: React.FC<{ mapKey: string }> = ({ mapKey }) => {
   const { latLng } = useSelector((state: RootState) => state.map);
   const { isMobile } = useScreenSize();
 
-  const initialValues: NewEventEntity = {
+  const initialValues: NewActivityEntity = {
     title: "",
     description: "",
     date: null,
@@ -54,7 +54,11 @@ const CreateActivityLayout: React.FC<{ mapKey: string }> = ({ mapKey }) => {
         </div>
       ) : (
         <div className="hidden w-full rounded-2xl md:block">
-          <MapWrapper API_KEY={mapKey} height="h-96" displayEvents={false} />
+          <MapWrapper
+            API_KEY={mapKey}
+            height="h-96"
+            displayActivities={false}
+          />
         </div>
       )}
       <div className="w-full p-3 pb-10 md:pb-0">

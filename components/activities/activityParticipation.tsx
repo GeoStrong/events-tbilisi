@@ -18,7 +18,7 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { ParticipantValues } from "@/lib/types";
 
-const EventParticipation: React.FC<{
+const ActivityParticipation: React.FC<{
   isNested?: boolean;
   isBtnLarge?: boolean;
 }> = ({ isNested, isBtnLarge }) => {
@@ -94,7 +94,7 @@ const EventParticipation: React.FC<{
               😃
             </DrawerTitle>
             <DrawerDescription className="text-base">
-              Let the event host know who you are by signing up.
+              Let the activity host know who you are by signing up.
             </DrawerDescription>
             <Form
               action=""
@@ -181,4 +181,4 @@ const EventParticipation: React.FC<{
     </>
   );
 };
-export default EventParticipation;
+export default ActivityParticipation;

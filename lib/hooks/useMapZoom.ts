@@ -5,7 +5,7 @@ import { RootState } from "../store/store";
 import { useSelector } from "react-redux";
 import useAddSearchQuery from "./useAddSearchQuery";
 
-const useMapZoom = (eventId: string) => {
+const useMapZoom = (activityId: string) => {
   const { map } = useSelector((state: RootState) => state.map);
   const { handleSearch } = useAddSearchQuery();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -20,7 +20,7 @@ const useMapZoom = (eventId: string) => {
 
   const handleLocationClick = (location: google.maps.LatLngLiteral) => {
     const poi: Poi = {
-      key: `activity-${eventId}`,
+      key: `activity-${activityId}`,
       location: location,
     };
     setLocationToLocalStorage(poi);

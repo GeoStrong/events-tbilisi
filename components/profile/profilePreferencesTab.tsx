@@ -36,7 +36,7 @@ const ProfilePreferencesTab: React.FC = () => {
                   <Label htmlFor="email-notif">Email Notifications</Label>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Receive email updates about events and activities.
+                  Receive email updates about activities and activities.
                 </p>
               </div>
             </div>
@@ -47,10 +47,10 @@ const ProfilePreferencesTab: React.FC = () => {
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
                   <Bell className="h-4 w-4 text-muted-foreground" />
-                  <Label htmlFor="event-reminders">Event Reminders</Label>
+                  <Label htmlFor="activity-reminders">Activity Reminders</Label>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Get reminders before your saved events start.
+                  Get reminders before your saved activities start.
                 </p>
               </div>
             </div>
@@ -64,7 +64,7 @@ const ProfilePreferencesTab: React.FC = () => {
                   <Label htmlFor="newsletter">Newsletter Subscription</Label>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Subscribe to our weekly newsletter with curated events.
+                  Subscribe to our weekly newsletter with curated activities.
                 </p>
               </div>
             </div>

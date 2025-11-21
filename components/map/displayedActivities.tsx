@@ -14,16 +14,16 @@ import {
   DrawerTrigger,
 } from "../ui/drawer";
 import useScreenSize from "@/lib/hooks/useScreenSize";
-import EventCardsWrapper from "../events/eventCardsWrapper";
-import EventCategories from "../events/eventCategoriesCarousel";
+import ActivityCardsWrapper from "../activities/activityCardsWrapper";
+import ActivityCategories from "../activities/activityCategoriesCarousel";
 import { categories } from "@/lib/data/categories";
 
-interface CreateEventProps {
+interface CreateActivityProps {
   buttonRef: React.RefObject<HTMLButtonElement>;
   setSearchParams: (query: string, value: string) => void;
 }
 
-const DisplayedEvents: React.FC<CreateEventProps> = ({
+const DisplayedActivities: React.FC<CreateActivityProps> = ({
   buttonRef,
   setSearchParams,
 }) => {
@@ -44,13 +44,13 @@ const DisplayedEvents: React.FC<CreateEventProps> = ({
             <div className="flex h-screen w-full flex-col overflow-y-auto">
               <DrawerHeader className="relative">
                 <DrawerTitle className="mt-3 text-center text-xl font-bold">
-                  All Events
+                  All Activities
                 </DrawerTitle>
                 <DrawerDescription className="text-left text-base"></DrawerDescription>
               </DrawerHeader>
               <div className="flex flex-col gap-3 p-4">
-                {isMobile && <EventCategories categories={categories} />}
-                <EventCardsWrapper />
+                {isMobile && <ActivityCategories categories={categories} />}
+                <ActivityCardsWrapper />
               </div>
               <DrawerFooter className="flex flex-col gap-2 md:flex-row-reverse">
                 <DrawerClose className="h-12 bg-transparent p-2">
@@ -64,4 +64,4 @@ const DisplayedEvents: React.FC<CreateEventProps> = ({
     </>
   );
 };
-export default DisplayedEvents;
+export default DisplayedActivities;

@@ -3,7 +3,7 @@
 import React from "react";
 import Header from "@/components/header/header";
 import Container from "@/components/container/container";
-import EventCategoriesCarousel from "@/components/events/eventCategoriesCarousel";
+import ActivityCategoriesCarousel from "@/components/activities/activityCategoriesCarousel";
 import { categories } from "@/lib/data/categories";
 import { useLocation } from "react-use";
 import SearchSection from "./searchSection";
@@ -19,7 +19,9 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <>
       <Toaster position="top-right" richColors />
       <Header />
-      {displayCategories && <EventCategoriesCarousel categories={categories} />}
+      {displayCategories && (
+        <ActivityCategoriesCarousel categories={categories} />
+      )}
       {displaySearchSection && <SearchSection />}
       <Container>{children}</Container>
     </>

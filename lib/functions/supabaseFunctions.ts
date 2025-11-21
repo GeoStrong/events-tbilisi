@@ -1,5 +1,5 @@
 import { supabase } from "../supabase/supabaseClient";
-import { EventEntity, ImageType, NewEventEntity } from "../types";
+import { ActivityEntity, ImageType, NewActivityEntity } from "../types";
 import { isString, isValidImage } from "./helperFunctions";
 
 export const getCategories = async () => {
@@ -27,14 +27,16 @@ export const getCategoryById = async (categoryId: number | string) => {
   return data;
 };
 
-export const getCategoriesByEventId = async (eventId: number | string) => {
+export const getCategoriesByActivityId = async (
+  activityId: number | string,
+) => {
   const { data: categoryId, error: categoryIdError } = await supabase
-    .from("event_categories")
+    .from("activity_categories")
     .select("category_id")
-    .eq("event_id", eventId);
+    .eq("activity_id", activityId);
 
   if (categoryIdError) {
-    console.error("Error fetching categories for event:", categoryIdError);
+    console.error("Error fetching categories for activity:", categoryIdError);
     return [];
   }
 
@@ -49,99 +51,102 @@ export const getCategoriesByEventId = async (eventId: number | string) => {
   return categories;
 };
 
-export const getEvents = async () => {
+export const getActivities = async () => {
   const { data, error } = await supabase
-    .from("events")
+    .from("activities")
     .select("*")
     .order("updated_at", { ascending: false });
 
   if (error) {
-    console.error("Error fetching events:", error);
+    console.error("Error fetching activities:", error);
     return [];
   }
 
   return data;
 };
 
-export const getEventById = async (eventId: number | string) => {
+export const getActivityById = async (activityId: number | string) => {
   const { data, error } = await supabase
-    .from("events")
+    .from("activities")
     .select("*")
-    .eq("id", eventId);
+    .eq("id", activityId);
 
   if (error) {
-    console.error("Error fetching event by ID:", error);
+    console.error("Error fetching activity by ID:", error);
     return null;
   }
 
   return data;
 };
 
-export const getEventsByCategoryId = async (categoryId: string) => {
-  const { data: eventIds, error: eventIdsError } = await supabase
-    .from("event_categories")
-    .select("event_id")
+export const getActivitiesByCategoryId = async (categoryId: string) => {
+  const { data: activityIds, error: activityIdsError } = await supabase
+    .from("activity_categories")
+    .select("activity_id")
     .eq("category_id", categoryId);
 
-  if (eventIdsError) {
-    console.error("Error fetching event categories:", eventIdsError);
+  if (activityIdsError) {
+    console.error("Error fetching activity categories:", activityIdsError);
     return [];
   }
 
-  const events = (
+  const activities = (
     await Promise.all(
-      eventIds!.map((item) =>
-        getEventById(item.event_id).then((event) => event),
+      activityIds!.map((item) =>
+        getActivityById(item.activity_id).then((activity) => activity),
       ),
     )
   ).flat();
 
-  return events;
+  return activities;
 };
 
-export const getEventsByUserId = async (userId: string) => {
-  const { data, error: eventIdsError } = await supabase
-    .from("events")
+export const getActivitiesByUserId = async (userId: string) => {
+  const { data, error: activityIdsError } = await supabase
+    .from("activities")
     .select("*")
     .eq("user_id", userId);
 
-  if (eventIdsError) {
-    console.error("Error fetching event categories:", eventIdsError);
+  if (activityIdsError) {
+    console.error("Error fetching activity categories:", activityIdsError);
     return [];
   }
 
   return data;
 };
 
-export const getEventImageUrl = async (imageLocation: ImageType) => {
+export const getActivityImageUrl = async (imageLocation: ImageType) => {
   const image = isString(imageLocation) ? imageLocation : "";
 
   const { data: imageData } = supabase.storage
     .from("Events-Tbilisi media")
     .getPublicUrl(image);
 
-  const eventImage = isValidImage(imageData.publicUrl);
+  const activityImage = isValidImage(imageData.publicUrl);
 
-  return eventImage;
+  return activityImage;
 };
 
-export const postNewEvent = async (activity: NewEventEntity) => {
+export const postNewActivity = async (activity: NewActivityEntity) => {
   const { data, error } = await supabase
-    .from("events")
+    .from("activities")
     .insert([activity])
     .select("*");
 
   if (error) throw error;
 
-  return data as EventEntity[];
+  return data as ActivityEntity[];
 };
 
-export const postEventCategory = async (eventId: string, category: string) => {
+export const postActivityCategory = async (
+  activityId: string,
+  category: string,
+) => {
   const { data, error } = await supabase
-    .from("event_categories")
+    .from("activity_categories")
     .insert([
       {
-        event_id: eventId,
+        activity_id: activityId,
         category_id: category,
       },
     ])
@@ -152,14 +157,14 @@ export const postEventCategory = async (eventId: string, category: string) => {
   return data;
 };
 
-export const postNewEventCategories = async (
-  eventId: string,
+export const postNewActivityCategories = async (
+  activityId: string,
   categories: string[],
 ) => {
   const data = (
     await Promise.all(
       categories!.map((category) =>
-        postEventCategory(eventId, category).then((category) => category),
+        postActivityCategory(activityId, category).then((category) => category),
       ),
     )
   ).flat();
@@ -167,29 +172,32 @@ export const postNewEventCategories = async (
   return data;
 };
 
-export const deleteEventByUser = async (userId: string, eventId: string) => {
+export const deleteActivityByUser = async (
+  userId: string,
+  activityId: string,
+) => {
   const { data, error } = await supabase
-    .from("events")
+    .from("activities")
     .delete()
-    .eq("id", eventId)
+    .eq("id", activityId)
     .eq("user_id", userId);
 
   if (error) {
-    console.error("Error deleting an event:", error);
+    console.error("Error deleting an activity:", error);
     return [];
   }
 
   return data;
 };
 
-export const updateEvent = async (
-  eventId: string,
-  updates: Partial<EventEntity>,
+export const updateActivtiy = async (
+  activityId: string,
+  updates: Partial<ActivityEntity>,
 ) => {
   const { data, error } = await supabase
-    .from("events")
+    .from("activities")
     .update(updates)
-    .eq("id", eventId)
+    .eq("id", activityId)
     .eq("user_id", updates.user_id)
     .select("*")
     .single();

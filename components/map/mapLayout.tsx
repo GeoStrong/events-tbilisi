@@ -2,44 +2,46 @@
 
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import MapWrapper from "@/components/map/map";
-import DisplayEventsBtnWrapper from "@/components/map/displayEventsBtn";
-import EventDescription from "@/components/events/eventDescription";
+import DisplayActivitiesBtnWrapper from "@/components/map/displayActivitiesBtn";
+import ActivityDescription from "@/components/activities/activityDescription";
 import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
 import MapLoadingLayout from "./mapLayoutLoading";
 import { useDispatch } from "react-redux";
 import { mapActions } from "@/lib/store/mapSlice";
-import { EventEntity } from "@/lib/types";
-import { getEvents } from "@/lib/functions/supabaseFunctions";
+import { ActivityEntity } from "@/lib/types";
+import { getActivities } from "@/lib/functions/supabaseFunctions";
 
 interface MapLayoutProps {
   mapKey: string;
 }
 
 const MapLayout: React.FC<MapLayoutProps> = ({ mapKey }) => {
-  const eventButtonRef = useRef<HTMLButtonElement>(null!);
+  const activityButtonRef = useRef<HTMLButtonElement>(null!);
   const { searchParams, handleReplace } = useAddSearchQuery();
   const dispatch = useDispatch();
-  const [events, setEvents] = useState<EventEntity[] | []>([]);
+  const [activities, setActivities] = useState<ActivityEntity[] | []>([]);
 
   useEffect(() => {
     (async () => {
-      const events = (await getEvents()) as EventEntity[];
-      setEvents(events);
+      const activities = (await getActivities()) as ActivityEntity[];
+      setActivities(activities);
     })();
   }, []);
 
-  const eventId = searchParams.get("activity");
-  const activeEvent = eventId ? events.find((e) => e.id === eventId) : null;
+  const activityId = searchParams.get("activity");
+  const activeActivity = activityId
+    ? activities.find((e) => e.id === activityId)
+    : null;
 
   useEffect(() => {
     dispatch(mapActions.setIsFloatingEnabled(false));
   }, [dispatch]);
 
   useEffect(() => {
-    if (activeEvent && eventButtonRef.current) {
-      eventButtonRef.current.click();
+    if (activeActivity && activityButtonRef.current) {
+      activityButtonRef.current.click();
     }
-  }, [activeEvent]);
+  }, [activeActivity]);
 
   const setSearchParams = (query: string, value: string) => {
     const params = new URLSearchParams(searchParams);
@@ -58,13 +60,13 @@ const MapLayout: React.FC<MapLayoutProps> = ({ mapKey }) => {
           <MapWrapper API_KEY={mapKey} />
         </div>
         <div className="fixed bottom-16 left-0 flex w-full justify-center">
-          <DisplayEventsBtnWrapper />
+          <DisplayActivitiesBtnWrapper />
         </div>
       </div>
-      {activeEvent && (
-        <EventDescription
-          buttonRef={eventButtonRef}
-          event={activeEvent}
+      {activeActivity && (
+        <ActivityDescription
+          buttonRef={activityButtonRef}
+          activity={activeActivity}
           setSearchParams={setSearchParams}
         />
       )}

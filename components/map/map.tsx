@@ -20,18 +20,19 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/lib/store/store";
 
 interface MapProps {
-  displayEvents?: boolean;
+  displayActivities?: boolean;
   mapHeight?: string;
 }
 
 const MapComponent: React.FC<MapProps> = ({
-  displayEvents = true,
+  displayActivities = true,
   mapHeight = "h-screen md:min-h-[500px]",
 }) => {
   const map = useMap();
   const dispatch = useDispatch();
   const { isFloatingEnabled } = useSelector((state: RootState) => state.map);
-  const [eventsLocations, setEventsLocations] = useState<Poi[]>(locations);
+  const [activitiesLocations, setActivitiesLocations] =
+    useState<Poi[]>(locations);
   const [value, _, removeValue] = useLocalStorage<Poi | null>("location", null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -69,7 +70,7 @@ const MapComponent: React.FC<MapProps> = ({
           onClickHandler(e);
         }}
       >
-        {displayEvents && <PoiMarkers pois={eventsLocations} />}
+        {displayActivities && <PoiMarkers pois={activitiesLocations} />}
 
         {clickedLatLng && (
           <AdvancedMarker position={clickedLatLng}>
@@ -99,11 +100,11 @@ const MapComponent: React.FC<MapProps> = ({
 const MapWrapper: React.FC<{
   API_KEY: string;
   height?: string;
-  displayEvents?: boolean;
-}> = ({ API_KEY, height, displayEvents }) => {
+  displayActivities?: boolean;
+}> = ({ API_KEY, height, displayActivities }) => {
   return (
     <APIProvider apiKey={API_KEY}>
-      <MapComponent mapHeight={height} displayEvents={displayEvents} />
+      <MapComponent mapHeight={height} displayActivities={displayActivities} />
     </APIProvider>
   );
 };

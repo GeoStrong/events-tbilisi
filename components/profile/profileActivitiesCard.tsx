@@ -1,11 +1,11 @@
 import React from "react";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import { EventEntity } from "@/lib/types";
+import { ActivityEntity } from "@/lib/types";
 import { redirect } from "next/navigation";
-import EventCard from "../events/eventCard";
+import ActivityCard from "../activities/activityCard";
 
 interface ProfileActivitiesCardProps {
-  activities: EventEntity[];
+  activities: ActivityEntity[];
   title: string;
   description: string;
 }
@@ -30,14 +30,14 @@ const ProfileActivitiesCard: React.FC<ProfileActivitiesCardProps> = ({
           </CardDescription>
         ) : (
           <CardDescription className="grid grid-cols-1 gap-3 p-3 sm:grid-cols-2 md:grid-cols-3">
-            {activities.map((event) => (
+            {activities.map((activity) => (
               <div
-                key={event.id}
+                key={activity.id}
                 onClick={() => {
-                  redirect(`/activities/${event.id}`);
+                  redirect(`/activities/${activity.id}`);
                 }}
               >
-                <EventCard event={event} />
+                <ActivityCard activity={activity} />
               </div>
             ))}
           </CardDescription>

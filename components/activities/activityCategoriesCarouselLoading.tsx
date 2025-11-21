@@ -1,7 +1,7 @@
 import { Skeleton } from "@mui/material";
 import React from "react";
 
-const EventCategoriesCarouselLoading: React.FC = () => {
+const ActivityCategoriesCarouselLoading: React.FC = () => {
   return (
     <div className="w-full">
       <Skeleton className="dark:!bg-gray-600" variant="text" width={250} />
@@ -34,4 +34,4 @@ const EventCategoriesCarouselLoading: React.FC = () => {
     </div>
   );
 };
-export default EventCategoriesCarouselLoading;
+export default ActivityCategoriesCarouselLoading;

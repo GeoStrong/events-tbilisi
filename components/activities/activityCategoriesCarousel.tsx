@@ -2,9 +2,9 @@
 
 import React, { Suspense } from "react";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
-import EventCategory from "./eventCategory";
+import ActivityCategory from "./activityCategory";
 import { Category } from "@/lib/types";
-import EventCategoriesCarouselLoading from "./EventCategoriesCarouselLoading";
+import ActivityCategoriesCarouselLoading from "./activityCategoriesCarouselLoading";
 
 interface CategoriesProps {
   categories: Category[];
@@ -18,7 +18,7 @@ const Categories: React.FC<CategoriesProps> = ({ categories }) => {
           <CarouselContent className="">
             {categories.map((category) => (
               <CarouselItem className="basis-auto pl-2" key={category.id}>
-                <EventCategory category={category} />
+                <ActivityCategory category={category} />
               </CarouselItem>
             ))}
           </CarouselContent>
@@ -28,12 +28,14 @@ const Categories: React.FC<CategoriesProps> = ({ categories }) => {
   );
 };
 
-const EventCategoriesCarousel: React.FC<CategoriesProps> = ({ categories }) => {
+const ActivityCategoriesCarousel: React.FC<CategoriesProps> = ({
+  categories,
+}) => {
   return (
-    <Suspense fallback={<EventCategoriesCarouselLoading />}>
+    <Suspense fallback={<ActivityCategoriesCarouselLoading />}>
       <Categories categories={categories} />
     </Suspense>
   );
 };
 
-export default EventCategoriesCarousel;
+export default ActivityCategoriesCarousel;

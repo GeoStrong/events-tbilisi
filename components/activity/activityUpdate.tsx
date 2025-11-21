@@ -9,15 +9,15 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import useScreenSize from "@/lib/hooks/useScreenSize";
-import { EventEntity, NewEventEntity, UserProfile } from "@/lib/types";
+import { ActivityEntity, NewActivityEntity, UserProfile } from "@/lib/types";
 import CreateActivityMobileMap from "../create-activity/createActivityMobileMap";
 import CreateActivityAlert from "../create-activity/createActivityAlert";
 import useModifyActivity from "@/lib/hooks/useModifyActivity";
 
-const EventUpdate: React.FC<{ user: UserProfile; event: EventEntity }> = ({
-  event,
-  user,
-}) => {
+const ActivityUpdate: React.FC<{
+  user: UserProfile;
+  activity: ActivityEntity;
+}> = ({ activity, user }) => {
   const {
     title,
     description,
@@ -32,10 +32,10 @@ const EventUpdate: React.FC<{ user: UserProfile; event: EventEntity }> = ({
     host,
     googleLocation,
     categories,
-  } = event;
+  } = activity;
   const { isMobile } = useScreenSize();
 
-  const initialValues: NewEventEntity = {
+  const initialValues: NewActivityEntity = {
     title,
     description,
     date: typeof date === "string" ? date?.toLocaleString().split("T")[0] : "",
@@ -54,7 +54,7 @@ const EventUpdate: React.FC<{ user: UserProfile; event: EventEntity }> = ({
   const { formikComponent, openMobileMapRef, openCreateActivityAlertRef } =
     useModifyActivity({
       user: user,
-      eventId: event.id,
+      activityId: activity.id,
       latLng: googleLocation,
       initialValues: initialValues,
       isUpdatingActivity: true,
@@ -67,11 +67,12 @@ const EventUpdate: React.FC<{ user: UserProfile; event: EventEntity }> = ({
       <Drawer
         repositionInputs={false}
         direction={isMobile ? "bottom" : "right"}
+        snapPoints={[1]}
       >
         <DrawerTrigger className="h-12 rounded-md border bg-white px-8 text-black">
           Edit
         </DrawerTrigger>
-        <DrawerContent className="h-1/2 w-full">
+        <DrawerContent className="w-full">
           <DrawerHeader>
             <DrawerTitle className="mb-3 text-center text-xl">
               Edit Activity
@@ -90,4 +91,4 @@ const EventUpdate: React.FC<{ user: UserProfile; event: EventEntity }> = ({
     </>
   );
 };
-export default EventUpdate;
+export default ActivityUpdate;

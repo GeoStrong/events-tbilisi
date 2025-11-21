@@ -3,17 +3,17 @@
 import React, { Suspense, useEffect, useRef } from "react";
 import { Button } from "../ui/button";
 import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
-import DisplayedEvents from "./displayedEvents";
+import DisplayedActivities from "./displayedActivities";
 import Spinner from "../general/spinner";
 
-const DisplayEventsBtn: React.FC = () => {
-  const displayEventsBtnRef = useRef<HTMLButtonElement>(null!);
+const DisplayActivitiesBtn: React.FC = () => {
+  const displayActivitiesBtnRef = useRef<HTMLButtonElement>(null!);
   const { searchParams, handleSearch } = useAddSearchQuery();
   const displayIsActive = searchParams.get("display-activities");
 
   const openDrawer = () => {
     setTimeout(() => {
-      displayEventsBtnRef?.current.click();
+      displayActivitiesBtnRef?.current.click();
     }, 1);
   };
 
@@ -24,8 +24,8 @@ const DisplayEventsBtn: React.FC = () => {
   return (
     <>
       {displayIsActive && (
-        <DisplayedEvents
-          buttonRef={displayEventsBtnRef}
+        <DisplayedActivities
+          buttonRef={displayActivitiesBtnRef}
           setSearchParams={handleSearch}
         />
       )}
@@ -35,16 +35,16 @@ const DisplayEventsBtn: React.FC = () => {
         }}
         className="rounded-full px-8 py-6 text-base font-bold text-white md:p-8"
       >
-        Display all Events
+        Display all Activities
       </Button>
     </>
   );
 };
 
-const DisplayEventsBtnWrapper: React.FC = () => (
+const DisplayActivitiesBtnWrapper: React.FC = () => (
   <Suspense fallback={<Spinner />}>
-    <DisplayEventsBtn />
+    <DisplayActivitiesBtn />
   </Suspense>
 );
 
-export default DisplayEventsBtnWrapper;
+export default DisplayActivitiesBtnWrapper;

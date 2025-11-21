@@ -43,7 +43,11 @@ const CreateActivityMobileMap: React.FC<CreateActivityMobileMapProps> = ({
               Simply Click on the Map to put your pinpoint
             </DialogDescription>
           </DialogHeader>
-          <MapWrapper API_KEY={mapKey} height="h-96" displayEvents={false} />
+          <MapWrapper
+            API_KEY={mapKey}
+            height="h-96"
+            displayActivities={false}
+          />
           <DialogClose>
             <Button type="button">Confirm Location</Button>
           </DialogClose>

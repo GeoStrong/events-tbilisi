@@ -1,11 +1,10 @@
-import EventCardsWrapper from "@/components/events/eventCardsWrapper";
-
+import ActivityCardsWrapper from "@/components/activities/activityCardsWrapper";
 import React from "react";
 
 const App: React.FC = async () => {
   return (
     <>
-      <EventCardsWrapper />
+      <ActivityCardsWrapper />
     </>
   );
 };

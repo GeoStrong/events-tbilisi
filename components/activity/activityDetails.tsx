@@ -1,5 +1,6 @@
 import React from "react";
-const EventDetails: React.FC<{
+
+const ActivityDetails: React.FC<{
   detail: string;
   value: string | number | React.ReactNode | undefined;
 }> = ({ detail, value }) => {
@@ -16,4 +17,4 @@ const EventDetails: React.FC<{
     </>
   );
 };
-export default EventDetails;
+export default ActivityDetails;

@@ -1,7 +1,7 @@
 import { handleUploadFile } from "../functions/helperFunctions";
-import { getEventById } from "../functions/supabaseFunctions";
+import { getActivityById } from "../functions/supabaseFunctions";
 import { supabase } from "../supabase/supabaseClient";
-import { EventEntity, SavedEventEntity, UserProfile } from "../types";
+import { ActivityEntity, SavedActivityEntity, UserProfile } from "../types";
 
 export const handleUploadUserAvatar = async (user: UserProfile, file: File) => {
   const filePath = await handleUploadFile("avatars", file, user);
@@ -42,56 +42,55 @@ export const handleUploadUserInformation = async (
   return data;
 };
 
-export const handleSavedEvents = async (
+export const handleSavedActivities = async (
   user: UserProfile,
-  eventId: string,
+  activityId: string,
   save: boolean,
 ) => {
   if (save) {
-    const { error } = await supabase.from("saved_events").insert([
+    const { error } = await supabase.from("saved_activities").insert([
       {
         user_id: user.id,
-        event_id: eventId,
+        activity_id: activityId,
       },
     ]);
     if (error) throw error;
   } else {
     const { error } = await supabase
-      .from("saved_events")
+      .from("saved_activities")
       .delete()
       .eq("user_id", user.id)
-      .eq("event_id", eventId);
+      .eq("activity_id", activityId);
 
     if (error) throw error;
   }
 };
 
-export const fetchSavedEvents = async (userId: string) => {
-  const { data: savedEventsId, error: savedEventsError } = await supabase
-    .from("saved_events")
-    .select("*")
-    .eq("user_id", userId);
+export const fetchSavedActivities = async (userId: string) => {
+  const { data: savedActivitiesId, error: savedActivitiesError } =
+    await supabase.from("saved_activities").select("*").eq("user_id", userId);
 
-  if (savedEventsError) throw savedEventsError;
+  if (savedActivitiesError) throw savedActivitiesError;
 
-  const savedEvents = (
+  const savedActivities = (
     await Promise.all(
-      savedEventsId.map(
-        async (event: SavedEventEntity) => await getEventById(event.event_id),
+      savedActivitiesId.map(
+        async (activity: SavedActivityEntity) =>
+          await getActivityById(activity.activity_id),
       ),
     )
-  ).flat() as EventEntity[];
+  ).flat() as ActivityEntity[];
 
-  return savedEvents;
-  // const savedEvents  = await getEventById()
+  return savedActivities;
+  // const savedActivities  = await getActivityById()
 };
 
-export const isEventSaved = async (userId: string, eventId: string) => {
+export const isActivitySaved = async (userId: string, activityId: string) => {
   const { data, error } = await supabase
-    .from("saved_events")
-    .select("event_id")
+    .from("saved_activities")
+    .select("activity_id")
     .eq("user_id", userId)
-    .eq("event_id", eventId)
+    .eq("activity_id", activityId)
     .single();
 
   if (error && error.code !== "PGRST116") {

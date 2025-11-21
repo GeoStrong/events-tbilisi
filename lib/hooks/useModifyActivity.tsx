@@ -1,5 +1,10 @@
 import * as Yup from "yup";
-import { EventEntity, ImageType, NewEventEntity, UserProfile } from "../types";
+import {
+  ActivityEntity,
+  ImageType,
+  NewActivityEntity,
+  UserProfile,
+} from "../types";
 import { JSX, RefObject, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { mapActions } from "../store/mapSlice";
@@ -9,16 +14,16 @@ import CreateActivityForm from "@/components/create-activity/createActivityForm"
 import useScreenSize from "./useScreenSize";
 import { handleUploadFile, isFile } from "../functions/helperFunctions";
 import {
-  postNewEvent,
-  postNewEventCategories,
-  updateEvent,
+  postNewActivity,
+  postNewActivityCategories,
+  updateActivtiy,
 } from "../functions/supabaseFunctions";
 
 interface useModifyActivityProps {
   user: UserProfile | null;
-  eventId?: string;
+  activityId?: string;
   latLng: google.maps.LatLngLiteral | null | undefined;
-  initialValues: NewEventEntity;
+  initialValues: NewActivityEntity;
   isUpdatingActivity: boolean;
   enableMapFloating?: boolean;
   image?: ImageType;
@@ -30,7 +35,7 @@ const useModifyActivity: (props: useModifyActivityProps) => {
   openCreateActivityAlertRef: RefObject<HTMLButtonElement | null>;
 } = ({
   user,
-  eventId,
+  activityId,
   latLng,
   initialValues,
   isUpdatingActivity = false,
@@ -63,12 +68,12 @@ const useModifyActivity: (props: useModifyActivityProps) => {
     if (openCreateActivityAlertRef) openCreateActivityAlertRef.current?.click();
   };
 
-  const submitHandler = async (values: NewEventEntity) => {
+  const submitHandler = async (values: NewActivityEntity) => {
     const imageUrl = isFile(values.image)
       ? await handleUploadFile("activities", values.image, user!)
       : values.image;
 
-    const newActivity: NewEventEntity = {
+    const newActivity: NewActivityEntity = {
       user_id: user?.id,
       title: values.title,
       description: values.description,
@@ -87,14 +92,17 @@ const useModifyActivity: (props: useModifyActivityProps) => {
     let activity;
 
     if (isUpdatingActivity) {
-      activity = (await updateEvent(eventId!, newActivity)) as EventEntity[];
+      activity = (await updateActivtiy(
+        activityId!,
+        newActivity,
+      )) as ActivityEntity[];
     } else {
-      activity = (await postNewEvent(newActivity)) as EventEntity[];
+      activity = (await postNewActivity(newActivity)) as ActivityEntity[];
     }
 
     if (values.categories)
-      await postNewEventCategories(
-        isUpdatingActivity ? eventId! : activity[0].id,
+      await postNewActivityCategories(
+        isUpdatingActivity ? activityId! : activity[0].id,
         values.categories,
       );
   };
@@ -141,7 +149,7 @@ const useModifyActivity: (props: useModifyActivityProps) => {
           handleImagePreview={setImagePreview}
           handleOpenMobileMap={onOpenMobileMap}
           displayOpenMapButton={isUpdatingActivity ? true : isMobile}
-          styles={`${isUpdatingActivity ? "h-1/2" : "md:h-[80%]"}`}
+          styles={`${isUpdatingActivity ? "h-1/2" : "md:max-h-[80%]"}`}
         />
       )}
     </Formik>
