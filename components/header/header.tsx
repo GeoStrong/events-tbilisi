@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/store/store";
 import { authActions } from "@/lib/store/authSlice";
+import HeaderProfile from "./headerProfile";
 
 const Header: React.FC = () => {
   const dispatch = useDispatch();
@@ -55,7 +56,7 @@ const Header: React.FC = () => {
         ) : (
           userProfile && (
             <Link href="/profile">
-              <ProfileAvatar image={userProfile[0]?.avatar_path} />
+              <HeaderProfile user={userProfile[0]} />
             </Link>
           )
         )}

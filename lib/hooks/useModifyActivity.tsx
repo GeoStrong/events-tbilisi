@@ -14,6 +14,9 @@ import CreateActivityForm from "@/components/create-activity/createActivityForm"
 import useScreenSize from "./useScreenSize";
 import { handleUploadFile, isFile } from "../functions/helperFunctions";
 import {
+  deleteActivityCategories,
+  deleteImageFromStorage,
+  getImageUrl,
   postNewActivity,
   postNewActivityCategories,
   updateActivtiy,
@@ -51,7 +54,15 @@ const useModifyActivity: (props: useModifyActivityProps) => {
   const validationSchema = Yup.object({
     title: Yup.string().required("Title is required"),
     description: Yup.string().required("Description is required"),
-    date: Yup.string().required("Date is required"),
+    date: Yup.date()
+      .transform((value, originalValue) => {
+        if (!originalValue) return value;
+        return new Date(originalValue);
+      })
+      .typeError("Invalid date")
+      .required("Date is required")
+      .min(new Date().setHours(0, 0, 0, 0), "Date cannot be in the past"),
+
     time: Yup.string().required("Time is required"),
     location: Yup.string().required("Location is required"),
     categories: Yup.array()
@@ -69,9 +80,16 @@ const useModifyActivity: (props: useModifyActivityProps) => {
   };
 
   const submitHandler = async (values: NewActivityEntity) => {
-    const imageUrl = isFile(values.image)
-      ? await handleUploadFile("activities", values.image, user!)
-      : values.image;
+    let imageUrl = values.image;
+
+    if (initialValues.image === values.image) {
+      imageUrl = initialValues.image;
+    } else {
+      await deleteImageFromStorage(initialValues.image?.toString() || null);
+      imageUrl = isFile(values.image)
+        ? await handleUploadFile("activities", values.image, user!)
+        : values.image;
+    }
 
     const newActivity: NewActivityEntity = {
       user_id: user?.id,
@@ -100,15 +118,27 @@ const useModifyActivity: (props: useModifyActivityProps) => {
       activity = (await postNewActivity(newActivity)) as ActivityEntity[];
     }
 
-    if (values.categories)
+    if (
+      JSON.stringify(initialValues.categories) ===
+      JSON.stringify(values.categories)
+    ) {
+      return;
+    } else {
+      await deleteActivityCategories(activityId || "");
       await postNewActivityCategories(
         isUpdatingActivity ? activityId! : activity[0].id,
-        values.categories,
+        values.categories!,
       );
+    }
   };
 
   useEffect(() => {
-    if (image) setImagePreview(image.toString());
+    if (image) {
+      (async () => {
+        const img = await getImageUrl(image);
+        setImagePreview(img || "");
+      })();
+    }
   }, [image]);
 
   useEffect(() => {

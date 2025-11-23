@@ -19,6 +19,10 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { redirect } from "next/navigation";
+import {
+  deleteImageFromStorage,
+  getImageUrl,
+} from "@/lib/functions/supabaseFunctions";
 
 interface ProfileHeaderProps {
   user: UserProfile | null;
@@ -35,7 +39,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   onSaveHandle,
   onTabChange,
 }) => {
-  const [avatarUrl, setAvatarUrl] = useState<string>(user?.avatar_path || "");
+  const [avatarUrl, setAvatarUrl] = useState<string>("");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -56,11 +60,14 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
 
       if (!user) throw new Error("Not signed in");
 
+      if (avatarUrl !== "") {
+        await deleteImageFromStorage(`${user.avatar_path}`);
+      }
+
       const uploadedUrl = await handleUploadUserAvatar(user, file);
 
       setAvatarUrl(uploadedUrl);
       setPreviewUrl(null);
-      onEditHandle(false);
       toast.success("New profile image has been set");
     } catch (err) {
       console.error("Error uploading avatar:", err);
@@ -74,7 +81,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   };
 
   useEffect(() => {
-    setAvatarUrl(user?.avatar_path || "");
+    (async () => {
+      const image = await getImageUrl(user?.avatar_path || "");
+      setAvatarUrl(image || "");
+    })();
   }, [user]);
 
   return (
@@ -119,17 +129,16 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                     </DialogContent>
                   </Dialog>
                 </Avatar>
-                {edit && (
-                  <Button
-                    size="icon"
-                    variant="secondary"
-                    className="absolute bottom-0 right-0 h-10 w-10 rounded-full"
-                    disabled={uploading}
-                    onClick={handleAvatarClick}
-                  >
-                    <Camera className="h-4 w-4" />
-                  </Button>
-                )}
+
+                <Button
+                  size="icon"
+                  variant="secondary"
+                  className="absolute bottom-0 right-0 h-10 w-10 rounded-full"
+                  disabled={uploading}
+                  onClick={handleAvatarClick}
+                >
+                  <Camera className="h-4 w-4" />
+                </Button>
               </div>
             </div>
 

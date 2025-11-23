@@ -72,7 +72,7 @@ const MapComponent: React.FC<MapProps> = ({
       >
         {displayActivities && <PoiMarkers pois={activitiesLocations} />}
 
-        {clickedLatLng && (
+        {clickedLatLng && isFloatingEnabled && (
           <AdvancedMarker position={clickedLatLng}>
             <FloatingCursorPin />
           </AdvancedMarker>

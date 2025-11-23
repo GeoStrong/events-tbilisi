@@ -16,7 +16,7 @@ import Link from "next/link";
 import { ImLocation2 } from "react-icons/im";
 import {
   getCategoriesByActivityId,
-  getActivityImageUrl,
+  getImageUrl,
 } from "@/lib/functions/supabaseFunctions";
 import { BiTimeFive } from "react-icons/bi";
 import { MdDateRange } from "react-icons/md";
@@ -44,7 +44,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
 
   useEffect(() => {
     (async () => {
-      const imageUrl = await getActivityImageUrl(activity.image);
+      const imageUrl = await getImageUrl(activity.image);
 
       setActivityImage(imageUrl);
     })();

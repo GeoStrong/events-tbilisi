@@ -25,10 +25,12 @@ import Share from "../general/share";
 import { useEffectOnce } from "react-use";
 import {
   getCategoriesByActivityId,
-  getActivityImageUrl,
+  getImageUrl,
 } from "@/lib/functions/supabaseFunctions";
 import { isString } from "@/lib/functions/helperFunctions";
 import BookmarkButton from "../general/bookmarkButton";
+import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
+import { Button } from "../ui/button";
 
 const snapPoints = [0.5, 1];
 
@@ -46,6 +48,7 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
   const { isMobile } = useScreenSize();
   const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const { user } = useGetUserProfile();
 
   useEffectOnce(() => {
     setSnap(1);
@@ -54,7 +57,7 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
 
   useEffect(() => {
     (async () => {
-      const imageUrl = await getActivityImageUrl(activity.image);
+      const imageUrl = await getImageUrl(activity.image);
 
       setActivityImage(imageUrl!);
     })();
@@ -182,8 +185,14 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
                   </p>
                 </div>
               </DrawerHeader>
-              <DrawerFooter className="flex flex-col gap-2 md:flex-row-reverse">
-                <ActivityParticipation isNested />
+              <DrawerFooter className="flex flex-col items-center gap-2 md:flex-row-reverse">
+                {activity.user_id === user?.id ? (
+                  <Link href={`/activities/${activity.id}`}>
+                    <Button className="h-12">Modify Activity</Button>
+                  </Link>
+                ) : (
+                  <ActivityParticipation isNested />
+                )}
                 <DrawerClose className="h-12 bg-transparent p-2">
                   Cancel
                 </DrawerClose>

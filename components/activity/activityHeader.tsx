@@ -6,7 +6,7 @@ import { FiShare } from "react-icons/fi";
 import Share from "../general/share";
 import { Category, ActivityEntity } from "@/lib/types";
 import defaultActivityImg from "@/public/images/default-activity-img.png";
-import { getActivityImageUrl } from "@/lib/functions/supabaseFunctions";
+import { getImageUrl } from "@/lib/functions/supabaseFunctions";
 import BookmarkButton from "../general/bookmarkButton";
 import ActivityHeaderButtons from "./activityHeaderButtons";
 
@@ -14,12 +14,7 @@ const ActivityHeader: React.FC<{
   activity: ActivityEntity;
   categories: Category[];
 }> = async ({ activity, categories }) => {
-  const imageUrl = (await getActivityImageUrl(activity.image)) as string;
-
-  const activityWithImage = {
-    ...activity,
-    image: imageUrl,
-  };
+  const imageUrl = (await getImageUrl(activity.image)) as string;
 
   return (
     <>
@@ -49,10 +44,7 @@ const ActivityHeader: React.FC<{
             </Share>
           </div>
         </div>
-        <ActivityHeaderButtons
-          activity={activityWithImage}
-          categories={categories}
-        />
+        <ActivityHeaderButtons activity={activity} categories={categories} />
       </header>
     </>
   );

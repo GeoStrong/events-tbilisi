@@ -15,7 +15,7 @@ import defaultActivityImg from "@/public/images/default-activity-img.png";
 import Socials from "./socials";
 import { useLocation } from "react-use";
 import { Button } from "../ui/button";
-import { getActivityImageUrl } from "@/lib/functions/supabaseFunctions";
+import { getImageUrl } from "@/lib/functions/supabaseFunctions";
 
 const Share: React.FC<{
   children: React.ReactNode;
@@ -34,7 +34,7 @@ const Share: React.FC<{
 
   useEffect(() => {
     (async () => {
-      const imageUrl = await getActivityImageUrl(activity.image);
+      const imageUrl = await getImageUrl(activity.image);
 
       setActivityImage(imageUrl!);
     })();

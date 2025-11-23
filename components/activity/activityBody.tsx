@@ -1,6 +1,6 @@
 "use client";
 
-import { Category, ActivityEntity, ImageType, UserProfile } from "@/lib/types";
+import { Category, ActivityEntity, UserProfile } from "@/lib/types";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import defaultActivityImg from "@/public/images/default-activity-img.png";
@@ -12,12 +12,21 @@ import { BiUser } from "react-icons/bi";
 import { Button } from "../ui/button";
 import { CiShare1 } from "react-icons/ci";
 import {
-  getActivityImageUrl,
+  getImageUrl,
   getActivitiesByCategoryId,
 } from "@/lib/functions/supabaseFunctions";
 import { Badge } from "../ui/badge";
 import useMapZoom from "@/lib/hooks/useMapZoom";
 import { fetchUserInfo } from "@/lib/profile/profile";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 
 interface ActivityBodyProps {
   categories: Category[];
@@ -33,36 +42,57 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
     [],
   );
   const { handleLocationClick } = useMapZoom(activity.id);
-  const [hostName, setHostName] = useState<string>("");
-  const [hostProfileImg, setHostProfileImg] = useState<ImageType>(null);
+  const [host, setHost] = useState<UserProfile | null>();
+  const [hostImage, setHostImage] = useState<string | null>();
+  const { user } = useGetUserProfile();
 
   useEffect(() => {
     (async () => {
-      const imageUrl = await getActivityImageUrl(activity.image);
+      const imageUrl = await getImageUrl(activity.image);
       const activities = await getActivitiesByCategoryId(
         categories[0].id.toLocaleString(),
       );
       const host = (await fetchUserInfo(activity.user_id!)) as UserProfile;
+      const hostImg = await getImageUrl(host.avatar_path || "");
 
       setActivityImage(imageUrl!);
       setSimilarActivities(activities);
-      setHostName(host.name);
-      setHostProfileImg(host.avatar_path!);
+      setHost(host);
+      setHostImage(hostImg);
     })();
   }, [categories, activity.image, activity.user_id]);
 
   return (
     <div className="mb-10 mt-5 grid grid-cols-1 grid-rows-3 gap-5 lg:grid-cols-4">
       <div className="col-span-3 row-span-3 flex flex-col gap-5 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 md:px-6">
-        <div className="rounded-md bg-white">
-          <Image
-            src={activityImage || defaultActivityImg.src}
-            width={100}
-            height={100}
-            alt="activity"
-            className={`max-h-96 w-full rounded-md object-center ${activity.image ? "object-cover" : "object-contain"}`}
-            unoptimized
-          />
+        <div className="rounded-md">
+          <Dialog>
+            <DialogTrigger className="w-full">
+              <Image
+                src={activityImage || defaultActivityImg.src}
+                width={100}
+                height={100}
+                alt="activity"
+                className={`max-h-96 w-full rounded-md object-center ${activity.image ? "object-cover" : "object-contain"}`}
+                unoptimized
+              />
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle></DialogTitle>
+                <DialogDescription>
+                  <Image
+                    src={activityImage || defaultActivityImg.src}
+                    width={100}
+                    height={100}
+                    alt="activity"
+                    className={`w-full rounded-md object-center ${activity.image ? "object-cover" : "object-contain"}`}
+                    unoptimized
+                  />
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         </div>
         <div className="w-full">
           <h3 className="my-3 text-base font-semibold md:text-xl">
@@ -146,19 +176,28 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
       </div>
       <div className="col-span-3 max-h-40 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">
         <h3 className="font-bold md:text-lg">Host</h3>
-        <div className="flex items-center gap-2">
+        <div className="flex items-start gap-2">
           <Avatar className="h-12 w-12">
             <AvatarImage
-              src={hostProfileImg?.toString()}
+              src={hostImage || ""}
               className="object-cover object-top"
             />
             <AvatarFallback>
               <BiUser />
             </AvatarFallback>
           </Avatar>
-          <div className="flex w-full flex-row items-center justify-between gap-2 lg:flex-col">
-            <span className="text-center text-base">{hostName}</span>
-            <Button className="text">Follow</Button>
+          <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-col">
+            <span className="text-center text-base">{host?.name}</span>
+            {user?.id === activity.user_id ? (
+              <Link
+                href="/profile#account"
+                className="w-full rounded-md border p-2 text-center dark:border-gray-600"
+              >
+                Edit Profile
+              </Link>
+            ) : (
+              <Button className="text">Follow</Button>
+            )}
           </div>
         </div>
       </div>

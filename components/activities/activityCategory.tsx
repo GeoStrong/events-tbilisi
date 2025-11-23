@@ -31,7 +31,7 @@ const ActivityCategory: React.FC<{ category: Category }> = ({ category }) => {
   return (
     <div className="px-2">
       <button
-        className={`relative flex items-center justify-between gap-3 rounded-lg border px-3 py-1 dark:border-gray-600 ${getActiveCategoryStyles(category.id.toLocaleString(), category.color)}`}
+        className={`relative flex items-center justify-between gap-3 rounded-lg border px-3 py-1 shadow-md dark:border-gray-600 ${getActiveCategoryStyles(category.id.toLocaleString(), category.color)}`}
         onClick={() => {
           if (cateogryIsActive) return handleSearch("category", "");
           return handleSearch("category", category.id.toLocaleString());

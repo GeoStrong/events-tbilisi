@@ -11,7 +11,7 @@ export const handleUploadUserAvatar = async (user: UserProfile, file: File) => {
 
   const { error: updateError } = await supabase
     .from("users")
-    .update({ avatar_path: data.publicUrl })
+    .update({ avatar_path: filePath })
     .eq("id", user.id);
 
   if (updateError) throw updateError;

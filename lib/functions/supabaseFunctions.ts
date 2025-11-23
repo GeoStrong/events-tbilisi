@@ -1,5 +1,10 @@
 import { supabase } from "../supabase/supabaseClient";
-import { ActivityEntity, ImageType, NewActivityEntity } from "../types";
+import {
+  ActivityCategories,
+  ActivityEntity,
+  ImageType,
+  NewActivityEntity,
+} from "../types";
 import { isString, isValidImage } from "./helperFunctions";
 
 export const getCategories = async () => {
@@ -115,7 +120,7 @@ export const getActivitiesByUserId = async (userId: string) => {
   return data;
 };
 
-export const getActivityImageUrl = async (imageLocation: ImageType) => {
+export const getImageUrl = async (imageLocation: ImageType) => {
   const image = isString(imageLocation) ? imageLocation : "";
 
   const { data: imageData } = supabase.storage
@@ -125,6 +130,13 @@ export const getActivityImageUrl = async (imageLocation: ImageType) => {
   const activityImage = isValidImage(imageData.publicUrl);
 
   return activityImage;
+};
+
+export const deleteImageFromStorage = async (imagePath: string | null) => {
+  if (!imagePath) return;
+  return await supabase.storage
+    .from("Events-Tbilisi media")
+    .remove([imagePath]);
 };
 
 export const postNewActivity = async (activity: NewActivityEntity) => {
@@ -159,7 +171,7 @@ export const postActivityCategory = async (
 
 export const postNewActivityCategories = async (
   activityId: string,
-  categories: string[],
+  categories: ActivityCategories[] | string[],
 ) => {
   const data = (
     await Promise.all(
@@ -205,4 +217,13 @@ export const updateActivtiy = async (
   if (error) throw error;
 
   return data;
+};
+
+export const deleteActivityCategories = async (activityId: string) => {
+  const { error } = await supabase
+    .from("activity_categories")
+    .delete()
+    .eq("activity_id", activityId);
+
+  if (error) throw error;
 };

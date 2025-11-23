@@ -80,7 +80,7 @@ const ActivityUpdate: React.FC<{
             <div className="">
               <CreateActivityMobileMap buttonRef={openMobileMapRef} />
             </div>
-            <div className="h-[85%] overflow-y-scroll">{formikComponent}</div>
+            <div className="h-[60%] md:h-[85%]">{formikComponent}</div>
             <CreateActivityAlert
               buttonRef={openCreateActivityAlertRef}
               isActivityCreated={false}
