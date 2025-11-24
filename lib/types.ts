@@ -4,7 +4,7 @@ export type UserProfile = {
   name: string;
   phone?: string;
   avatar_path?: string;
-  created_at: Date;
+  created_at: Date | string;
   additionalInfo?: string;
 };
 export type ActivityCategories =

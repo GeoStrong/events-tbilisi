@@ -63,204 +63,208 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
   }, [categories, activity.image, activity.user_id]);
 
   return (
-    <div className="mb-10 mt-5 grid grid-cols-1 grid-rows-3 gap-5 lg:grid-cols-4">
-      <div className="col-span-3 row-span-3 flex flex-col gap-5 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 md:px-6">
-        <div className="rounded-md">
-          <Dialog>
-            <DialogTrigger className="w-full">
-              <Image
-                src={activityImage || defaultActivityImg.src}
-                width={100}
-                height={100}
-                alt="activity"
-                className={`max-h-96 w-full rounded-md object-center ${activity.image ? "object-cover" : "object-contain"}`}
-                unoptimized
-              />
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle></DialogTitle>
-                <DialogDescription>
-                  <Image
-                    src={activityImage || defaultActivityImg.src}
-                    width={100}
-                    height={100}
-                    alt="activity"
-                    className={`w-full rounded-md object-center ${activity.image ? "object-cover" : "object-contain"}`}
-                    unoptimized
-                  />
-                </DialogDescription>
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
-        </div>
-        <div className="w-full">
-          <h3 className="my-3 text-base font-semibold md:text-xl">
-            About the activity
-          </h3>
-          <div className="flex items-center justify-between">
-            <div className="flex gap-2">
-              {categories.map((category) => (
-                <span
-                  key={category.id}
-                  className={`rounded-full bg-${category.color} px-2 py-1 text-sm text-white`}
-                >
-                  {category.name}
-                </span>
-              ))}
-            </div>
-            <Badge
-              variant={`${activity.status === "active" ? "success" : activity.status === "inactive" ? "destructive" : "default"}`}
-            >
-              {activity.status?.toUpperCase()}
-            </Badge>
-          </div>
-          <p className="mt-3 text-sm text-muted-foreground md:text-lg">
-            {activity.description}
-          </p>
-          <h3 className="mt-3 text-base font-semibold md:text-xl">
-            Activity Details:
-          </h3>
-          <div className="mt-2 flex w-full flex-col justify-between md:flex-row">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <ActivityDetails
-                  detail="📍 Address"
-                  value={activity.location}
+    <div className="mb-10 mt-5 flex w-full flex-col gap-5 md:flex-row">
+      <div className="w-3/4">
+        <div className="flex flex-col gap-5 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 md:px-6">
+          <div className="rounded-md">
+            <Dialog>
+              <DialogTrigger className="w-full">
+                <Image
+                  src={activityImage || defaultActivityImg.src}
+                  width={100}
+                  height={100}
+                  alt="activity"
+                  className={`max-h-96 w-full rounded-md object-center ${activity.image ? "object-cover" : "object-contain"}`}
+                  unoptimized
                 />
-                <Link
-                  href="/map"
-                  className="text-sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (activity.googleLocation) {
-                      handleLocationClick(activity.googleLocation);
-                    }
-                  }}
-                >
-                  See Map ↗️
-                </Link>
-              </div>
-              <ActivityDetails
-                detail="⌚ Time"
-                value={activity.time as string}
-              />
-              <ActivityDetails
-                detail="📅 Date"
-                value={
-                  activity.date &&
-                  new Date(activity.date).toLocaleString("en-US", {
-                    month: "long",
-                    year: "numeric",
-                    weekday: "short",
-                    day: "numeric",
-                  })
-                }
-              />
-            </div>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle></DialogTitle>
+                  <DialogDescription>
+                    <Image
+                      src={activityImage || defaultActivityImg.src}
+                      width={100}
+                      height={100}
+                      alt="activity"
+                      className={`w-full rounded-md object-center ${activity.image ? "object-cover" : "object-contain"}`}
+                      unoptimized
+                    />
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
           </div>
-
-          <div className="mt-2">
-            {activity.tags &&
-              activity.tags.map((tag) => (
-                <span key={tag} className="font-bold">
-                  #{tag}
-                </span>
-              ))}
-          </div>
-          <h3 className="mt-3 text-base font-semibold md:text-xl">
-            Share with your friends
-          </h3>
-          <Socials />
-        </div>
-      </div>
-      <div className="col-span-3 max-h-40 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">
-        <h3 className="font-bold md:text-lg">Host</h3>
-        <div className="flex items-start gap-2">
-          <Avatar className="h-12 w-12">
-            <AvatarImage
-              src={hostImage || ""}
-              className="object-cover object-top"
-            />
-            <AvatarFallback>
-              <BiUser />
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-col">
-            <span className="text-center text-base">{host?.name}</span>
-            {user?.id === activity.user_id ? (
-              <Link
-                href="/profile#account"
-                className="w-full rounded-md border p-2 text-center dark:border-gray-600"
-              >
-                Edit Profile
-              </Link>
-            ) : (
-              <Button className="text">Follow</Button>
-            )}
-          </div>
-        </div>
-      </div>
-      <div className="col-span-3 row-span-1 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">
-        <h3 className="font-bold md:text-lg">Additional Info</h3>
-        <div className="flex items-center gap-2">
-          <div className="mt-2 flex flex-col">
-            {activity.link && (
-              <ActivityDetails
-                detail="🔗 Link"
-                value={
-                  <Link
-                    href={activity.link}
-                    className="text-blue-500 underline"
-                    target="_blank"
+          <div className="w-full">
+            <h3 className="my-3 text-base font-semibold md:text-xl">
+              About the activity
+            </h3>
+            <div className="flex items-center justify-between">
+              <div className="flex gap-2">
+                {categories.map((category) => (
+                  <span
+                    key={category.id}
+                    className={`rounded-full bg-${category.color} px-2 py-1 text-sm text-white`}
                   >
-                    Learn More
+                    {category.name}
+                  </span>
+                ))}
+              </div>
+              <Badge
+                variant={`${activity.status === "active" ? "success" : activity.status === "inactive" ? "destructive" : "default"}`}
+              >
+                {activity.status?.toUpperCase()}
+              </Badge>
+            </div>
+            <p className="mt-3 text-sm text-muted-foreground md:text-lg">
+              {activity.description}
+            </p>
+            <h3 className="mt-3 text-base font-semibold md:text-xl">
+              Activity Details:
+            </h3>
+            <div className="mt-2 flex w-full flex-col justify-between md:flex-row">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <ActivityDetails
+                    detail="📍 Address"
+                    value={activity.location}
+                  />
+                  <Link
+                    href="/map"
+                    className="text-sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (activity.googleLocation) {
+                        handleLocationClick(activity.googleLocation);
+                      }
+                    }}
+                  >
+                    See Map ↗️
                   </Link>
-                }
-              />
-            )}
-            <ActivityDetails
-              detail="👥 Target Audience"
-              value={activity.targetAudience}
-            />
-            <ActivityDetails
-              detail="🔢 Max Attendees"
-              value={activity.maxAttendees}
-            />
-            <ActivityDetails
-              detail="Participants"
-              value={activity.participants?.length}
-            />
-          </div>
-        </div>
-      </div>
-      <div className="col-span-3 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">
-        <h3 className="font-bold md:text-lg">
-          Explore More {categories[0].name} Activities
-        </h3>
-        <div className="mt-3 flex flex-col gap-2">
-          {similarActivities.map((activity) => (
-            <div
-              key={activity.id}
-              className="flex justify-between gap-2 rounded-lg border p-2 dark:border-gray-600"
-            >
-              <div className="flex flex-col">
-                <h3 className="text-sm font-semibold">{activity.title}</h3>
-                <p className="text-xs text-muted-foreground">
-                  {activity.date &&
+                </div>
+                <ActivityDetails
+                  detail="⌚ Time"
+                  value={activity.time as string}
+                />
+                <ActivityDetails
+                  detail="📅 Date"
+                  value={
+                    activity.date &&
                     new Date(activity.date).toLocaleString("en-US", {
                       month: "long",
                       year: "numeric",
                       weekday: "short",
                       day: "numeric",
-                    })}
-                </p>
+                    })
+                  }
+                />
               </div>
-              <Link href={`/${activity.id}`}>
-                <CiShare1 />
-              </Link>
             </div>
-          ))}
+
+            <div className="mt-2">
+              {activity.tags &&
+                activity.tags.map((tag) => (
+                  <span key={tag} className="font-bold">
+                    #{tag}
+                  </span>
+                ))}
+            </div>
+            <h3 className="mt-3 text-base font-semibold md:text-xl">
+              Share with your friends
+            </h3>
+            <Socials />
+          </div>
+        </div>
+      </div>
+      <div className="flex w-1/4 flex-col gap-5">
+        <div className="max-h-40 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">
+          <h3 className="font-bold md:text-lg">Host</h3>
+          <div className="flex items-start gap-2">
+            <Avatar className="h-12 w-12">
+              <AvatarImage
+                src={hostImage || ""}
+                className="object-cover object-top"
+              />
+              <AvatarFallback>
+                <BiUser />
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-col">
+              <span className="text-center text-base">{host?.name}</span>
+              {user?.id === activity.user_id ? (
+                <Link
+                  href="/profile#account"
+                  className="w-full rounded-md border p-2 text-center dark:border-gray-600"
+                >
+                  Edit Profile
+                </Link>
+              ) : (
+                <Button className="text">Follow</Button>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">
+          <h3 className="font-bold md:text-lg">Additional Info</h3>
+          <div className="flex items-center gap-2">
+            <div className="mt-2 flex flex-col">
+              {activity.link && (
+                <ActivityDetails
+                  detail="🔗 Link"
+                  value={
+                    <Link
+                      href={activity.link}
+                      className="text-blue-500 underline"
+                      target="_blank"
+                    >
+                      Learn More
+                    </Link>
+                  }
+                />
+              )}
+              <ActivityDetails
+                detail="👥 Target Audience"
+                value={activity.targetAudience}
+              />
+              <ActivityDetails
+                detail="🔢 Max Attendees"
+                value={activity.maxAttendees}
+              />
+              <ActivityDetails
+                detail="Participants"
+                value={activity.participants?.length}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">
+          <h3 className="font-bold md:text-lg">
+            Explore More {categories[0].name} Activities
+          </h3>
+          <div className="mt-3 flex flex-col gap-2">
+            {similarActivities.map((activity) => (
+              <div
+                key={activity.id}
+                className="flex justify-between gap-2 rounded-lg border p-2 dark:border-gray-600"
+              >
+                <div className="flex flex-col">
+                  <h3 className="text-sm font-semibold">{activity.title}</h3>
+                  <p className="text-xs text-muted-foreground">
+                    {activity.date &&
+                      new Date(activity.date).toLocaleString("en-US", {
+                        month: "long",
+                        year: "numeric",
+                        weekday: "short",
+                        day: "numeric",
+                      })}
+                  </p>
+                </div>
+                <Link href={`/${activity.id}`}>
+                  <CiShare1 />
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

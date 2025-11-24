@@ -6,6 +6,7 @@ import { useLocation } from "react-use";
 import { FiMapPin } from "react-icons/fi";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { AiOutlineHome } from "react-icons/ai";
+import { RiCompassDiscoverLine } from "react-icons/ri";
 
 const FooterNavMobile: React.FC = () => {
   const { pathname } = useLocation();
@@ -21,10 +22,17 @@ const FooterNavMobile: React.FC = () => {
             />
           </Link>
         </li>
-        <li className="-translate-y-1">
+        <li className="">
+          <Link href="/discover">
+            <RiCompassDiscoverLine
+              className={`text-2xl ${pathname === "/discover" && "text-primary"}`}
+            />
+          </Link>
+        </li>
+        <li className="">
           <Link href="/create-activity">
             <AiOutlinePlusCircle
-              className={`text-4xl ${pathname === "/create-activity" && "text-primary"}`}
+              className={`text-2xl ${pathname === "/create-activity" && "text-primary"}`}
             />
           </Link>
         </li>
@@ -32,7 +40,7 @@ const FooterNavMobile: React.FC = () => {
           <Link href="/map">
             {" "}
             <FiMapPin
-              className={`text-2xl ${pathname === "/map" && "text-primary"}`}
+              className={`text-xl ${pathname === "/map" && "text-primary"}`}
             />
           </Link>
         </li>

@@ -10,7 +10,6 @@ import AuthDialog from "../auth/authForm";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import HeaderProfileLoader from "./headerProfileLoader";
 import { Button } from "../ui/button";
-import ProfileAvatar from "../general/profileAvatar";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/store/store";
@@ -54,11 +53,7 @@ const Header: React.FC = () => {
             Sign in
           </Button>
         ) : (
-          userProfile && (
-            <Link href="/profile">
-              <HeaderProfile user={userProfile[0]} />
-            </Link>
-          )
+          userProfile && <HeaderProfile user={userProfile[0]} />
         )}
       </div>
 

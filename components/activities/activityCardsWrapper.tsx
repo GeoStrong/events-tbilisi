@@ -1,25 +1,16 @@
 "use client";
 
 import React, { Suspense, useEffect, useRef, useState } from "react";
-import { Category, ActivityEntity } from "@/lib/types";
 import ActivityCard from "./activityCard";
 import ActivityDescription from "./activityDescription";
 import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
 import { usePathname } from "next/navigation";
 import Spinner from "../general/spinner";
-import {
-  getActivities,
-  getCategoryById,
-  getActivitiesByCategoryId,
-} from "@/lib/functions/supabaseFunctions";
 import ActivityCardsLoading from "./activityCardsLoading";
+import useActivitiesFilter from "@/lib/hooks/useActvitiesFilter";
 
 const ActivityCards: React.FC = () => {
-  const [activities, setActivities] = useState<ActivityEntity[] | null>(null);
-  const [category, setCategory] = useState<Category[]>([]);
-  const [activeActivity, setActiveActivity] = useState<ActivityEntity | null>(
-    null,
-  );
+  const { activities, category, activeActivity } = useActivitiesFilter();
   const [gridStyles, setGridStyles] = useState<string>("");
   const pathname = usePathname();
   const { searchParams, handleSearch } = useAddSearchQuery();
@@ -43,38 +34,6 @@ const ActivityCards: React.FC = () => {
         : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
     );
   }, [pathname]);
-
-  useEffect(() => {
-    if (categoryId) {
-      (async () => {
-        const activities = await getActivitiesByCategoryId(categoryId);
-        setActivities(activities);
-      })();
-    } else {
-      (async () => {
-        const activities = await getActivities();
-        setActivities(activities);
-      })();
-    }
-  }, [categoryId]);
-
-  useEffect(() => {
-    (async () => {
-      const category =
-        categoryId && ((await getCategoryById(categoryId)) as Category[]);
-      setCategory(category || []);
-    })();
-  }, [categoryId]);
-
-  useEffect(() => {
-    const activityId = searchParams.get("activity")!;
-    if (activityId || activities) {
-      const activity = activities?.find(
-        (activity) => activity.id === activityId,
-      );
-      setActiveActivity(activity || null);
-    }
-  }, [activities, searchParams]);
 
   return (
     <>

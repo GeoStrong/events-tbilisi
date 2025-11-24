@@ -118,17 +118,18 @@ const useModifyActivity: (props: useModifyActivityProps) => {
       activity = (await postNewActivity(newActivity)) as ActivityEntity[];
     }
 
-    if (
-      JSON.stringify(initialValues.categories) ===
-      JSON.stringify(values.categories)
-    ) {
-      return;
+    if (isUpdatingActivity) {
+      if (
+        JSON.stringify(initialValues.categories) ===
+        JSON.stringify(values.categories)
+      ) {
+        return;
+      } else {
+        await deleteActivityCategories(activityId || "");
+        await postNewActivityCategories(activityId!, values.categories!);
+      }
     } else {
-      await deleteActivityCategories(activityId || "");
-      await postNewActivityCategories(
-        isUpdatingActivity ? activityId! : activity[0].id,
-        values.categories!,
-      );
+      await postNewActivityCategories(activity[0].id, values.categories!);
     }
   };
 

@@ -33,6 +33,7 @@ const ActivityUpdate: React.FC<{
     googleLocation,
     categories,
   } = activity;
+
   const { isMobile } = useScreenSize();
 
   const initialValues: NewActivityEntity = {
@@ -67,7 +68,7 @@ const ActivityUpdate: React.FC<{
       <Drawer
         repositionInputs={false}
         direction={isMobile ? "bottom" : "right"}
-        snapPoints={[1]}
+        snapPoints={isMobile ? [0.5, 1] : [1]}
       >
         <DrawerTrigger className="h-12 rounded-md border bg-white px-8 text-black">
           Edit
@@ -80,7 +81,7 @@ const ActivityUpdate: React.FC<{
             <div className="">
               <CreateActivityMobileMap buttonRef={openMobileMapRef} />
             </div>
-            <div className="h-[60%] md:h-[85%]">{formikComponent}</div>
+            <div className="h-[75%] md:h-[85%]">{formikComponent}</div>
             <CreateActivityAlert
               buttonRef={openCreateActivityAlertRef}
               isActivityCreated={false}

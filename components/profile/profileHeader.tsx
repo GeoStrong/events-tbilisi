@@ -155,7 +155,14 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
-                  <span>Joined Nov 2025</span>
+                  <span>
+                    Joined{" "}
+                    {user?.created_at &&
+                      new Date(user?.created_at).toLocaleDateString("en-US", {
+                        month: "long",
+                        year: "numeric",
+                      })}
+                  </span>
                 </div>
               </div>
 

@@ -15,7 +15,7 @@ const Categories: React.FC<CategoriesProps> = ({ categories }) => {
     <>
       <div className="sticky top-[3.3rem] z-50 border-b bg-white px-2 py-4 dark:border-gray-600 dark:bg-gray-900 md:px-20">
         <Carousel opts={{ dragFree: true }}>
-          <CarouselContent className="">
+          <CarouselContent className="cursor-grab">
             {categories.map((category) => (
               <CarouselItem className="basis-auto pl-2" key={category.id}>
                 <ActivityCategory category={category} />

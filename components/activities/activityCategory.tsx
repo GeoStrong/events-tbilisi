@@ -20,7 +20,7 @@ const ActivityCategory: React.FC<{ category: Category }> = ({ category }) => {
 
   const activeCategory = searchParams.get("category");
 
-  const cateogryIsActive = activeCategory && activeCategory === category.id;
+  const categoryIsActive = activeCategory && activeCategory === category.id;
 
   const getActiveCategoryStyles = (category: string, categoryColor: string) => {
     if (activeCategory === category) {
@@ -33,13 +33,13 @@ const ActivityCategory: React.FC<{ category: Category }> = ({ category }) => {
       <button
         className={`relative flex items-center justify-between gap-3 rounded-lg border px-3 py-1 shadow-md dark:border-gray-600 ${getActiveCategoryStyles(category.id.toLocaleString(), category.color)}`}
         onClick={() => {
-          if (cateogryIsActive) return handleSearch("category", "");
+          if (categoryIsActive) return handleSearch("category", "");
           return handleSearch("category", category.id.toLocaleString());
         }}
       >
         {activityQuantity > 0 && (
           <Badge
-            className={`${cateogryIsActive ? `border-[1px] border-${category.color}/80 bg-white text-${category.color}` : `bg-${category.color} text-white`} hover:bg-${category.color} absolute -right-3 -top-0 flex w-1 items-center justify-center rounded-full text-[10px] font-medium`}
+            className={`${categoryIsActive ? `border-[1px] border-${category.color}/80 bg-white text-${category.color}` : `bg-${category.color} text-white`} hover:bg-${category.color} absolute -right-3 -top-0 flex w-1 items-center justify-center rounded-full text-[10px] font-medium`}
           >
             {activityQuantity}
           </Badge>

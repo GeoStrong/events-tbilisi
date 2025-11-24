@@ -22,12 +22,12 @@ const SearchSection: React.FC = () => {
         <div className="flex items-center md:w-1/2">
           <Input
             type="text"
-            className="rounded-full rounded-r-none border-none bg-white p-6 focus:placeholder:text-primary"
+            className="rounded-full rounded-r-none border-2 border-white bg-white p-6 focus:border-primary"
             placeholder="Search Activities, Places"
           />
           <Button
             type="submit"
-            className="rounded-full rounded-l-none border-none bg-primary p-6 text-white md:px-10"
+            className="rounded-full rounded-l-none border-2 border-primary bg-primary p-6 text-white hover:bg-primary/80 hover:text-white md:px-10"
             variant="outline"
           >
             Search

@@ -11,6 +11,7 @@ import HeaderProfileLoader from "./headerProfileLoader";
 import { AiOutlineHome, AiOutlinePlusCircle } from "react-icons/ai";
 import { FiMapPin } from "react-icons/fi";
 import { UserProfile } from "@/lib/types";
+import { RiCompassDiscoverLine } from "react-icons/ri";
 
 interface HeaderNavProps {
   onAuthClick: () => void;
@@ -36,6 +37,23 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick, userProfile }) => {
                 Activities
               </Link>
               {pathname === "/" && (
+                <motion.div
+                  layoutId="underline"
+                  className="absolute bottom-0 h-[2px] w-full bg-primary"
+                />
+              )}
+            </li>
+            <li
+              className={`relative flex flex-col items-center gap-1 hover:text-primary ${pathname === "/create-activity" && "border-primary text-primary"}`}
+            >
+              <Link
+                href="/discover"
+                className="mb-1 flex flex-col items-center gap-1 px-3 text-sm"
+              >
+                <RiCompassDiscoverLine className="text-base" />
+                Discover
+              </Link>
+              {pathname === "/discover" && (
                 <motion.div
                   layoutId="underline"
                   className="absolute bottom-0 h-[2px] w-full bg-primary"
@@ -76,6 +94,7 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick, userProfile }) => {
                 />
               )}
             </li>
+
             <li className={`hover:text-primary`}>
               {userProfile === null && <HeaderProfileLoader />}
               {userProfile?.length === 0 ||

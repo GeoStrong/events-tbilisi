@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   AdvancedMarker,
   APIProvider,
@@ -9,7 +9,6 @@ import {
 } from "@vis.gl/react-google-maps";
 import PoiMarkers from "./poiMarkers";
 import { Poi } from "@/lib/types";
-import { locations } from "@/lib/data/locations";
 import { useDispatch } from "react-redux";
 import { mapActions } from "@/lib/store/mapSlice";
 import { useLocalStorage } from "react-use";
@@ -18,6 +17,7 @@ import FloatingCursorPin from "./floatingCursorPin";
 import useMapPinFloat from "@/lib/hooks/useMapPinFloat";
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/store/store";
+import useActivitiesFilter from "@/lib/hooks/useActvitiesFilter";
 
 interface MapProps {
   displayActivities?: boolean;
@@ -31,13 +31,14 @@ const MapComponent: React.FC<MapProps> = ({
   const map = useMap();
   const dispatch = useDispatch();
   const { isFloatingEnabled } = useSelector((state: RootState) => state.map);
-  const [activitiesLocations, setActivitiesLocations] =
-    useState<Poi[]>(locations);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [value, _, removeValue] = useLocalStorage<Poi | null>("location", null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { cursorPos, clickedLatLng, mouseMoveHandler, onClickHandler } =
     useMapPinFloat(containerRef);
+
+  const { activityLocations } = useActivitiesFilter();
 
   useEffect(() => {
     if (!map) return;
@@ -70,7 +71,7 @@ const MapComponent: React.FC<MapProps> = ({
           onClickHandler(e);
         }}
       >
-        {displayActivities && <PoiMarkers pois={activitiesLocations} />}
+        {displayActivities && <PoiMarkers pois={activityLocations} />}
 
         {clickedLatLng && isFloatingEnabled && (
           <AdvancedMarker position={clickedLatLng}>
