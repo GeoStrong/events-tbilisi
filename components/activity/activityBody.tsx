@@ -64,7 +64,7 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
 
   return (
     <div className="mb-10 mt-5 flex w-full flex-col gap-5 md:flex-row">
-      <div className="w-3/4">
+      <div className="md:w-3/4">
         <div className="flex flex-col gap-5 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 md:px-6">
           <div className="rounded-md">
             <Dialog>
@@ -78,14 +78,14 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
                   unoptimized
                 />
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="">
                 <DialogHeader>
                   <DialogTitle></DialogTitle>
                   <DialogDescription>
                     <Image
                       src={activityImage || defaultActivityImg.src}
-                      width={100}
-                      height={100}
+                      width={0}
+                      height={0}
                       alt="activity"
                       className={`w-full rounded-md object-center ${activity.image ? "object-cover" : "object-contain"}`}
                       unoptimized
@@ -176,7 +176,7 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
           </div>
         </div>
       </div>
-      <div className="flex w-1/4 flex-col gap-5">
+      <div className="md:-1/4 flex flex-col gap-5">
         <div className="max-h-40 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">
           <h3 className="font-bold md:text-lg">Host</h3>
           <div className="flex items-start gap-2">

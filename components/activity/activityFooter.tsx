@@ -22,8 +22,8 @@ const ActivityFooter: React.FC<{
     [],
   );
   // const { isMobile } = useScreenSize();
-  const firstCategory = categories[0].id;
-  const secondCategory = categories[1].id;
+  const firstCategory = categories[0]?.id;
+  const secondCategory = categories[1]?.id;
 
   useEffect(() => {
     (async () => {

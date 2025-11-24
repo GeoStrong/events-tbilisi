@@ -4,10 +4,10 @@ import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import { handleSavedActivities, isActivitySaved } from "@/lib/profile/profile";
 import React, { useEffect, useState } from "react";
 import { BsFillBookmarkFill } from "react-icons/bs";
-import Spinner from "./spinner";
 import { useDispatch } from "react-redux";
 import { authActions } from "@/lib/store/authSlice";
 import { toast } from "sonner";
+import { Skeleton } from "@mui/material";
 
 const BookmarkButton: React.FC<{ activityId: string }> = ({ activityId }) => {
   const [isSaved, setIsSaved] = useState(false);
@@ -60,7 +60,7 @@ const BookmarkButton: React.FC<{ activityId: string }> = ({ activityId }) => {
     <>
       <button disabled={loading} onClick={toggleSave}>
         {loading ? (
-          <Spinner />
+          <Skeleton variant="rectangular" width={20} height={30} />
         ) : (
           <BsFillBookmarkFill
             className={`text-lg md:text-2xl ${isSaved ? "text-primary" : ""}`}

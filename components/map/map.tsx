@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { Suspense, useEffect, useRef } from "react";
 import {
   AdvancedMarker,
   APIProvider,
@@ -18,6 +18,7 @@ import useMapPinFloat from "@/lib/hooks/useMapPinFloat";
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/store/store";
 import useActivitiesFilter from "@/lib/hooks/useActvitiesFilter";
+import MapLoadingLayout from "./mapLayoutLoading";
 
 interface MapProps {
   displayActivities?: boolean;
@@ -38,7 +39,7 @@ const MapComponent: React.FC<MapProps> = ({
   const { cursorPos, clickedLatLng, mouseMoveHandler, onClickHandler } =
     useMapPinFloat(containerRef);
 
-  // const { activityLocations } = useActivitiesFilter();
+  const { activityLocations } = useActivitiesFilter();
 
   useEffect(() => {
     if (!map) return;
@@ -71,7 +72,7 @@ const MapComponent: React.FC<MapProps> = ({
           onClickHandler(e);
         }}
       >
-        {/* {displayActivities && <PoiMarkers pois={activityLocations} />} */}
+        {displayActivities && <PoiMarkers pois={activityLocations} />}
 
         {clickedLatLng && isFloatingEnabled && (
           <AdvancedMarker position={clickedLatLng}>
@@ -104,9 +105,14 @@ const MapWrapper: React.FC<{
   displayActivities?: boolean;
 }> = ({ API_KEY, height, displayActivities }) => {
   return (
-    <APIProvider apiKey={API_KEY}>
-      <MapComponent mapHeight={height} displayActivities={displayActivities} />
-    </APIProvider>
+    <Suspense fallback={<MapLoadingLayout />}>
+      <APIProvider apiKey={API_KEY}>
+        <MapComponent
+          mapHeight={height}
+          displayActivities={displayActivities}
+        />
+      </APIProvider>
+    </Suspense>
   );
 };
 
