@@ -38,7 +38,7 @@ const MapComponent: React.FC<MapProps> = ({
   const { cursorPos, clickedLatLng, mouseMoveHandler, onClickHandler } =
     useMapPinFloat(containerRef);
 
-  const { activityLocations } = useActivitiesFilter();
+  // const { activityLocations } = useActivitiesFilter();
 
   useEffect(() => {
     if (!map) return;
@@ -71,7 +71,7 @@ const MapComponent: React.FC<MapProps> = ({
           onClickHandler(e);
         }}
       >
-        {displayActivities && <PoiMarkers pois={activityLocations} />}
+        {/* {displayActivities && <PoiMarkers pois={activityLocations} />} */}
 
         {clickedLatLng && isFloatingEnabled && (
           <AdvancedMarker position={clickedLatLng}>

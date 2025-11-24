@@ -2,7 +2,7 @@
 
 import { categories } from "@/lib/data/categories";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import ActivityCard from "../activities/activityCard";
@@ -107,4 +107,11 @@ const DiscoverLayout: React.FC = () => {
   );
 };
 
-export default DiscoverLayout;
+const DiscoverLayoutWrapper: React.FC = () => {
+  return (
+    <Suspense fallback={<>Loading...</>}>
+      <DiscoverLayout />
+    </Suspense>
+  );
+};
+export default DiscoverLayoutWrapper;
