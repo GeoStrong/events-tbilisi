@@ -52,7 +52,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
 
   return (
     <Card
-      className="cursor-pointer duration-300 dark:border-gray-600 dark:bg-slate-800"
+      className="cursor-pointer duration-300 dark:border-gray-600 dark:bg-gray-900"
       onClick={() => {
         if (setSearchParams)
           return setSearchParams("activity", activity.id.toString());

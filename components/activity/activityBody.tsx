@@ -27,6 +27,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
+import MapWrapper from "../map/map";
 
 interface ActivityBodyProps {
   categories: Category[];
@@ -45,6 +46,7 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
   const [host, setHost] = useState<UserProfile | null>();
   const [hostImage, setHostImage] = useState<string | null>();
   const { user } = useGetUserProfile();
+  const [mapKey, setMapKey] = useState<string>("");
 
   useEffect(() => {
     (async () => {
@@ -61,6 +63,12 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
       setHostImage(hostImg);
     })();
   }, [categories, activity.image, activity.user_id]);
+
+  useEffect(() => {
+    fetch("/api/use-secret")
+      .then((res) => res.json())
+      .then((data) => setMapKey(data));
+  }, []);
 
   return (
     <div className="mb-10 mt-5 flex w-full flex-col gap-5 md:flex-row">
@@ -123,7 +131,7 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
               Activity Details:
             </h3>
             <div className="mt-2 flex w-full flex-col justify-between md:flex-row">
-              <div className="space-y-2">
+              <div className="w-1/2 space-y-2">
                 <div className="flex items-center gap-2">
                   <ActivityDetails
                     detail="📍 Address"
@@ -158,6 +166,15 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
                     })
                   }
                 />
+              </div>
+              <div className="w-1/2">
+                {mapKey && (
+                  <MapWrapper
+                    API_KEY={mapKey}
+                    height="h-40"
+                    displayActivities={false}
+                  />
+                )}
               </div>
             </div>
 

@@ -19,14 +19,17 @@ const useActivitiesFilter = () => {
 
   const { searchParams } = useAddSearchQuery();
 
-  // --- Extract filters from URL ---
-  const searchValue = searchParams.get("search")?.toLowerCase() || "";
+  // params
   const categoryCSV = searchParams.get("categories");
-  const selectedCategories = categoryCSV ? categoryCSV.split(",") : [];
-  const dateParam = searchParams.get("date");
-
   const activityId = searchParams.get("activity");
+  const search = searchParams.get("search")?.toLowerCase() || "";
+  const date = searchParams.get("date") || "";
   const singleCategoryId = searchParams.get("category");
+
+  // stable categories
+  const selectedCategories = useMemo(() => {
+    return categoryCSV ? categoryCSV.split(",") : [];
+  }, [categoryCSV]);
 
   // --- Fetch activities ---
   useEffect(() => {
@@ -41,110 +44,91 @@ const useActivitiesFilter = () => {
     })();
   }, [singleCategoryId]);
 
-  // --- Fetch category info ---
+  // --------------------------------------------------------------------
+  // 1️⃣ Fetch base activities: by category (if any) or all activities
+  // --------------------------------------------------------------------
   useEffect(() => {
-    (async () => {
-      const data =
-        singleCategoryId &&
-        ((await getCategoryById(singleCategoryId)) as Category[]);
-      setCategory(data || []);
-    })();
-  }, [singleCategoryId]);
+    const loadActivities = async () => {
+      let baseActivities: ActivityEntity[] = [];
 
-  // --- Filtering Logic ---
-  const filteredActivities = useMemo(() => {
-    if (!activities) return null;
-
-    return activities.filter((activity) => {
-      // --- TEXT SEARCH ---
-      if (searchValue) {
-        const target =
-          `${activity.title} ${activity.description} ${activity.location}`.toLowerCase();
-        if (!target.includes(searchValue)) return false;
-      }
-
-      // --- MULTI CATEGORY FILTER ---
       if (selectedCategories.length > 0) {
-        const actCats =
-          activity.categories?.map((c: string | Category) =>
-            typeof c === "string" ? c : c.name,
-          ) ?? [];
-
-        const match = selectedCategories.some((cat) => actCats.includes(cat));
-        if (!match) return false;
+        const results = await Promise.all(
+          selectedCategories.map((id) => getActivitiesByCategoryId(id)),
+        );
+        baseActivities = results.flat();
+      } else {
+        baseActivities = (await getActivities()) ?? [];
       }
 
-      // --- DATE FILTER ---
-      if (dateParam) {
-        const actDate = new Date(activity.date as Date);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        // Specific date
-        if (/^\d{4}-\d{2}-\d{2}$/.test(dateParam)) {
-          const selected = new Date(dateParam);
-          if (actDate.toDateString() !== selected.toDateString()) return false;
-        }
-
-        if (dateParam === "weekend") {
-          const day = actDate.getDay();
-          if (day !== 6 && day !== 0) return false; // Sat or Sun
-        }
-
-        if (dateParam === "month") {
-          const nowMonth = today.getMonth();
-          const nowYear = today.getFullYear();
-          if (
-            actDate.getMonth() !== nowMonth ||
-            actDate.getFullYear() !== nowYear
-          )
-            return false;
-        }
+      // 🔎 2️⃣ apply search filter
+      if (search) {
+        baseActivities = baseActivities.filter((a) =>
+          `${a.title} ${a.location} ${a.description}`
+            .toLowerCase()
+            .includes(search),
+        );
       }
 
-      return true;
-    });
-  }, [activities, searchValue, selectedCategories, dateParam]);
+      // 📅 3️⃣ apply date filter
+      if (date) {
+        baseActivities = baseActivities.filter(
+          (a) => a.date?.toString().split("T")[0] === date,
+        );
+      }
 
-  // --- Active activity ---
+      setActivities(baseActivities);
+    };
+
+    loadActivities();
+  }, [selectedCategories, search, date]);
+
+  // --------------------------------------------------------------------
+  // 2️⃣ Load category title (optional)
+  // --------------------------------------------------------------------
   useEffect(() => {
-    if (!filteredActivities) return;
+    const loadCategory = async () => {
+      if (selectedCategories.length === 1) {
+        const result = await getCategoryById(selectedCategories[0]);
+        setCategory((result as Category[]) ?? []);
+      } else {
+        setCategory([]);
+      }
+    };
 
-    if (activityId) {
-      const found = filteredActivities.find((a) => a.id === activityId) || null;
+    loadCategory();
+  }, [selectedCategories]);
 
-      setActiveActivity((prev) => {
-        // avoid state update if value is identical
-        if (JSON.stringify(prev) === JSON.stringify(found)) return prev;
-        return found;
-      });
-    } else {
-      setActiveActivity((prev) => {
-        if (prev === null) return prev;
-        return null;
-      });
-    }
-  }, [filteredActivities, activityId]);
-
-  // --- Map locations ---
+  // --------------------------------------------------------------------
+  // 3️⃣ Active activity
+  // --------------------------------------------------------------------
   useEffect(() => {
-    if (!filteredActivities) return;
+    if (!activities) return;
 
-    const locations = filteredActivities
-      .filter((a) => a.googleLocation)
-      .map((a) => ({
-        key: `activity-${a.id}`,
-        location: a.googleLocation!,
-      }));
+    const activity = activities.find((a) => a.id === activityId) || null;
+    setActiveActivity(activity);
+  }, [activities, activityId]);
 
-    setActivityLocations((prev) => {
-      if (JSON.stringify(prev) === JSON.stringify(locations)) return prev;
-      return locations;
-    });
-  }, [filteredActivities]);
+  // --------------------------------------------------------------------
+  // 4️⃣ Map locations
+  // --------------------------------------------------------------------
+  useEffect(() => {
+    if (!activities) return;
+
+    const locations =
+      activities
+        .filter((a) => a.googleLocation)
+        .map((a) => ({
+          key: `activity-${a.id}`,
+          location: a.googleLocation!,
+        })) || null;
+
+    setActivityLocations(locations);
+  }, [activities]);
+
+  console.log(activities);
 
   return {
-    activities: filteredActivities,
+    activities,
     category,
     activeActivity,
     activityLocations,

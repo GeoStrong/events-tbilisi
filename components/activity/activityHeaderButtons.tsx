@@ -43,11 +43,11 @@ const ActivityHeaderButtons: React.FC<{
   return (
     <>
       <div className="fixed bottom-16 left-0 flex w-full justify-center md:static md:bottom-0 md:justify-end">
-        {isUserHost ? (
-          <div className="flex w-3/4 flex-col gap-2 md:flex-row md:justify-end">
+        {user?.id !== undefined && isUserHost && (
+          <div className="flex w-full flex-row justify-between gap-2 px-6 md:justify-end">
             <ActivityUpdate user={user!} activity={updatedActivity} />
             <Dialog>
-              <DialogTrigger className="h-12 rounded-md bg-red-600 px-8 py-1 text-white shadow-lg">
+              <DialogTrigger className="h-10 w-1/2 rounded-md bg-red-600 px-8 py-1 text-white shadow-lg md:w-auto">
                 Delete
               </DialogTrigger>
               <DialogContent>
@@ -69,7 +69,8 @@ const ActivityHeaderButtons: React.FC<{
               </DialogContent>
             </Dialog>
           </div>
-        ) : (
+        )}
+        {user?.id !== undefined && !isUserHost && (
           <ActivityParticipation isBtnLarge />
         )}
       </div>

@@ -70,7 +70,7 @@ const ActivityUpdate: React.FC<{
         direction={isMobile ? "bottom" : "right"}
         snapPoints={isMobile ? [0.5, 1] : [1]}
       >
-        <DrawerTrigger className="h-12 rounded-md border bg-white px-8 text-black">
+        <DrawerTrigger className="h-10 w-1/2 rounded-md border bg-white px-8 text-black md:w-auto">
           Edit
         </DrawerTrigger>
         <DrawerContent className="w-full">

@@ -186,11 +186,12 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
                 </div>
               </DrawerHeader>
               <DrawerFooter className="flex flex-col items-center gap-2 md:flex-row-reverse">
-                {activity.user_id === user?.id ? (
+                {user?.id !== undefined && activity.user_id === user?.id && (
                   <Link href={`/activities/${activity.id}`}>
                     <Button className="h-12">Modify Activity</Button>
                   </Link>
-                ) : (
+                )}
+                {user?.id !== undefined && activity.user_id !== user?.id && (
                   <ActivityParticipation isNested />
                 )}
                 <DrawerClose className="h-12 bg-transparent p-2">
