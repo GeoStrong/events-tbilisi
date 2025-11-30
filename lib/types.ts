@@ -7,6 +7,7 @@ export type UserProfile = {
   created_at: Date | string;
   additionalInfo?: string;
 };
+
 export type ActivityCategories =
   | "music"
   | "sport"
@@ -79,6 +80,16 @@ export interface ActivityEntity {
   createdAt?: Date;
   updatedAt?: Date;
   participants?: ParticipantValues[];
+}
+
+export interface CommentEntity {
+  id: string;
+  activityid: string;
+  user: UserProfile;
+  text: string;
+  created_at: Date | string | null;
+  updated_at?: Date | string | null;
+  parentCommentId?: string;
 }
 
 export type NewActivityEntity = Omit<ActivityEntity, "id">;

@@ -63,9 +63,6 @@ const ActivityUpdate: React.FC<{
     googleLocation,
   };
 
-  console.log("go", googleLocation);
-  console.log("lt", latLng);
-
   const { formikComponent, openMobileMapRef, openCreateActivityAlertRef } =
     useModifyActivity({
       user: user,

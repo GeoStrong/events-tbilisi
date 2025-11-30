@@ -10,16 +10,13 @@ import Socials from "../general/socials";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { BiUser } from "react-icons/bi";
 import { Button } from "../ui/button";
-import { CiShare1 } from "react-icons/ci";
-import {
-  getImageUrl,
-  getActivitiesByCategoryId,
-} from "@/lib/functions/supabaseFunctions";
+import { getImageUrl } from "@/lib/functions/supabaseFunctions";
 import { Badge } from "../ui/badge";
 import useMapZoom from "@/lib/hooks/useMapZoom";
 import { fetchUserInfo } from "@/lib/profile/profile";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import MapWrapper from "../map/map";
+import ActivityComments from "./activityComments";
 
 interface ActivityBodyProps {
   categories: Category[];
@@ -31,9 +28,6 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
   categories,
 }) => {
   const [activityImage, setActivityImage] = useState<string>();
-  const [similarActivities, setSimilarActivities] = useState<ActivityEntity[]>(
-    [],
-  );
   const { handleLocationClick } = useMapZoom(activity.id);
   const [host, setHost] = useState<UserProfile | null>();
   const [hostImage, setHostImage] = useState<string | null>();
@@ -43,14 +37,10 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
   useEffect(() => {
     (async () => {
       const imageUrl = await getImageUrl(activity.image);
-      const activities = await getActivitiesByCategoryId(
-        categories[0].id.toLocaleString(),
-      );
       const host = (await fetchUserInfo(activity.user_id!)) as UserProfile;
       const hostImg = await getImageUrl(host.avatar_path || "");
 
       setActivityImage(imageUrl!);
-      setSimilarActivities(activities);
       setHost(host);
       setHostImage(hostImg);
     })();
@@ -218,47 +208,21 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
             </div>
           </div>
         </div>
-        <div className="rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">
-          <h3 className="font-bold md:text-lg">
-            Explore More {categories[0].name} Activities
-          </h3>
-          <div className="mt-3 flex flex-col gap-2">
-            {similarActivities.map((activity) => (
-              <div
-                key={activity.id}
-                className="flex justify-between gap-2 rounded-lg border p-2 dark:border-gray-600"
-              >
-                <div className="flex flex-col">
-                  <h3 className="text-sm font-semibold">{activity.title}</h3>
-                  <p className="text-xs text-muted-foreground">
-                    {activity.date &&
-                      new Date(activity.date).toLocaleString("en-US", {
-                        month: "long",
-                        year: "numeric",
-                        weekday: "short",
-                        day: "numeric",
-                      })}
-                  </p>
-                </div>
-                <Link href={`/${activity.id}`}>
-                  <CiShare1 />
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="w-full rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">
+        <div className="w-full rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900">
           <h3 className="mb-3 font-bold md:text-lg">Location on map</h3>
           {mapKey && (
             <MapWrapper
               API_KEY={mapKey}
-              height="h-64"
+              height="h-52"
               displayActivities={false}
               selectedActivityLocation={[
                 { key: activity.id, location: activity.googleLocation! },
               ]}
             />
           )}
+        </div>
+        <div className="">
+          <ActivityComments />
         </div>
       </div>
     </div>

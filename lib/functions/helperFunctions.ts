@@ -1,5 +1,5 @@
 import { supabase } from "../supabase/supabaseClient";
-import { Poi, UserProfile } from "../types";
+import { CommentEntity, Poi, UserProfile } from "../types";
 
 export const isString = (value: unknown) => {
   return typeof value === "string";
@@ -46,4 +46,25 @@ export const handleUploadFile = async (
   if (uploadError) throw uploadError;
 
   return filePath;
+};
+
+export const buildCommentTree = (comments: CommentEntity[]) => {
+  const map = new Map<string, CommentEntity & { replies: CommentEntity[] }>();
+
+  comments.forEach((c) => {
+    map.set(c.id, { ...c, replies: [] });
+  });
+
+  const root: (CommentEntity & { replies: CommentEntity[] })[] = [];
+
+  comments.forEach((c) => {
+    if (c.parentCommentId) {
+      const parent = map.get(c.parentCommentId);
+      if (parent) parent.replies.push(map.get(c.id)!);
+    } else {
+      root.push(map.get(c.id)!);
+    }
+  });
+
+  return root;
 };
