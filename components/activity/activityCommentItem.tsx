@@ -1,17 +1,11 @@
-import { CommentEntity, UserProfile } from "@/lib/types";
+import { CommentNode, UserProfile } from "@/lib/types";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import defaultUserImg from "@/public/images/default-user.png";
 import { getImageUrl } from "@/lib/functions/supabaseFunctions";
 
-type CommentNode = CommentEntity & {
-  replies: CommentNode[];
-};
-
 const ActivityCommentItem: React.FC<{
-  comment: CommentEntity & {
-    replies: CommentNode[];
-  };
+  comment: CommentNode;
   level?: number;
   user: UserProfile;
 }> = ({ comment, level = 0, user }) => {
