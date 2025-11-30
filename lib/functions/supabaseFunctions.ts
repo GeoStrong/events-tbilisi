@@ -111,7 +111,6 @@ export const getActivitiesByUserId = async (userId: string) => {
     .from("activities")
     .select("*")
     .eq("user_id", userId);
-
   if (activityIdsError) {
     console.error("Error fetching activity categories:", activityIdsError);
     return [];

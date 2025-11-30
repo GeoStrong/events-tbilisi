@@ -3,6 +3,7 @@ import React from "react";
 import imgTbilisi from "@/public/images/tbilisi.jpg";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import Form from "next/form";
 
 const SearchSection: React.FC = () => {
   return (
@@ -19,19 +20,22 @@ const SearchSection: React.FC = () => {
         <h1 className="text-center text-4xl font-bold text-white">
           Discover Social Activities in Tbilisi
         </h1>
-        <div className="flex items-center md:w-1/2">
-          <Input
-            type="text"
-            className="rounded-full rounded-r-none border-2 border-white bg-white p-6 focus:border-primary"
-            placeholder="Search Activities, Places"
-          />
-          <Button
-            type="submit"
-            className="rounded-full rounded-l-none border-2 border-primary bg-primary p-6 text-white hover:bg-primary/80 hover:text-white md:px-10"
-            variant="outline"
-          >
-            Search
-          </Button>
+        <div className="md:w-1/2">
+          <Form action="/discover" className="flex items-center">
+            <Input
+              type="text"
+              name="search"
+              className="rounded-full rounded-r-none border-2 border-white bg-white p-6 focus:border-primary"
+              placeholder="Search Activities, Places"
+            />
+            <Button
+              type="submit"
+              className="rounded-full rounded-l-none border-2 border-primary bg-primary p-6 text-white hover:bg-primary/80 hover:text-white md:px-10"
+              variant="outline"
+            >
+              Search
+            </Button>
+          </Form>
         </div>
       </div>
     </div>

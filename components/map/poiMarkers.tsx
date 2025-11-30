@@ -4,8 +4,27 @@ import { AdvancedMarker } from "@vis.gl/react-google-maps";
 import React from "react";
 import HoverPin from "./hoverPin";
 
-const PoiMarkers: React.FC<{ pois: Poi[] | null }> = ({ pois }) => {
+interface PoiMarkesProps {
+  pois: Poi[] | null;
+  enableClick?: boolean;
+}
+
+const PoiMarkers: React.FC<PoiMarkesProps> = ({ pois, enableClick = true }) => {
   const { handleReplace } = useAddSearchQuery();
+
+  const clickHandler = (event: google.maps.MapMouseEvent) => {
+    let element = event.domEvent.target as HTMLElement;
+    while (element && !element.id) {
+      element = element.parentElement as HTMLElement;
+    }
+    if (element && element.id) {
+      const newParams = new URLSearchParams();
+      const activityId = element.id.split("-").slice(1).join("-");
+      newParams.set("activity", activityId);
+      handleReplace(newParams);
+    }
+  };
+
   return (
     <>
       {pois &&
@@ -13,16 +32,8 @@ const PoiMarkers: React.FC<{ pois: Poi[] | null }> = ({ pois }) => {
           <AdvancedMarker
             key={poi.key}
             onClick={(event) => {
-              let element = event.domEvent.target as HTMLElement;
-              while (element && !element.id) {
-                element = element.parentElement as HTMLElement;
-              }
-              if (element && element.id) {
-                const newParams = new URLSearchParams();
-                const activityId = element.id.split("-").slice(1).join("-");
-                newParams.set("activity", activityId);
-                handleReplace(newParams);
-              }
+              if (!enableClick) return;
+              clickHandler(event);
             }}
             position={poi.location}
             clickable

@@ -125,8 +125,6 @@ const useActivitiesFilter = () => {
     setActivityLocations(locations);
   }, [activities]);
 
-  console.log(activities);
-
   return {
     activities,
     category,

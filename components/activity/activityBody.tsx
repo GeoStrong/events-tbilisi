@@ -131,7 +131,7 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
               Activity Details:
             </h3>
             <div className="mt-2 flex w-full flex-col justify-between md:flex-row">
-              <div className="w-1/2 space-y-2">
+              <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <ActivityDetails
                     detail="📍 Address"
@@ -167,15 +167,6 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
                   }
                 />
               </div>
-              <div className="w-1/2">
-                {mapKey && (
-                  <MapWrapper
-                    API_KEY={mapKey}
-                    height="h-40"
-                    displayActivities={false}
-                  />
-                )}
-              </div>
             </div>
 
             <div className="mt-2">
@@ -193,10 +184,10 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
           </div>
         </div>
       </div>
-      <div className="md:-1/4 flex flex-col gap-5">
+      <div className="flex flex-col gap-5 md:w-1/4">
         <div className="max-h-40 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">
           <h3 className="font-bold md:text-lg">Host</h3>
-          <div className="flex items-start gap-2">
+          <div className="flex items-center gap-2">
             <Avatar className="h-12 w-12">
               <AvatarImage
                 src={hostImage || ""}
@@ -206,7 +197,7 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
                 <BiUser />
               </AvatarFallback>
             </Avatar>
-            <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-col">
+            <div className="flex w-full items-center justify-between gap-2">
               <span className="text-center text-base">{host?.name}</span>
               {user?.id === activity.user_id ? (
                 <Link
@@ -282,6 +273,19 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
               </div>
             ))}
           </div>
+        </div>
+        <div className="w-full rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">
+          <h3 className="mb-3 font-bold md:text-lg">Location on map</h3>
+          {mapKey && (
+            <MapWrapper
+              API_KEY={mapKey}
+              height="h-64"
+              displayActivities={false}
+              selectedActivityLocation={[
+                { key: activity.id, location: activity.googleLocation! },
+              ]}
+            />
+          )}
         </div>
       </div>
     </div>

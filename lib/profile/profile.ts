@@ -68,7 +68,11 @@ export const handleSavedActivities = async (
 
 export const fetchSavedActivities = async (userId: string) => {
   const { data: savedActivitiesId, error: savedActivitiesError } =
-    await supabase.from("saved_activities").select("*").eq("user_id", userId);
+    await supabase
+      .from("saved_activities")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
 
   if (savedActivitiesError) throw savedActivitiesError;
 

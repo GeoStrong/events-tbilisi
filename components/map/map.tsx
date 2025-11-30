@@ -23,11 +23,13 @@ import MapLoadingLayout from "./mapLayoutLoading";
 interface MapProps {
   displayActivities?: boolean;
   mapHeight?: string;
+  selectedActivity?: Poi[];
 }
 
 const MapComponent: React.FC<MapProps> = ({
   displayActivities = true,
   mapHeight = "h-screen md:min-h-[500px]",
+  selectedActivity,
 }) => {
   const map = useMap();
   const dispatch = useDispatch();
@@ -59,10 +61,14 @@ const MapComponent: React.FC<MapProps> = ({
     <div ref={containerRef} className="relative w-full rounded-2xl">
       <GoogleMap
         mapId="bd8257f6f4dd710a"
-        defaultCenter={{ lat: 41.73809, lng: 44.7808 }}
+        defaultCenter={
+          selectedActivity
+            ? selectedActivity[0].location
+            : { lat: 41.73809, lng: 44.7808 }
+        }
         gestureHandling={"greedy"}
         disableDefaultUI={true}
-        defaultZoom={8}
+        defaultZoom={selectedActivity ? 16 : 8}
         minZoom={12}
         className={`${mapHeight} w-full`}
         onMousemove={(e) => {
@@ -72,7 +78,11 @@ const MapComponent: React.FC<MapProps> = ({
           onClickHandler(e);
         }}
       >
-        {displayActivities && <PoiMarkers pois={activityLocations} />}
+        {displayActivities ? (
+          <PoiMarkers pois={activityLocations} />
+        ) : (
+          <PoiMarkers pois={selectedActivity!} enableClick={false} />
+        )}
 
         {clickedLatLng && isFloatingEnabled && (
           <AdvancedMarker position={clickedLatLng}>
@@ -103,13 +113,15 @@ const MapWrapper: React.FC<{
   API_KEY: string;
   height?: string;
   displayActivities?: boolean;
-}> = ({ API_KEY, height, displayActivities }) => {
+  selectedActivityLocation?: Poi[];
+}> = ({ API_KEY, height, displayActivities, selectedActivityLocation }) => {
   return (
     <Suspense fallback={<MapLoadingLayout />}>
       <APIProvider apiKey={API_KEY}>
         <MapComponent
           mapHeight={height}
           displayActivities={displayActivities}
+          selectedActivity={selectedActivityLocation}
         />
       </APIProvider>
     </Suspense>

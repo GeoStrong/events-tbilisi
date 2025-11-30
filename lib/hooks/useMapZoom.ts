@@ -25,9 +25,9 @@ const useMapZoom = (activityId: string) => {
     };
     setLocationToLocalStorage(poi);
     zoomToLocation(map, poi);
-    setTimeout(() => {
-      removeValue();
-    }, 500);
+    // setTimeout(() => {
+    //   removeValue();
+    // }, 500);
     return handleSearch("display-activities", "");
   };
 
