@@ -52,8 +52,12 @@ const useModifyActivity: (props: useModifyActivityProps) => {
   const { isMobile } = useScreenSize();
 
   const validationSchema = Yup.object({
-    title: Yup.string().required("Title is required"),
-    description: Yup.string().required("Description is required"),
+    title: Yup.string()
+      .required("Title is required")
+      .max(100, "Title is too long"),
+    description: Yup.string()
+      .required("Description is required")
+      .max(300, "Description is too long"),
     date: Yup.date()
       .transform((value, originalValue) => {
         if (!originalValue) return value;

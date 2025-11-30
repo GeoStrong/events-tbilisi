@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Drawer,
   DrawerContent,
@@ -13,11 +13,16 @@ import { ActivityEntity, NewActivityEntity, UserProfile } from "@/lib/types";
 import CreateActivityMobileMap from "../create-activity/createActivityMobileMap";
 import CreateActivityAlert from "../create-activity/createActivityAlert";
 import useModifyActivity from "@/lib/hooks/useModifyActivity";
+import { useSelector } from "react-redux";
+import { RootState } from "@/lib/store/store";
+import { mapActions } from "@/lib/store/mapSlice";
+import { useDispatch } from "react-redux";
 
 const ActivityUpdate: React.FC<{
   user: UserProfile;
   activity: ActivityEntity;
 }> = ({ activity, user }) => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const {
     title,
     description,
@@ -33,8 +38,14 @@ const ActivityUpdate: React.FC<{
     googleLocation,
     categories,
   } = activity;
-
+  const dispatch = useDispatch();
+  const { latLng } = useSelector((state: RootState) => state.map);
   const { isMobile } = useScreenSize();
+
+  useEffect(() => {
+    if (isDrawerOpen) dispatch(mapActions.setLatLng(null));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDrawerOpen]);
 
   const initialValues: NewActivityEntity = {
     title,
@@ -52,14 +63,17 @@ const ActivityUpdate: React.FC<{
     googleLocation,
   };
 
+  console.log("go", googleLocation);
+  console.log("lt", latLng);
+
   const { formikComponent, openMobileMapRef, openCreateActivityAlertRef } =
     useModifyActivity({
       user: user,
       activityId: activity.id,
-      latLng: googleLocation,
+      latLng: latLng || googleLocation,
       initialValues: initialValues,
       isUpdatingActivity: true,
-      enableMapFloating: false,
+      enableMapFloating: isDrawerOpen,
       image: image,
     });
 
@@ -69,6 +83,9 @@ const ActivityUpdate: React.FC<{
         repositionInputs={false}
         direction={isMobile ? "bottom" : "right"}
         snapPoints={isMobile ? [0.5, 1] : [1]}
+        onOpenChange={(drawerState) => {
+          setIsDrawerOpen(drawerState);
+        }}
       >
         <DrawerTrigger className="h-10 w-1/2 rounded-md border bg-white px-8 text-black md:w-auto">
           Edit

@@ -44,7 +44,7 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick, userProfile }) => {
               )}
             </li>
             <li
-              className={`relative flex flex-col items-center gap-1 hover:text-primary ${pathname === "/create-activity" && "border-primary text-primary"}`}
+              className={`relative flex flex-col items-center gap-1 hover:text-primary ${pathname === "/discover" && "border-primary text-primary"}`}
             >
               <Link
                 href="/discover"

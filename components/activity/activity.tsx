@@ -10,6 +10,7 @@ const Activity: React.FC<{
   activityId: string;
 }> = async ({ activity, activityId }) => {
   const categories = await getCategoriesByActivityId(activityId);
+
   return (
     <>
       <ActivityHeader categories={categories} activity={activity} />

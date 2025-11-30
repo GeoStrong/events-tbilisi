@@ -27,7 +27,7 @@ const DiscoverSearch: React.FC<DiscoverSearchProps> = ({
       >
         <Input
           placeholder="Search for an activity: name / location..."
-          className="h-16 dark:bg-gray-800"
+          className="h-16 dark:bg-gray-800 md:h-12"
           value={search}
           onChange={(e) => onSearch(e.target.value)}
         />

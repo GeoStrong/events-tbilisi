@@ -14,6 +14,8 @@ import useScreenSize from "@/lib/hooks/useScreenSize";
 import CreateActivityMobileMap from "./createActivityMobileMap";
 import CreateActivityAlert from "./createActivityAlert";
 import useModifyActivity from "@/lib/hooks/useModifyActivity";
+import { useEffectOnce } from "react-use";
+import { mapActions } from "@/lib/store/mapSlice";
 
 const CreateActivityLayout: React.FC<{ mapKey: string }> = ({ mapKey }) => {
   const dispatch = useDispatch();
@@ -45,6 +47,10 @@ const CreateActivityLayout: React.FC<{ mapKey: string }> = ({ mapKey }) => {
       isUpdatingActivity: false,
       enableMapFloating: true,
     });
+
+  useEffectOnce(() => {
+    dispatch(mapActions.setLatLng(null));
+  });
 
   return (
     <div className="mt-3 flex w-full flex-col justify-between gap-2 rounded-md bg-white dark:bg-gray-800 md:max-h-[500px] lg:flex-row">

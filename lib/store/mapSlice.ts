@@ -18,7 +18,10 @@ export const mapSlice = createSlice({
     setMap: (state, action: PayloadAction<google.maps.Map>) => {
       state.map = action.payload;
     },
-    setLatLng: (state, action: PayloadAction<google.maps.LatLngLiteral>) => {
+    setLatLng: (
+      state,
+      action: PayloadAction<google.maps.LatLngLiteral | null>,
+    ) => {
       state.latLng = action.payload;
     },
     setIsFloatingEnabled: (state, action: PayloadAction<boolean>) => {

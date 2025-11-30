@@ -18,14 +18,6 @@ import {
 import { Badge } from "../ui/badge";
 import useMapZoom from "@/lib/hooks/useMapZoom";
 import { fetchUserInfo } from "@/lib/profile/profile";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import MapWrapper from "../map/map";
 
@@ -75,33 +67,14 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
       <div className="md:w-3/4">
         <div className="flex flex-col gap-5 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 md:px-6">
           <div className="rounded-md">
-            <Dialog>
-              <DialogTrigger className="w-full">
-                <Image
-                  src={activityImage || defaultActivityImg.src}
-                  width={100}
-                  height={100}
-                  alt="activity"
-                  className={`max-h-96 w-full rounded-md object-center ${activity.image ? "object-cover" : "object-contain"}`}
-                  unoptimized
-                />
-              </DialogTrigger>
-              <DialogContent className="">
-                <DialogHeader>
-                  <DialogTitle></DialogTitle>
-                  <DialogDescription>
-                    <Image
-                      src={activityImage || defaultActivityImg.src}
-                      width={0}
-                      height={0}
-                      alt="activity"
-                      className={`w-full rounded-md object-center ${activity.image ? "object-cover" : "object-contain"}`}
-                      unoptimized
-                    />
-                  </DialogDescription>
-                </DialogHeader>
-              </DialogContent>
-            </Dialog>
+            <Image
+              src={activityImage || defaultActivityImg.src}
+              width={100}
+              height={100}
+              alt="activity"
+              className={`max-h-96 w-full rounded-md object-center ${activity.image ? "object-cover" : "object-contain"}`}
+              unoptimized
+            />
           </div>
           <div className="w-full">
             <h3 className="my-3 text-base font-semibold md:text-xl">
@@ -202,7 +175,7 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
               {user?.id === activity.user_id ? (
                 <Link
                   href="/profile#account"
-                  className="w-full rounded-md border p-2 text-center dark:border-gray-600"
+                  className="rounded-md border p-2 text-center dark:border-gray-600"
                 >
                   Edit Profile
                 </Link>

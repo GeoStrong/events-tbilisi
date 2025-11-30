@@ -9,6 +9,7 @@ import useActivitiesFilter from "@/lib/hooks/useActvitiesFilter";
 import DiscoverSearch from "./discoverSearch";
 import DiscoverFilters from "./discoverFilters";
 import { redirect } from "next/navigation";
+import DiscoverLoading from "./discoverLoading";
 
 const DiscoverLayout: React.FC = () => {
   const { activities } = useActivitiesFilter();
@@ -63,74 +64,82 @@ const DiscoverLayout: React.FC = () => {
   };
 
   return (
-    <div className="p-4 md:p-8">
-      <h1 className="mb-8 text-4xl font-bold md:text-5xl">
-        Discover Activities
-      </h1>
+    <>
+      {activities === null ? (
+        <DiscoverLoading />
+      ) : (
+        <div className="p-4 md:p-8">
+          <h1 className="mb-8 text-4xl font-bold md:text-5xl">
+            Discover Activities
+          </h1>
 
-      <div className="flex w-full flex-col gap-8 md:flex-row">
-        <DiscoverFilters
-          setSearch={setSearch}
-          setSelectedDate={setSelectedDate}
-        />
+          <div className="flex w-full flex-col gap-3 md:flex-row md:gap-8">
+            <DiscoverFilters
+              setSearch={setSearch}
+              setSelectedDate={setSelectedDate}
+            />
 
-        <div className="flex-1">
-          <div className="mb-6 rounded-xl bg-white p-6 shadow-md dark:bg-gray-900">
-            <div className="mb-6 md:block">
-              <DiscoverSearch search={search} onSearch={setSearch} />
-            </div>
+            <div className="flex-1">
+              <div className="mb-6 rounded-xl bg-white p-6 shadow-md dark:bg-gray-900">
+                <div className="mb-6 md:block">
+                  <DiscoverSearch search={search} onSearch={setSearch} />
+                </div>
 
-            <div className="flex w-full flex-col justify-between gap-4 md:flex-row md:items-center">
-              <div className="flex flex-wrap justify-center gap-2 md:flex-nowrap md:overflow-x-auto">
-                {["Today", "Tomorrow", "Weekend", "This month", "All"].map(
-                  (b) => (
-                    <Button
-                      key={b}
-                      variant="outline"
-                      onClick={() => setQuickDate(b)}
-                      className="whitespace-nowrap rounded-full border px-4 py-2 dark:bg-gray-700"
-                    >
-                      {b}
-                    </Button>
-                  ),
-                )}
+                <div className="flex w-full flex-col justify-between gap-4 md:flex-row md:items-center">
+                  <div className="flex flex-wrap justify-center gap-2 md:flex-nowrap md:overflow-x-auto">
+                    {["Today", "Tomorrow", "Weekend", "This month", "All"].map(
+                      (b) => (
+                        <Button
+                          key={b}
+                          variant="outline"
+                          onClick={() => setQuickDate(b)}
+                          className="whitespace-nowrap rounded-full border px-4 py-2 dark:bg-gray-700"
+                        >
+                          {b}
+                        </Button>
+                      ),
+                    )}
+                  </div>
+
+                  <Input
+                    type="date"
+                    value={selectedDate}
+                    onChange={(e) => onDateSelect(e.target.value)}
+                    className="w-full dark:bg-gray-700 md:w-[20%]"
+                    min={new Date().toISOString().split("T")[0]}
+                  />
+                </div>
               </div>
 
-              <Input
-                type="date"
-                value={selectedDate}
-                onChange={(e) => onDateSelect(e.target.value)}
-                className="w-full dark:bg-gray-700 md:w-[20%]"
-                min={new Date().toISOString().split("T")[0]}
-              />
-            </div>
-          </div>
-
-          {activities?.length === 0 && (
-            <p className="w-full text-center text-xl">No activities found</p>
-          )}
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-            {activities?.map((activity) => (
-              <div
-                key={activity.id}
-                className=""
-                onClick={() => {
-                  redirect(`/activities/${activity.id}`);
-                }}
-              >
-                <ActivityCard activity={activity} />
+              {activities?.length === 0 && (
+                <p className="w-full text-center text-xl">
+                  No activities found
+                </p>
+              )}
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+                {activities?.map((activity) => (
+                  <div
+                    key={activity.id}
+                    className=""
+                    onClick={() => {
+                      redirect(`/activities/${activity.id}`);
+                    }}
+                  >
+                    <ActivityCard activity={activity} />
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
 const DiscoverLayoutWrapper: React.FC = () => {
   return (
-    <Suspense fallback={<>Loading...</>}>
+    <Suspense fallback={<DiscoverLoading />}>
       <DiscoverLayout />
     </Suspense>
   );
