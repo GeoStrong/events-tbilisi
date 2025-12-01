@@ -34,14 +34,14 @@ const ActivityCommentItem: React.FC<ActivityCommentItemProps> = ({
         alt="profile"
       />
 
-      <div className="w-3/4 rounded-md text-left">
-        <h4 className={`text-sm ${isReply ? "font-semibold" : "font-bold"}`}>
+      <div className="w-3/4 rounded-md text-left md:w-[90%]">
+        <h4 className={`text-base ${isReply ? "font-semibold" : "font-bold"}`}>
           {comment.user?.name}
         </h4>
 
-        <p className="text-sm">{comment.text}</p>
+        <p className="text-base">{comment.text}</p>
 
-        <button className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+        <button className="mt-1 text-base text-gray-600 dark:text-gray-400">
           Reply
         </button>
       </div>

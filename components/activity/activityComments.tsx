@@ -92,13 +92,25 @@ const ActivityComments: React.FC = () => {
     })();
   }, [user]);
 
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   const groupedComments = groupCommentsOneLevel(commentsExample);
 
   return (
     <>
       <div className="hidden items-center justify-center md:flex">
         <AnimatePresence>
-          <div className="relative w-full rounded-xl bg-gray-100 px-3 py-4 shadow-md dark:bg-gray-900">
+          <div className="relative w-full rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900">
             {!open && (
               <motion.div
                 layoutId="expandable"
@@ -141,23 +153,91 @@ const ActivityComments: React.FC = () => {
                 onClick={() => setOpen(false)}
               >
                 <motion.div
-                  className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl dark:bg-gray-800"
+                  className="relative rounded-2xl bg-white p-6 shadow-xl dark:bg-gray-800"
                   initial={{ borderRadius: 20 }}
                   animate={{ borderRadius: 20 }}
                   exit={{ borderRadius: 20 }}
                   transition={{ type: "spring", stiffness: 250, damping: 25 }}
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <Button
-                    onClick={() => setOpen(false)}
-                    variant="outline"
-                    className="absolute right-3 top-3 p-2"
-                  >
-                    <AiOutlineClose />
-                  </Button>
+                  <div className="h-[90vh] w-full max-w-[80vw] overflow-y-scroll">
+                    <div className="absolute right-1/2 w-full translate-x-1/2 border-b bg-white dark:border-b-gray-500 dark:bg-gray-800">
+                      <div className="flex justify-between px-5 shadow-md">
+                        <div className=""></div>
+                        <h3 className="mb-5 text-xl font-bold">Comments</h3>
+                        <Button
+                          onClick={() => setOpen(false)}
+                          variant="outline"
+                          className="p-2"
+                        >
+                          <AiOutlineClose />
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="my-20">
+                      {groupedComments.map(({ root, replies }) => (
+                        <div key={root.id} className="w-full">
+                          <ActivityCommentItem comment={root} user={user!} />
 
-                  <h2 className="mb-4 text-xl font-semibold text-black"></h2>
-                  <p></p>
+                          {replies.length > 0 && (
+                            <div className="ml-12 mt-4 flex flex-col gap-3 pl-4">
+                              {replies.map((reply) => (
+                                <ActivityCommentItem
+                                  key={reply.id}
+                                  comment={reply}
+                                  user={user!}
+                                  isReply
+                                />
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="absolute bottom-0 right-1/2 flex h-20 w-full translate-x-1/2 items-center rounded-b-3xl border bg-white shadow-md dark:border-t-gray-500 dark:bg-gray-800">
+                      <div className="flex w-full items-center justify-between gap-5 px-10">
+                        <Image
+                          src={avatarUrl || defaultUserImg.src}
+                          width={20}
+                          height={20}
+                          className="h-12 w-12 rounded-full"
+                          alt="profile"
+                        />
+                        <Form
+                          action=""
+                          className="relative flex w-full items-center justify-between gap-3"
+                          onSubmit={() => {
+                            console.log(commentTextInput);
+                          }}
+                        >
+                          <Input
+                            type="text"
+                            value={commentTextInput}
+                            onChange={(event) => {
+                              setCommentTextInput(event.target.value);
+                            }}
+                            className="h-12 rounded-full border !text-lg dark:border-gray-500"
+                          />
+                          <AnimatePresence>
+                            {commentTextInput !== "" && (
+                              <motion.div
+                                key="modal"
+                                initial={{ opacity: 0, scale: 0 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0 }}
+                                className="absolute right-2"
+                              >
+                                <button className="rounded-full bg-primary px-3 py-2">
+                                  <IoIosSend className="text-xl text-white" />
+                                </button>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </Form>
+                      </div>
+                    </div>
+                  </div>
                 </motion.div>
               </motion.div>
             </>
@@ -200,7 +280,7 @@ const ActivityComments: React.FC = () => {
                     <ActivityCommentItem comment={root} user={user!} />
 
                     {replies.length > 0 && (
-                      <div className="ml-12 mt-4 flex flex-col gap-3 border-l pl-4">
+                      <div className="ml-12 mt-4 flex flex-col gap-3 pl-4">
                         {replies.map((reply) => (
                           <ActivityCommentItem
                             key={reply.id}
@@ -219,7 +299,7 @@ const ActivityComments: React.FC = () => {
                   src={avatarUrl || defaultUserImg.src}
                   width={20}
                   height={20}
-                  className="h-8 w-8 rounded-full"
+                  className="h-12 w-12 rounded-full"
                   alt="profile"
                 />
                 <Form
@@ -235,7 +315,7 @@ const ActivityComments: React.FC = () => {
                     onChange={(event) => {
                       setCommentTextInput(event.target.value);
                     }}
-                    className="rounded-full border dark:border-gray-500"
+                    className="h-12 rounded-full border dark:border-gray-500"
                   />
                   <AnimatePresence>
                     {commentTextInput !== "" && (
@@ -246,8 +326,8 @@ const ActivityComments: React.FC = () => {
                         exit={{ opacity: 0, scale: 0 }}
                         className="absolute right-2"
                       >
-                        <button className="rounded-full bg-primary px-2 py-1">
-                          <IoIosSend className="text-white" />
+                        <button className="rounded-full bg-primary px-3 py-2">
+                          <IoIosSend className="text-xl text-white" />
                         </button>
                       </motion.div>
                     )}
