@@ -9,7 +9,6 @@ import {
   DrawerDescription,
   DrawerFooter,
   DrawerHeader,
-  DrawerOverlay,
   DrawerPortal,
   DrawerTitle,
   DrawerTrigger,
@@ -22,7 +21,7 @@ import defaultActivityImg from "@/public/images/default-activity-img.png";
 import ActivityParticipation from "./activityParticipation";
 import Share from "../general/share";
 
-import { useEffectOnce } from "react-use";
+// import { useEffectOnce } from "react-use";
 import {
   getCategoriesByActivityId,
   getImageUrl,
@@ -50,9 +49,10 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
   const [categories, setCategories] = useState<Category[]>([]);
   const { user } = useGetUserProfile();
 
-  useEffectOnce(() => {
-    setSnap(1);
-  });
+  // useEffectOnce(() => {
+  //   setSnap(1);
+  // });
+
   const [activityImage, setActivityImage] = useState<string>();
 
   useEffect(() => {
@@ -80,9 +80,9 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
         onClose={() => {
           setSearchParams("activity", "");
         }}
+        fadeFromIndex={0}
       >
         <DrawerTrigger ref={buttonRef} className="hidden"></DrawerTrigger>
-        <DrawerOverlay className="fixed inset-0 bg-black/40" />
         <DrawerPortal>
           <DrawerContent
             headerChildren={

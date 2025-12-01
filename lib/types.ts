@@ -100,7 +100,3 @@ export interface SavedActivityEntity {
 }
 
 export type Poi = { key: string; location: google.maps.LatLngLiteral };
-
-export type CommentNode = CommentEntity & {
-  replies: CommentNode[];
-};

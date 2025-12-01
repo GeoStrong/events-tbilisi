@@ -1,5 +1,5 @@
 import { supabase } from "../supabase/supabaseClient";
-import { CommentEntity, CommentNode, Poi, UserProfile } from "../types";
+import { CommentEntity, Poi, UserProfile } from "../types";
 
 export const isString = (value: unknown) => {
   return typeof value === "string";
@@ -48,23 +48,31 @@ export const handleUploadFile = async (
   return filePath;
 };
 
-export const buildCommentTree = (comments: CommentEntity[]): CommentNode[] => {
-  const map = new Map<string, CommentNode>();
+const isCommentDescendant = (
+  all: CommentEntity[],
+  comment: CommentEntity,
+  rootId: string,
+): boolean => {
+  let current = comment;
+  while (current.parentCommentId) {
+    const parent = all.find((c) => c.id === current.parentCommentId);
+    if (!parent) return false;
+    if (parent.id === rootId) return true;
+    current = parent;
+  }
+  return false;
+};
 
-  comments.forEach((c) => {
-    map.set(c.id, { ...c, replies: [] });
+export const groupCommentsOneLevel = (comments: CommentEntity[]) => {
+  const roots = comments.filter((c) => !c.parentCommentId);
+
+  return roots.map((root) => {
+    const replies = comments.filter(
+      (c) =>
+        c.parentCommentId === root.id ||
+        isCommentDescendant(comments, c, root.id),
+    );
+
+    return { root, replies };
   });
-
-  const root: CommentNode[] = [];
-
-  comments.forEach((c) => {
-    if (c.parentCommentId) {
-      const parent = map.get(c.parentCommentId);
-      if (parent) parent.replies.push(map.get(c.id)!);
-    } else {
-      root.push(map.get(c.id)!);
-    }
-  });
-
-  return root;
 };

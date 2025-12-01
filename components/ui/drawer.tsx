@@ -59,7 +59,7 @@ const DrawerContent = React.forwardRef<
       {...props}
     >
       <div
-        className={`${headerChildren ? "h-16" : "h-5 py-3"} flex items-center`}
+        className={`${headerChildren ? "h-20" : "h-5 py-3"} flex flex-col items-center justify-center gap-2`}
       >
         <div className="mx-auto h-1 min-h-1 w-[40px] rounded-full bg-gray-300 dark:bg-gray-700 md:hidden" />
         {headerChildren}

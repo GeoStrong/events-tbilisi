@@ -17,13 +17,20 @@ import defaultUserImg from "@/public/images/default-user.png";
 import { CommentEntity } from "@/lib/types";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import { getImageUrl } from "@/lib/functions/supabaseFunctions";
-import { buildCommentTree } from "@/lib/functions/helperFunctions";
+import { groupCommentsOneLevel } from "@/lib/functions/helperFunctions";
 import ActivityCommentItem from "./activityCommentItem";
+import { Input } from "../ui/input";
+import Form from "next/form";
+import { IoIosSend } from "react-icons/io";
+
+const snapPoints = [0.5, 1];
 
 const ActivityComments: React.FC = () => {
   const [open, setOpen] = useState(false);
   const { user } = useGetUserProfile();
   const [avatarUrl, setAvatarUrl] = useState<string>();
+  const [snap, setSnap] = React.useState<number | string | null>(snapPoints[0]);
+  const [commentTextInput, setCommentTextInput] = useState<string>("");
 
   const commentsExample: CommentEntity[] = [
     {
@@ -85,9 +92,7 @@ const ActivityComments: React.FC = () => {
     })();
   }, [user]);
 
-  const tree = buildCommentTree(commentsExample);
-
-  console.log(tree);
+  const groupedComments = groupCommentsOneLevel(commentsExample);
 
   return (
     <>
@@ -160,11 +165,16 @@ const ActivityComments: React.FC = () => {
         </AnimatePresence>
       </div>
       <div className="md:hidden">
-        <Drawer snapPoints={[0.5, 1]}>
+        <Drawer
+          snapPoints={snapPoints}
+          activeSnapPoint={snap}
+          setActiveSnapPoint={setSnap}
+          fadeFromIndex={0}
+        >
           <DrawerTrigger className="w-full">
-            <div className="relative w-full rounded-xl bg-gray-100 px-3 py-4 shadow-md dark:bg-gray-900">
+            <div className="relative w-full rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900">
               <h3 className="mb-3 text-left font-bold">Comments</h3>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 rounded-md bg-gray-100 p-2 dark:bg-gray-700">
                 <Image
                   src={avatarUrl || defaultUserImg.src}
                   width={20}
@@ -178,29 +188,71 @@ const ActivityComments: React.FC = () => {
               </div>
             </div>
           </DrawerTrigger>
-          <DrawerContent className="w-full">
-            <div className="h-screen overflow-y-auto">
+          <DrawerContent className="w-full" headerChildren={"Comments"}>
+            <div className="mb-20 h-screen overflow-y-auto">
               <DrawerHeader>
-                <DrawerTitle>Comments</DrawerTitle>
-                <DrawerDescription></DrawerDescription>
-                <div className="flex flex-col gap-5">
-                  {tree.map((comment) => (
-                    <ActivityCommentItem
-                      comment={comment}
-                      user={user!}
-                      key={comment.id}
-                    />
-                  ))}
-                </div>
+                <DrawerTitle className="hidden">Comments</DrawerTitle>
+                <DrawerDescription className="hidden">
+                  Comments
+                </DrawerDescription>
+                {groupedComments.map(({ root, replies }) => (
+                  <div key={root.id} className="mb-6">
+                    <ActivityCommentItem comment={root} user={user!} />
+
+                    {replies.length > 0 && (
+                      <div className="ml-12 mt-4 flex flex-col gap-3 border-l pl-4">
+                        {replies.map((reply) => (
+                          <ActivityCommentItem
+                            key={reply.id}
+                            comment={reply}
+                            user={user!}
+                            isReply
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
               </DrawerHeader>
-              <DrawerFooter className="border-top fixed bottom-0 w-full border bg-white">
+              <DrawerFooter className="fixed bottom-0 flex w-full flex-row items-center justify-between gap-3 border border-t-gray-100 bg-white shadow-md dark:border-t-gray-600 dark:bg-gray-800">
                 <Image
                   src={avatarUrl || defaultUserImg.src}
                   width={20}
                   height={20}
-                  className="h-10 w-10 rounded-full"
+                  className="h-8 w-8 rounded-full"
                   alt="profile"
                 />
+                <Form
+                  action=""
+                  className="relative flex w-[85%] items-center justify-between gap-3"
+                  onSubmit={() => {
+                    console.log(commentTextInput);
+                  }}
+                >
+                  <Input
+                    type="text"
+                    value={commentTextInput}
+                    onChange={(event) => {
+                      setCommentTextInput(event.target.value);
+                    }}
+                    className="rounded-full border dark:border-gray-500"
+                  />
+                  <AnimatePresence>
+                    {commentTextInput !== "" && (
+                      <motion.div
+                        key="modal"
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0 }}
+                        className="absolute right-2"
+                      >
+                        <button className="rounded-full bg-primary px-2 py-1">
+                          <IoIosSend className="text-white" />
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </Form>
               </DrawerFooter>
             </div>
           </DrawerContent>
