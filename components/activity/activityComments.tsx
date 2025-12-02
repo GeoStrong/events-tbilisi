@@ -160,7 +160,7 @@ const ActivityComments: React.FC = () => {
                   transition={{ type: "spring", stiffness: 250, damping: 25 }}
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <div className="h-[90vh] w-full max-w-[80vw] overflow-y-scroll">
+                  <div className="h-[90vh] w-full max-w-[50vw] overflow-y-scroll">
                     <div className="absolute right-1/2 w-full translate-x-1/2 border-b bg-white dark:border-b-gray-500 dark:bg-gray-800">
                       <div className="flex justify-between px-5 shadow-md">
                         <div className=""></div>
