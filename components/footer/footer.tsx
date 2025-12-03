@@ -12,11 +12,14 @@ const Footer: React.FC = () => {
             <Link className="text-lg" href="/">
               Activities
             </Link>
+            <Link className="text-lg" href="/discover">
+              Discover
+            </Link>
             <Link className="text-lg" href="/map">
               Map
             </Link>
-            <Link className="text-lg" href="/about">
-              About Us
+            <Link className="text-lg" href="/create-activity">
+              Create a New Activity
             </Link>
           </div>
           <div className="flex flex-col items-center justify-evenly gap-3 md:flex-row">

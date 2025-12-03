@@ -122,7 +122,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                             height={100}
                             alt="profile"
                             className="h-full w-full"
-                            unoptimized
                           />
                         </DialogDescription>
                       </DialogHeader>

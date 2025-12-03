@@ -63,7 +63,7 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
               height={100}
               alt="activity"
               className={`max-h-96 w-full rounded-md object-center ${activity.image ? "object-cover" : "object-contain"}`}
-              unoptimized
+              unoptimized={activityImage ? false : true}
             />
           </div>
           <div className="w-full">
@@ -160,7 +160,10 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
                 <BiUser />
               </AvatarFallback>
             </Avatar>
-            <div className="flex w-full items-center justify-between gap-2">
+            <Link
+              href={`/users/${host?.id}`}
+              className="flex w-full items-center justify-between gap-2"
+            >
               <span className="text-center text-base">{host?.name}</span>
               {user?.id === activity.user_id ? (
                 <Link
@@ -172,7 +175,7 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
               ) : (
                 <Button className="text">Follow</Button>
               )}
-            </div>
+            </Link>
           </div>
         </div>
         <div className="rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">

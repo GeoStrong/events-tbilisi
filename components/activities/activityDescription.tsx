@@ -21,7 +21,7 @@ import defaultActivityImg from "@/public/images/default-activity-img.png";
 import ActivityParticipation from "./activityParticipation";
 import Share from "../general/share";
 
-// import { useEffectOnce } from "react-use";
+import { useEffectOnce } from "react-use";
 import {
   getCategoriesByActivityId,
   getImageUrl,
@@ -49,9 +49,9 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
   const [categories, setCategories] = useState<Category[]>([]);
   const { user } = useGetUserProfile();
 
-  // useEffectOnce(() => {
-  //   setSnap(1);
-  // });
+  useEffectOnce(() => {
+    setSnap(1);
+  });
 
   const [activityImage, setActivityImage] = useState<string>();
 
@@ -174,7 +174,7 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
                       height={100}
                       alt="activity"
                       className="mt-5 h-44 w-full rounded-xl object-cover"
-                      unoptimized
+                      unoptimized={activityImage ? false : true}
                     />
                   )}
                   <p className="de mt-4 flex items-center justify-between gap-2 md:justify-start">

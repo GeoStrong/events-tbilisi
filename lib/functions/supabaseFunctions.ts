@@ -122,11 +122,11 @@ export const getActivitiesByUserId = async (userId: string) => {
 export const getImageUrl = async (imageLocation: ImageType) => {
   const image = isString(imageLocation) ? imageLocation : "";
 
-  const { data: imageData } = supabase.storage
+  const { data: imageData } = await supabase.storage
     .from("Events-Tbilisi media")
-    .getPublicUrl(image);
+    .createSignedUrl(image, 60 * 60);
 
-  const activityImage = isValidImage(imageData.publicUrl);
+  const activityImage = isValidImage(imageData?.signedUrl);
 
   return activityImage;
 };

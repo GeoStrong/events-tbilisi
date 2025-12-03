@@ -107,7 +107,7 @@ export const isActivitySaved = async (userId: string, activityId: string) => {
 export const fetchUserInfo = async (userId: string) => {
   const { data, error } = await supabase
     .from("users")
-    .select("name, avatar_path")
+    .select("id, name, avatar_path")
     .eq("id", userId)
     .single();
 

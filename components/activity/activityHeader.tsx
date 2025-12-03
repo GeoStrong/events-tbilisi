@@ -32,7 +32,8 @@ const ActivityHeader: React.FC<{
             width={100}
             height={100}
             className="hidden max-h-24 w-64 rounded-md bg-white object-cover md:block"
-            unoptimized
+              unoptimized={imageUrl ? false : true}
+
           />
         </div>
         <div className="flex w-full items-center justify-between gap-3 md:flex-col md:items-start md:justify-start">

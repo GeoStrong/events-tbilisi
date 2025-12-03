@@ -57,7 +57,7 @@ const Share: React.FC<{
                   alt="activity"
                   width={100}
                   height={100}
-                  unoptimized
+                  unoptimized={activityImage ? false : true}
                 />
               </div>
               <div className="flex flex-col">

@@ -67,7 +67,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
             height={100}
             alt="activity"
             className={`h-full w-full transform rounded-t-xl transition-transform duration-300 group-hover:scale-105 ${!activityImage ? "object-contain" : "object-cover"}`}
-            unoptimized
+            unoptimized={activityImage ? false : true}
           />
         </div>
         <div className="absolute top-0 flex h-4 w-full justify-end px-2 text-right">

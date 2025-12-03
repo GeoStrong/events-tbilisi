@@ -27,7 +27,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${myFont.variable} antialiased`}>
         <StoreProvider>
-          <ThemeProvider attribute="class">
+          <ThemeProvider attribute="class" enableSystem defaultTheme="system">
             <main className="flex min-h-[90vh] flex-col">
               <MainLayout>{children}</MainLayout>
             </main>
