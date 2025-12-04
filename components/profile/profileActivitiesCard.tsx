@@ -19,8 +19,8 @@ const ProfileActivitiesCard: React.FC<ProfileActivitiesCardProps> = ({
     <>
       <Card className="dark:bg-gray-800">
         <CardHeader>
-          <CardTitle>{title}</CardTitle>
-          <CardDescription>{description}</CardDescription>
+          <CardTitle className="text-xl">{title}</CardTitle>
+          <CardDescription className="text-lg">{description}</CardDescription>
         </CardHeader>
         {activities.length === 0 ? (
           <CardDescription className="p-3">

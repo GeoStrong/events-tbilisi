@@ -116,7 +116,7 @@ export const getActivitiesByUserId = async (userId: string) => {
     return [];
   }
 
-  return data;
+  return data as ActivityEntity[];
 };
 
 export const getImageUrl = async (imageLocation: ImageType) => {

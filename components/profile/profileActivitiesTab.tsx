@@ -26,8 +26,12 @@ const ProfileActivitiesTab: React.FC<{ userId: string }> = ({ userId }) => {
         <Tabs defaultValue="my-activities">
           <div className="flex w-full justify-center">
             <TabsList>
-              <TabsTrigger value="my-activities">My Actviities</TabsTrigger>
-              <TabsTrigger value="my-bookmarks">My Bookmarks</TabsTrigger>
+              <TabsTrigger className="text-base" value="my-activities">
+                My Actviities
+              </TabsTrigger>
+              <TabsTrigger className="text-base" value="my-bookmarks">
+                My Bookmarks
+              </TabsTrigger>
             </TabsList>
           </div>
           <TabsContent value="my-activities">

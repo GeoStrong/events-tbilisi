@@ -37,7 +37,7 @@ const ActivityCards: React.FC = () => {
 
   return (
     <>
-      <h2 className="section-title mt-3 md:mt-1">
+      <h2 className="section-title mt-3 text-xl md:mt-1">
         {categoryId && category.length !== 0 ? category[0].name : "Recent"}{" "}
         activities in Tbilisi
       </h2>

@@ -18,6 +18,8 @@ import { RootState } from "@/lib/store/store";
 import { mapActions } from "@/lib/store/mapSlice";
 import { useDispatch } from "react-redux";
 
+const snapPoints = [0.5, 1];
+
 const ActivityUpdate: React.FC<{
   user: UserProfile;
   activity: ActivityEntity;
@@ -41,6 +43,7 @@ const ActivityUpdate: React.FC<{
   const dispatch = useDispatch();
   const { latLng } = useSelector((state: RootState) => state.map);
   const { isMobile } = useScreenSize();
+  const [snap, setSnap] = React.useState<number | string | null>(snapPoints[0]);
 
   useEffect(() => {
     if (isDrawerOpen) dispatch(mapActions.setLatLng(null));
@@ -77,12 +80,14 @@ const ActivityUpdate: React.FC<{
   return (
     <>
       <Drawer
-        repositionInputs={false}
         direction={isMobile ? "bottom" : "right"}
-        snapPoints={isMobile ? [0.5, 1] : [1]}
         onOpenChange={(drawerState) => {
           setIsDrawerOpen(drawerState);
         }}
+        snapPoints={isMobile ? snapPoints : [1]}
+        activeSnapPoint={snap}
+        setActiveSnapPoint={setSnap}
+        fadeFromIndex={0}
       >
         <DrawerTrigger className="h-10 w-1/2 rounded-md border bg-white px-8 text-black md:w-auto">
           Edit

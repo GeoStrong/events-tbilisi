@@ -141,9 +141,9 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               </div>
             </div>
 
-            <div className="flex-1 space-y-4">
+            <div className="flex-1 space-y-4 text-lg">
               <div>
-                <h2>{user?.name}</h2>
+                <h2 className="text-xl">{user?.name}</h2>
                 {user && <p className="text-muted-foreground">{user.email}</p>}
               </div>
 
@@ -154,7 +154,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
-                  <span>
+                  <span className="text-base">
                     Joined{" "}
                     {user?.created_at &&
                       new Date(user?.created_at).toLocaleDateString("en-US", {

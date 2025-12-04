@@ -84,7 +84,7 @@ const ProfileLayout: React.FC = () => {
                     }}
                   >
                     <div className="md:hidden">
-                      <BsCalendar2Event />
+                      <BsCalendar2Event className="text-xl" />
                     </div>
                     <p className="hidden md:block">Activities</p>
                   </TabsTrigger>
@@ -96,7 +96,7 @@ const ProfileLayout: React.FC = () => {
                     }}
                   >
                     <div className="md:hidden">
-                      <AiOutlineUser />
+                      <AiOutlineUser className="text-xl" />
                     </div>
                     <p className="hidden md:block">Account</p>
                   </TabsTrigger>
@@ -109,7 +109,7 @@ const ProfileLayout: React.FC = () => {
                     }}
                   >
                     <div className="md:hidden">
-                      <FiSettings />
+                      <FiSettings className="text-xl" />
                     </div>
                     <p className="hidden md:block">Preferences</p>
                   </TabsTrigger>

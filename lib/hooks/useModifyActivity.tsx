@@ -54,7 +54,7 @@ const useModifyActivity: (props: useModifyActivityProps) => {
   const validationSchema = Yup.object({
     title: Yup.string()
       .required("Title is required")
-      .max(100, "Title is too long"),
+      .max(50, "Title is too long"),
     description: Yup.string()
       .required("Description is required")
       .max(300, "Description is too long"),

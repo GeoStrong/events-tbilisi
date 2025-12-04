@@ -2,14 +2,17 @@ import { UserProfile } from "@/lib/types";
 import Image from "next/image";
 import React from "react";
 import defaultUserImg from "@/public/images/default-user.png";
-import { getImageUrl } from "@/lib/functions/supabaseFunctions";
+import {
+  getActivitiesByUserId,
+  getImageUrl,
+} from "@/lib/functions/supabaseFunctions";
 import { Button } from "../ui/button";
 
 const UsersHeader: React.FC<{ user: UserProfile }> = async ({ user }) => {
-  // const [profileImg, setProfileImg]
   const profileImg =
     (user?.avatar_path && (await getImageUrl(user?.avatar_path))) ||
     defaultUserImg.src;
+  const postedActivitiesNumber = (await getActivitiesByUserId(user.id)).length;
 
   return (
     <div className="mt-5 w-full">
@@ -28,7 +31,7 @@ const UsersHeader: React.FC<{ user: UserProfile }> = async ({ user }) => {
           <h1 className="text-lg font-bold">{user.name}</h1>
           <div className="flex items-center justify-between">
             <div className="space-y-1 text-center">
-              <p className="text-lg font-bold">5</p>
+              <p className="text-lg font-bold">{postedActivitiesNumber}</p>
               <p className="text-base">Activities</p>
             </div>
             <div className="space-y-1 text-center">
@@ -41,7 +44,7 @@ const UsersHeader: React.FC<{ user: UserProfile }> = async ({ user }) => {
             </div>
           </div>
         </div>
-        <Button className="hidden p-6 text-xl md:block">Follow</Button>
+        <Button className="hidden p-6 text-xl md:flex">Follow</Button>
       </div>
       <div className="mt-4 w-full">
         <p className="text-base text-gray-500">

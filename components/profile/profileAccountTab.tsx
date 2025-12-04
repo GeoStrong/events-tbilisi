@@ -64,8 +64,8 @@ const ProfileAccountTab: React.FC<ProfileAccountTabProps> = ({
           <Form onBlur={handleSubmit}>
             <Card className="dark:bg-gray-800">
               <CardHeader>
-                <CardTitle>Profile Information</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-xl">Profile Information</CardTitle>
+                <CardDescription className="text-lg">
                   Update your personal information and bio.
                 </CardDescription>
               </CardHeader>
@@ -73,14 +73,16 @@ const ProfileAccountTab: React.FC<ProfileAccountTabProps> = ({
               <CardContent className="space-y-4">
                 {/* Name */}
                 <div className="space-y-2">
-                  <Label htmlFor="profile-name">Name</Label>
+                  <Label className="text-xl" htmlFor="profile-name">
+                    Name
+                  </Label>
                   <Field
                     as={Input}
                     id="profile-name"
                     name="name"
                     disabled={!edit}
                     placeholder="Enter your name"
-                    className="dark:border-gray-500"
+                    className="p-7 text-xl dark:border-gray-500"
                   />
                   <ErrorMessage
                     name="name"
@@ -92,19 +94,23 @@ const ProfileAccountTab: React.FC<ProfileAccountTabProps> = ({
                 {/* Email (readonly) */}
                 {user && (
                   <div className="space-y-2">
-                    <Label htmlFor="profile-email">Email</Label>
+                    <Label className="text-xl" htmlFor="profile-email">
+                      Email
+                    </Label>
                     <Input
                       id="profile-email"
                       value={user.email}
                       disabled
-                      className="dark:border-gray-500"
+                      className="p-7 text-xl dark:border-gray-500"
                     />
                   </div>
                 )}
 
                 {/* Phone */}
                 <div className="space-y-2">
-                  <Label htmlFor="profile-phone">Phone</Label>
+                  <Label className="text-xl" htmlFor="profile-phone">
+                    Phone
+                  </Label>
                   <Field
                     as={Input}
                     id="profile-phone"
@@ -112,7 +118,7 @@ const ProfileAccountTab: React.FC<ProfileAccountTabProps> = ({
                     type="tel"
                     disabled={!edit}
                     placeholder="+123456789"
-                    className="dark:border-gray-500"
+                    className="p-7 text-xl dark:border-gray-500"
                   />
                   <ErrorMessage
                     name="phone"
@@ -123,14 +129,16 @@ const ProfileAccountTab: React.FC<ProfileAccountTabProps> = ({
 
                 {/* Bio */}
                 <div className="space-y-2">
-                  <Label htmlFor="profile-bio">Bio</Label>
+                  <Label className="text-xl" htmlFor="profile-bio">
+                    Bio
+                  </Label>
                   <Field
                     as={Textarea}
                     id="profile-bio"
                     name="bio"
                     disabled={!edit}
                     placeholder="Tell us about yourself..."
-                    className="dark:border-gray-500"
+                    className="p-7 text-xl dark:border-gray-500"
                     rows={4}
                   />
                   <ErrorMessage
@@ -148,6 +156,7 @@ const ProfileAccountTab: React.FC<ProfileAccountTabProps> = ({
                     await signOut();
                     window.location.reload();
                   }}
+                  className="p-5 text-xl"
                 >
                   Log out
                 </Button>
