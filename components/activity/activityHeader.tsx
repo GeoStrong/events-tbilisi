@@ -9,6 +9,7 @@ import defaultActivityImg from "@/public/images/default-activity-img.png";
 import { getImageUrl } from "@/lib/functions/supabaseFunctions";
 import BookmarkButton from "../general/bookmarkButton";
 import ActivityHeaderButtons from "./activityHeaderButtons";
+import ActivityEngagement from "./activityEngagement";
 
 const ActivityHeader: React.FC<{
   activity: ActivityEntity;
@@ -32,13 +33,17 @@ const ActivityHeader: React.FC<{
             width={100}
             height={100}
             className="hidden max-h-24 w-64 rounded-md bg-white object-cover md:block"
-              unoptimized={imageUrl ? false : true}
-
+            unoptimized={imageUrl ? false : true}
           />
         </div>
         <div className="flex w-full items-center justify-between gap-3 md:flex-col md:items-start md:justify-start">
           <h2 className="text-xl font-bold md:text-3xl">{activity.title}</h2>
           <div className="flex gap-3">
+            <ActivityEngagement
+              activityId={activity.id}
+              activityLikes={activity.likes || 0}
+              activityDislikes={activity.dislikes || 0}
+            />
             <BookmarkButton activityId={activity.id} />
             <Share activity={activity}>
               <FiShare className="text-lg md:text-2xl" />

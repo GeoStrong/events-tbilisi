@@ -109,6 +109,8 @@ const useModifyActivity: (props: useModifyActivityProps) => {
       maxAttendees: values.maxAttendees || null,
       image: imageUrl || null,
       googleLocation: values.googleLocation,
+      likes: 0,
+      dislikes: 0,
     };
 
     let activity;

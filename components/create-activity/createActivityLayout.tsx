@@ -37,6 +37,8 @@ const CreateActivityLayout: React.FC<{ mapKey: string }> = ({ mapKey }) => {
     host: "individual",
     categories: [],
     googleLocation: latLng,
+    likes: 0,
+    dislikes: 0,
   };
 
   const { formikComponent, openCreateActivityAlertRef, openMobileMapRef } =

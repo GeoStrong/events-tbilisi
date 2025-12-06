@@ -80,6 +80,8 @@ export interface ActivityEntity {
   createdAt?: Date;
   updatedAt?: Date;
   participants?: ParticipantValues[];
+  likes?: number;
+  dislikes?: number;
 }
 
 export interface CommentEntity {

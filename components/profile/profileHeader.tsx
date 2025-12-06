@@ -141,9 +141,9 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               </div>
             </div>
 
-            <div className="flex-1 space-y-4 text-lg">
+            <div className="flex-1 space-y-4 text-base">
               <div>
-                <h2 className="text-xl">{user?.name}</h2>
+                <h2 className="text-lg">{user?.name}</h2>
                 {user && <p className="text-muted-foreground">{user.email}</p>}
               </div>
 

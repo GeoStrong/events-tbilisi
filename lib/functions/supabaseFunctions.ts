@@ -226,3 +226,42 @@ export const deleteActivityCategories = async (activityId: string) => {
 
   if (error) throw error;
 };
+
+export const toggleActivityReaction = async (
+  activityId: string,
+  reaction: "like" | "dislike",
+  userId: string,
+) => {
+  const { data, error } = await supabase.rpc("toggle_reaction", {
+    p_activity_id: activityId,
+    p_user_id: userId,
+    p_reaction: reaction,
+  });
+
+  if (error) console.log("RPC error →", error);
+  return data;
+};
+
+export const getActivityReactions = async (activityId: string) => {
+  const { data, error } = await supabase
+    .from("activities")
+    .select("likes, dislikes")
+    .eq("id", activityId)
+    .single();
+
+  if (error) throw error;
+
+  return data;
+};
+
+export const getUserReaction = async (activityId: string, userId: string) => {
+  const { data, error } = await supabase
+    .from("user_activity_reactions")
+    .select("reaction")
+    .eq("activity_id", activityId)
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (error) return null;
+  return data?.reaction ?? null;
+};

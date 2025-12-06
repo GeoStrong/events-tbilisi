@@ -23,8 +23,8 @@ const ProfilePreferencesTab: React.FC = () => {
       <TabsContent value="preferences" className="space-y-4">
         <Card className="dark:bg-gray-800">
           <CardHeader>
-            <CardTitle className="text-xl">Notifications</CardTitle>
-            <CardDescription className="text-lg">
+            <CardTitle className="text-lg">Notifications</CardTitle>
+            <CardDescription className="text-base">
               Manage how you receive notifications.
             </CardDescription>
           </CardHeader>
@@ -33,11 +33,11 @@ const ProfilePreferencesTab: React.FC = () => {
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
                   <Mail className="h-4 w-4 text-muted-foreground" />
-                  <Label className="text-xl" htmlFor="email-notif">
+                  <Label className="text-lg" htmlFor="email-notif">
                     Email Notifications
                   </Label>
                 </div>
-                <p className="text-lg text-muted-foreground">
+                <p className="text-base text-muted-foreground">
                   Receive email updates about activities and activities.
                 </p>
               </div>
@@ -49,11 +49,11 @@ const ProfilePreferencesTab: React.FC = () => {
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
                   <Bell className="h-4 w-4 text-muted-foreground" />
-                  <Label className="text-xl" htmlFor="activity-reminders">
+                  <Label className="text-lg" htmlFor="activity-reminders">
                     Activity Reminders
                   </Label>
                 </div>
-                <p className="text-lg text-muted-foreground">
+                <p className="text-base text-muted-foreground">
                   Get reminders before your saved activities start.
                 </p>
               </div>
@@ -65,11 +65,11 @@ const ProfilePreferencesTab: React.FC = () => {
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
                   <Globe className="h-4 w-4 text-muted-foreground" />
-                  <Label className="text-xl" htmlFor="newsletter">
+                  <Label className="text-lg" htmlFor="newsletter">
                     Newsletter Subscription
                   </Label>
                 </div>
-                <p className="text-lg text-muted-foreground">
+                <p className="text-base text-muted-foreground">
                   Subscribe to our weekly newsletter with curated activities.
                 </p>
               </div>
@@ -79,8 +79,8 @@ const ProfilePreferencesTab: React.FC = () => {
 
         <Card className="dark:bg-gray-800 md:hidden">
           <CardHeader>
-            <CardTitle className="text-xl">Display Preferences</CardTitle>
-            <CardDescription className="text-lg">
+            <CardTitle className="text-lg">Display Preferences</CardTitle>
+            <CardDescription className="text-base">
               Customize your viewing experience.
             </CardDescription>
           </CardHeader>
@@ -96,8 +96,8 @@ const ProfilePreferencesTab: React.FC = () => {
 
         <Card className="dark:bg-gray-800">
           <CardHeader>
-            <CardTitle className="text-xl">Account Settings</CardTitle>
-            <CardDescription className="text-lg">
+            <CardTitle className="text-lg">Account Settings</CardTitle>
+            <CardDescription className="text-base">
               Customize your viewing experience.
             </CardDescription>
           </CardHeader>
@@ -105,12 +105,12 @@ const ProfilePreferencesTab: React.FC = () => {
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Lock className="h-4 w-4 text-muted-foreground" />
-                <Label className="text-xl">Password</Label>
+                <Label className="text-lg">Password</Label>
               </div>
-              <p className="mb-2 text-lg text-muted-foreground">
+              <p className="mb-2 text-base text-muted-foreground">
                 Keep your account secure by updating your password regularly.
               </p>
-              <Button variant="outline" className="text-xl">
+              <Button variant="outline" className="text-base">
                 Change Password
               </Button>
             </div>
@@ -118,11 +118,11 @@ const ProfilePreferencesTab: React.FC = () => {
             <Separator />
 
             <div className="space-y-2">
-              <Label className="text-xl text-destructive">Danger Zone</Label>
-              <p className="mb-2 text-lg text-muted-foreground">
+              <Label className="text-lg text-destructive">Danger Zone</Label>
+              <p className="mb-2 text-base text-muted-foreground">
                 Permanently delete your account and all associated data.
               </p>
-              <Button variant="destructive" className="text-xl">
+              <Button variant="destructive" className="text-base">
                 Delete Account
               </Button>
             </div>

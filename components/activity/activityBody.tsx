@@ -161,18 +161,15 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
               </AvatarFallback>
             </Avatar>
             <Link
-              href={`/users/${host?.id}`}
+              href={
+                user?.id === activity.user_id
+                  ? "/profile#account"
+                  : `/users/${host?.id}`
+              }
               className="flex w-full items-center justify-between gap-2"
             >
               <span className="text-center text-base">{host?.name}</span>
-              {user?.id === activity.user_id ? (
-                <Link
-                  href="/profile#account"
-                  className="rounded-md border p-2 text-center dark:border-gray-600"
-                >
-                  Edit Profile
-                </Link>
-              ) : (
+              {user?.id !== activity.user_id && (
                 <Button className="text">Follow</Button>
               )}
             </Link>
