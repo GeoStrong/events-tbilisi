@@ -13,11 +13,21 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import defaultUserImg from "@/public/images/default-user.png";
-import { CommentEntity } from "@/lib/types";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import { groupCommentsOneLevel } from "@/lib/functions/helperFunctions";
 import ActivityCommentItem from "./activityCommentItem";
+import useComments from "@/lib/hooks/useComments";
 import { Input } from "../ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog";
 import Form from "next/form";
 import { IoIosSend } from "react-icons/io";
 import useOptimizedImage from "@/lib/hooks/useOptimizedImage";
@@ -25,65 +35,16 @@ import OptimizedImage from "../ui/optimizedImage";
 
 const snapPoints = [0.5, 1];
 
-const ActivityComments: React.FC = () => {
+const ActivityComments: React.FC<{ activityId?: string }> = ({
+  activityId,
+}) => {
   const [open, setOpen] = useState(false);
   const { user } = useGetUserProfile();
-  // const [avatarUrl, setAvatarUrl] = useState<string>();
   const [snap, setSnap] = React.useState<number | string | null>(snapPoints[0]);
   const [commentTextInput, setCommentTextInput] = useState<string>("");
-
-  const commentsExample: CommentEntity[] = [
-    {
-      id: "123",
-      activityid: "1",
-      user: user!,
-      created_at: new Date(),
-      text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis, unde.",
-    },
-    {
-      id: "1234",
-      activityid: "1",
-
-      user: user!,
-      created_at: new Date(),
-      text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt error placeat accusamus nemo sint nulla eius consectetur! Ipsum officiis rerum neque ab autem quos labore debitis, voluptatibus obcaecati soluta veniam, blanditiis inventore optio! Officiis asperiores aspernatur qui pariatur aut, tempore expedita eum repudiandae exercitationem debitis cupiditate, facilis autem nobis eius!",
-      parentCommentId: "123",
-    },
-    {
-      id: "1235",
-      activityid: "1",
-
-      user: user!,
-      created_at: new Date(),
-      text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt error placeat accusamus nemo sint nulla eius consectetur! Ipsum officiis rerum neque ab autem quos labore debitis, voluptatibus obcaecati soluta veniam, blanditiis inventore optio! Officiis asperiores aspernatur qui pariatur aut, tempore expedita eum repudiandae exercitationem debitis cupiditate, facilis autem nobis eius!",
-    },
-    {
-      id: "1236",
-      activityid: "1",
-
-      user: user!,
-      created_at: new Date(),
-      text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt error placeat accusamus nemo sint nulla eius consectetur! Ipsum officiis rerum neque ab autem quos labore debitis, voluptatibus obcaecati soluta veniam, blanditiis inventore optio! Officiis asperiores aspernatur qui pariatur aut, tempore expedita eum repudiandae exercitationem debitis cupiditate, facilis autem nobis eius!",
-      parentCommentId: "1235",
-    },
-    {
-      id: "1237",
-      activityid: "1",
-
-      user: user!,
-      created_at: new Date(),
-      text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt error placeat accusamus nemo sint nulla eius consectetur! Ipsum officiis rerum neque ab autem quos labore debitis, voluptatibus obcaecati soluta veniam, blanditiis inventore optio! Officiis asperiores aspernatur qui pariatur aut, tempore expedita eum repudiandae exercitationem debitis cupiditate, facilis autem nobis eius!",
-      parentCommentId: "1236",
-    },
-    {
-      activityid: "1",
-      user: user!,
-      id: "1238",
-      created_at: new Date(),
-      text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt error placeat accusamus nemo sint nulla eius consectetur! Ipsum officiis rerum neque ab autem quos labore debitis, voluptatibus obcaecati soluta veniam, blanditiis inventore optio! Officiis asperiores aspernatur qui pariatur aut, tempore expedita eum repudiandae exercitationem debitis cupiditate, facilis autem nobis eius!",
-      parentCommentId: "1235",
-    },
-  ];
+  const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
 
   const { imageUrl: avatarUrl } = useOptimizedImage(user?.avatar_path || "", {
     quality: 50,
@@ -91,6 +52,15 @@ const ActivityComments: React.FC = () => {
     height: 18,
     fallback: defaultUserImg.src,
   });
+
+  const {
+    comments,
+    isLoading,
+    addComment,
+    editComment,
+    removeComment,
+    refresh,
+  } = useComments(activityId || "");
 
   useEffect(() => {
     if (open) {
@@ -104,7 +74,7 @@ const ActivityComments: React.FC = () => {
     };
   }, [open]);
 
-  const groupedComments = groupCommentsOneLevel(commentsExample);
+  const groupedComments = groupCommentsOneLevel(comments || []);
 
   return (
     <>
@@ -133,7 +103,9 @@ const ActivityComments: React.FC = () => {
                 />
               </div>
               <p className="text-sm font-extralight">
-                {commentsExample[0].text.slice(0, 40) + "..."}
+                {comments && comments.length > 0
+                  ? (comments[0].text || "").slice(0, 40) + "..."
+                  : "No comments yet"}
               </p>
             </div>
           </div>
@@ -180,7 +152,23 @@ const ActivityComments: React.FC = () => {
                     <div className="my-20">
                       {groupedComments.map(({ root, replies }) => (
                         <div key={root.id} className="w-full">
-                          <ActivityCommentItem comment={root} user={user!} />
+                          <ActivityCommentItem
+                            comment={root}
+                            onRequestEdit={(id, text) => {
+                              setEditingCommentId(id);
+                              setCommentTextInput(text);
+                            }}
+                            onRequestDelete={(id) => {
+                              setDeleteTargetId(id);
+                              setIsDeleteDialogOpen(true);
+                            }}
+                            onReplyTo={(id, username) => {
+                              const prefix = username ? `@${username} ` : "@";
+                              setCommentTextInput((prev) =>
+                                prev ? `${prev} ${prefix}` : prefix,
+                              );
+                            }}
+                          />
 
                           {replies.length > 0 && (
                             <div className="ml-12 mt-4 flex flex-col gap-3 pl-4">
@@ -188,8 +176,23 @@ const ActivityComments: React.FC = () => {
                                 <ActivityCommentItem
                                   key={reply.id}
                                   comment={reply}
-                                  user={user!}
                                   isReply
+                                  onRequestEdit={(id, text) => {
+                                    setEditingCommentId(id);
+                                    setCommentTextInput(text);
+                                  }}
+                                  onRequestDelete={(id) => {
+                                    setDeleteTargetId(id);
+                                    setIsDeleteDialogOpen(true);
+                                  }}
+                                  onReplyTo={(id, username) => {
+                                    const prefix = username
+                                      ? `@${username} `
+                                      : "@";
+                                    setCommentTextInput((prev) =>
+                                      prev ? `${prev} ${prefix}` : prefix,
+                                    );
+                                  }}
                                 />
                               ))}
                             </div>
@@ -212,8 +215,21 @@ const ActivityComments: React.FC = () => {
                         <Form
                           action=""
                           className="relative flex w-full items-center justify-between gap-3"
-                          onSubmit={() => {
-                            console.log(commentTextInput);
+                          onSubmit={async (e) => {
+                            e.preventDefault();
+                            if (!commentTextInput || !user?.id) return;
+                            if (editingCommentId) {
+                              await editComment(
+                                editingCommentId,
+                                user.id,
+                                commentTextInput,
+                              );
+                              setEditingCommentId(null);
+                            } else {
+                              await addComment(user.id, commentTextInput);
+                            }
+                            setCommentTextInput("");
+                            await refresh();
                           }}
                         >
                           <Input
@@ -270,7 +286,9 @@ const ActivityComments: React.FC = () => {
                   priority={false}
                 />
                 <p className="text-sm font-extralight">
-                  {commentsExample[0].text.slice(0, 40) + "..."}
+                  {comments && comments.length > 0
+                    ? (comments[0].text || "").slice(0, 40) + "..."
+                    : "No comments yet"}
                 </p>
               </div>
             </div>
@@ -284,7 +302,19 @@ const ActivityComments: React.FC = () => {
                 </DrawerDescription>
                 {groupedComments.map(({ root, replies }) => (
                   <div key={root.id} className="mb-6">
-                    <ActivityCommentItem comment={root} user={user!} />
+                    <ActivityCommentItem
+                      comment={root}
+                      onEdit={async (id: string, newText: string) => {
+                        if (!user?.id) return;
+                        await editComment(id, user.id, newText);
+                        await refresh();
+                      }}
+                      onDelete={async (id: string) => {
+                        if (!user?.id) return;
+                        await removeComment(id, user.id);
+                        await refresh();
+                      }}
+                    />
 
                     {replies.length > 0 && (
                       <div className="ml-12 mt-4 flex flex-col gap-3 pl-4">
@@ -292,8 +322,17 @@ const ActivityComments: React.FC = () => {
                           <ActivityCommentItem
                             key={reply.id}
                             comment={reply}
-                            user={user!}
                             isReply
+                            onEdit={async (id: string, newText: string) => {
+                              if (!user?.id) return;
+                              await editComment(id, user.id, newText);
+                              await refresh();
+                            }}
+                            onDelete={async (id: string) => {
+                              if (!user?.id) return;
+                              await removeComment(id, user.id);
+                              await refresh();
+                            }}
                           />
                         ))}
                       </div>
@@ -314,8 +353,21 @@ const ActivityComments: React.FC = () => {
                 <Form
                   action=""
                   className="relative flex w-[85%] items-center justify-between gap-3"
-                  onSubmit={() => {
-                    console.log(commentTextInput);
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    if (!commentTextInput || !user?.id) return;
+                    if (editingCommentId) {
+                      await editComment(
+                        editingCommentId,
+                        user.id,
+                        commentTextInput,
+                      );
+                      setEditingCommentId(null);
+                    } else {
+                      await addComment(user.id, commentTextInput);
+                    }
+                    setCommentTextInput("");
+                    await refresh();
                   }}
                 >
                   <Input
@@ -347,6 +399,43 @@ const ActivityComments: React.FC = () => {
           </DrawerContent>
         </Drawer>
       </div>
+      {/* Delete confirmation dialog */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete comment</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this comment? This action cannot
+              be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsDeleteDialogOpen(false);
+                  setDeleteTargetId(null);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={async () => {
+                  if (!deleteTargetId || !user?.id) return;
+                  await removeComment(deleteTargetId, user.id);
+                  setIsDeleteDialogOpen(false);
+                  setDeleteTargetId(null);
+                  await refresh();
+                }}
+                className="bg-red-600"
+              >
+                Delete
+              </Button>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

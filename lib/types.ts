@@ -87,7 +87,7 @@ export interface ActivityEntity {
 export interface CommentEntity {
   id: string;
   activityid: string;
-  user: UserProfile;
+  user_id: string;
   text: string;
   created_at: Date | string | null;
   updated_at?: Date | string | null;

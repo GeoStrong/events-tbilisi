@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,12 +10,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ActivityEntity } from "@/lib/types";
-import Image from "next/image";
 import defaultActivityImg from "@/public/images/default-activity-img.png";
 import Socials from "./socials";
 import { useLocation } from "react-use";
 import { Button } from "../ui/button";
-import { getImageUrl } from "@/lib/functions/supabaseFunctions";
 import useOptimizedImage from "@/lib/hooks/useOptimizedImage";
 import OptimizedImage from "../ui/optimizedImage";
 

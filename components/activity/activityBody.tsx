@@ -231,7 +231,7 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
           )}
         </div>
         <div className="">
-          <ActivityComments />
+          <ActivityComments activityId={activity.id} />
         </div>
       </div>
     </div>

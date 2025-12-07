@@ -176,7 +176,7 @@ const OptimizedImage = React.forwardRef<HTMLDivElement, OptimizedImageProps>(
               objectPosition: objectPosition,
               filter: isLoading ? blurPlaceholder : "none",
             }}
-            onLoadingComplete={handleLoadingComplete}
+            onLoad={handleLoadingComplete}
             decoding="async"
           />
         )}

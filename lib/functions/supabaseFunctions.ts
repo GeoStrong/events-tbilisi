@@ -380,3 +380,119 @@ export const getUserReaction = async (activityId: string, userId: string) => {
   if (error) return null;
   return data?.reaction ?? null;
 };
+
+// -------------------------
+// Activity comments (CRUD)
+// -------------------------
+
+/**
+ * Get profile by id (lightweight)
+ */
+export const getCommentsByActivityId = async (activityId: string) => {
+  if (!activityId) return [];
+
+  const { data, error } = await supabase
+    .from("activity_comments")
+    .select(
+      "id, activity_id, user_id, text, created_at, updated_at, parent_comment_id",
+    )
+    .eq("activity_id", activityId)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching comments:", error);
+    return [];
+  }
+
+  const comments = (data || []).map((c: any) => ({
+    id: c.id,
+    activityid: c.activity_id,
+    user_id: c.user_id,
+    text: c.text,
+    created_at: c.created_at,
+    updated_at: c.updated_at,
+    parentCommentId: c.parent_comment_id || null,
+  }));
+
+  return comments;
+};
+
+export const postComment = async (
+  activityId: string,
+  userId: string,
+  text: string,
+  parentCommentId?: string | null,
+) => {
+  if (!activityId || !userId || !text)
+    throw new Error("Missing required fields");
+
+  const insertObj: any = {
+    activity_id: activityId,
+    user_id: userId,
+    text,
+  };
+
+  if (parentCommentId) insertObj.parent_comment_id = parentCommentId;
+
+  const { data, error } = await supabase
+    .from("activity_comments")
+    .insert([insertObj])
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    activityid: data.activity_id,
+    user_id: data.user_id,
+    text: data.text,
+    created_at: data.created_at,
+    updated_at: data.updated_at,
+    parentCommentId: data.parent_comment_id || null,
+  };
+};
+
+export const updateComment = async (
+  commentId: string,
+  userId: string,
+  text: string,
+) => {
+  if (!commentId || !userId || !text)
+    throw new Error("Missing required fields");
+
+  const { data, error } = await supabase
+    .from("activity_comments")
+    .update({ text })
+    .eq("id", commentId)
+    .eq("user_id", userId)
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    activityid: data.activity_id,
+    user_id: data.user_id,
+    text: data.text,
+    created_at: data.created_at,
+    updated_at: data.updated_at,
+    parentCommentId: data.parent_comment_id || null,
+  };
+};
+
+export const deleteComment = async (commentId: string, userId: string) => {
+  if (!commentId || !userId) throw new Error("Missing required fields");
+
+  const { data, error } = await supabase
+    .from("activity_comments")
+    .delete()
+    .eq("id", commentId)
+    .eq("user_id", userId)
+    .select();
+
+  if (error) throw error;
+
+  return data;
+};

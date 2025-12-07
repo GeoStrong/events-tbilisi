@@ -53,6 +53,7 @@ export const useOptimizedImage = (
       }
     } catch (e) {
       // ignore cache errors and proceed to fetch
+      console.error("Error reading cached optimized image URL:", e);
     }
 
     const fetchImage = async () => {

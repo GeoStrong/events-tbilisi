@@ -7,6 +7,17 @@ export const store = configureStore({
     map: mapReducer,
     auth: authReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        // The Google Maps `Map` instance is non-serializable. We intentionally
+        // keep a reference to the instance in the `map` slice for convenience
+        // (used throughout the codebase). Disable the serializable-state
+        // invariant for this specific action and state path to avoid dev warnings.
+        ignoredActions: ["map/setMap"],
+        ignoredPaths: ["map.map"],
+      },
+    }),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
