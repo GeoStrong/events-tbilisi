@@ -12,23 +12,23 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import Image from "next/image";
 import defaultUserImg from "@/public/images/default-user.png";
 import { CommentEntity } from "@/lib/types";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
-import { getImageUrl } from "@/lib/functions/supabaseFunctions";
 import { groupCommentsOneLevel } from "@/lib/functions/helperFunctions";
 import ActivityCommentItem from "./activityCommentItem";
 import { Input } from "../ui/input";
 import Form from "next/form";
 import { IoIosSend } from "react-icons/io";
+import useOptimizedImage from "@/lib/hooks/useOptimizedImage";
+import OptimizedImage from "../ui/optimizedImage";
 
 const snapPoints = [0.5, 1];
 
 const ActivityComments: React.FC = () => {
   const [open, setOpen] = useState(false);
   const { user } = useGetUserProfile();
-  const [avatarUrl, setAvatarUrl] = useState<string>();
+  // const [avatarUrl, setAvatarUrl] = useState<string>();
   const [snap, setSnap] = React.useState<number | string | null>(snapPoints[0]);
   const [commentTextInput, setCommentTextInput] = useState<string>("");
 
@@ -85,12 +85,12 @@ const ActivityComments: React.FC = () => {
     },
   ];
 
-  useEffect(() => {
-    (async () => {
-      const image = await getImageUrl(user?.avatar_path || "");
-      setAvatarUrl(image || "");
-    })();
-  }, [user]);
+  const { imageUrl: avatarUrl } = useOptimizedImage(user?.avatar_path || "", {
+    quality: 50,
+    width: 18,
+    height: 18,
+    fallback: defaultUserImg.src,
+  });
 
   useEffect(() => {
     if (open) {
@@ -122,13 +122,16 @@ const ActivityComments: React.FC = () => {
             )}
             <h3 className="mb-3 text-lg font-bold">Comments</h3>
             <div className="flex items-center gap-3">
-              <Image
-                src={avatarUrl || defaultUserImg.src}
-                width={20}
-                height={20}
-                className="h-8 w-8 rounded-full"
-                alt="profile"
-              />
+              <div className="w-10">
+                <OptimizedImage
+                  src={avatarUrl}
+                  width={20}
+                  height={20}
+                  containerClassName="h-8 w-8 rounded-full"
+                  alt="profile"
+                  priority={false}
+                />
+              </div>
               <p className="text-sm font-extralight">
                 {commentsExample[0].text.slice(0, 40) + "..."}
               </p>
@@ -197,12 +200,14 @@ const ActivityComments: React.FC = () => {
 
                     <div className="absolute bottom-0 right-1/2 flex h-20 w-full translate-x-1/2 items-center rounded-b-3xl border bg-white shadow-md dark:border-t-gray-500 dark:bg-gray-800">
                       <div className="flex w-full items-center justify-between gap-5 px-10">
-                        <Image
-                          src={avatarUrl || defaultUserImg.src}
+                        <OptimizedImage
+                          quality={50}
+                          src={avatarUrl}
                           width={20}
                           height={20}
-                          className="h-12 w-12 rounded-full"
+                          containerClassName="h-12 w-12 rounded-full"
                           alt="profile"
+                          priority={false}
                         />
                         <Form
                           action=""
@@ -255,12 +260,14 @@ const ActivityComments: React.FC = () => {
             <div className="relative w-full rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900">
               <h3 className="mb-3 text-left font-bold">Comments</h3>
               <div className="flex items-center gap-3 rounded-md bg-gray-100 p-2 dark:bg-gray-700">
-                <Image
-                  src={avatarUrl || defaultUserImg.src}
+                <OptimizedImage
+                  quality={50}
+                  src={avatarUrl}
                   width={20}
                   height={20}
-                  className="h-8 w-8 rounded-full"
+                  containerClassName="h-8 w-8 rounded-full"
                   alt="profile"
+                  priority={false}
                 />
                 <p className="text-sm font-extralight">
                   {commentsExample[0].text.slice(0, 40) + "..."}
@@ -295,12 +302,14 @@ const ActivityComments: React.FC = () => {
                 ))}
               </DrawerHeader>
               <DrawerFooter className="fixed bottom-0 flex w-full flex-row items-center justify-between gap-3 border border-t-gray-100 bg-white shadow-md dark:border-t-gray-600 dark:bg-gray-800">
-                <Image
-                  src={avatarUrl || defaultUserImg.src}
+                <OptimizedImage
+                  quality={50}
+                  src={avatarUrl}
                   width={20}
                   height={20}
-                  className="h-12 w-12 rounded-full"
+                  containerClassName="h-12 w-12 rounded-full"
                   alt="profile"
+                  priority={false}
                 />
                 <Form
                   action=""

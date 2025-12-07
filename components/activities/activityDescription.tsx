@@ -16,20 +16,18 @@ import {
 import { Category, ActivityEntity } from "@/lib/types";
 import useScreenSize from "@/lib/hooks/useScreenSize";
 import Link from "next/link";
-import Image from "next/image";
 import defaultActivityImg from "@/public/images/default-activity-img.png";
 import ActivityParticipation from "./activityParticipation";
 import Share from "../general/share";
 
 import { useEffectOnce } from "react-use";
-import {
-  getCategoriesByActivityId,
-  getImageUrl,
-} from "@/lib/functions/supabaseFunctions";
+import { getCategoriesByActivityId } from "@/lib/functions/supabaseFunctions";
 import { isString } from "@/lib/functions/helperFunctions";
 import BookmarkButton from "../general/bookmarkButton";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import { Button } from "../ui/button";
+import useOptimizedImage from "@/lib/hooks/useOptimizedImage";
+import OptimizedImage from "../ui/optimizedImage";
 
 const snapPoints = [0.5, 1];
 
@@ -53,15 +51,12 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
     setSnap(1);
   });
 
-  const [activityImage, setActivityImage] = useState<string>();
-
-  useEffect(() => {
-    (async () => {
-      const imageUrl = await getImageUrl(activity.image);
-
-      setActivityImage(imageUrl!);
-    })();
-  }, [activity.image]);
+  const { imageUrl: activityImage } = useOptimizedImage(activity.image, {
+    quality: 80,
+    width: 800,
+    height: 600,
+    fallback: defaultActivityImg.src,
+  });
 
   useEffect(() => {
     (async () => {
@@ -168,13 +163,15 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
                     </p>
                   )}
                   {activity?.image && (
-                    <Image
+                    <OptimizedImage
                       src={activityImage || defaultActivityImg.src}
                       width={100}
                       height={100}
                       alt="activity"
-                      className="mt-5 h-44 w-full rounded-xl object-cover"
-                      unoptimized={activityImage ? false : true}
+                      priority={false}
+                      containerClassName="mt-5 rounded-xl h-44 w-full"
+                      objectFit="cover"
+                      quality={75}
                     />
                   )}
                   <p className="de mt-4 flex items-center justify-between gap-2 md:justify-start">

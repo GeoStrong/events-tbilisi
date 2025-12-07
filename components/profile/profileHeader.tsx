@@ -9,7 +9,6 @@ import { UserProfile } from "@/lib/types";
 import defaultUserImg from "@/public/images/default-user.png";
 import { handleUploadUserAvatar } from "@/lib/profile/profile";
 import { toast } from "sonner";
-import Image from "next/image";
 import {
   Dialog,
   DialogContent,
@@ -23,6 +22,7 @@ import {
   deleteImageFromStorage,
   getImageUrl,
 } from "@/lib/functions/supabaseFunctions";
+import OptimizedImage from "../ui/optimizedImage";
 
 interface ProfileHeaderProps {
   user: UserProfile | null;
@@ -116,12 +116,16 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                           Your Profile Picture
                         </DialogTitle>
                         <DialogDescription>
-                          <Image
+                          <OptimizedImage
                             src={previewUrl || avatarUrl || defaultUserImg.src}
                             width={100}
                             height={100}
                             alt="profile"
-                            className="h-full w-full"
+                            quality={50}
+                            priority={true}
+                            objectFit="cover"
+                            objectPosition="center"
+                            containerClassName="h-full w-full"
                           />
                         </DialogDescription>
                       </DialogHeader>

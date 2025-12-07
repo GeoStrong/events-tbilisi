@@ -16,12 +16,13 @@ import Socials from "./socials";
 import { useLocation } from "react-use";
 import { Button } from "../ui/button";
 import { getImageUrl } from "@/lib/functions/supabaseFunctions";
+import useOptimizedImage from "@/lib/hooks/useOptimizedImage";
+import OptimizedImage from "../ui/optimizedImage";
 
 const Share: React.FC<{
   children: React.ReactNode;
   activity: ActivityEntity;
 }> = ({ children, activity }) => {
-  const [activityImage, setActivityImage] = useState<string>();
   const { href } = useLocation();
   const [copied, setCopied] = useState(false);
 
@@ -32,13 +33,12 @@ const Share: React.FC<{
     }, 1000);
   };
 
-  useEffect(() => {
-    (async () => {
-      const imageUrl = await getImageUrl(activity.image);
-
-      setActivityImage(imageUrl!);
-    })();
-  }, [activity.image]);
+  const { imageUrl: activityImage } = useOptimizedImage(activity.image || "", {
+    quality: 50,
+    width: 100,
+    height: 100,
+    fallback: defaultActivityImg.src,
+  });
 
   return (
     <>
@@ -52,12 +52,14 @@ const Share: React.FC<{
             </DialogDescription>
             <div className="flex items-center gap-3 rounded-md border shadow-lg">
               <div className="bg-white">
-                <Image
-                  src={activityImage || defaultActivityImg.src}
+                <OptimizedImage
+                  src={activityImage}
                   alt="activity"
                   width={100}
                   height={100}
-                  unoptimized={activityImage ? false : true}
+                  quality={50}
+                  priority={false}
+                  containerClassName="w-24 h-16"
                 />
               </div>
               <div className="flex flex-col">

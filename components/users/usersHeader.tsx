@@ -1,5 +1,4 @@
 import { UserProfile } from "@/lib/types";
-import Image from "next/image";
 import React from "react";
 import defaultUserImg from "@/public/images/default-user.png";
 import {
@@ -7,6 +6,7 @@ import {
   getImageUrl,
 } from "@/lib/functions/supabaseFunctions";
 import { Button } from "../ui/button";
+import OptimizedImage from "../ui/optimizedImage";
 
 const UsersHeader: React.FC<{ user: UserProfile }> = async ({ user }) => {
   const profileImg =
@@ -18,13 +18,16 @@ const UsersHeader: React.FC<{ user: UserProfile }> = async ({ user }) => {
     <div className="mt-5 w-full">
       <div className="flex justify-between gap-5 md:items-center md:gap-10">
         <div className="w-1/4 md:w-auto">
-          <Image
+          <OptimizedImage
             src={profileImg}
             width={50}
             height={50}
             alt="profile"
-            className="h-16 w-16 rounded-full object-cover object-center md:h-44 md:w-44"
-            unoptimized={true}
+            priority={true}
+            objectFit="cover"
+            quality={60}
+            objectPosition="center"
+            containerClassName="h-16 w-16 rounded-full md:h-44 md:w-44"
           />
         </div>
         <div className="flex w-full flex-col gap-2 md:w-1/3">

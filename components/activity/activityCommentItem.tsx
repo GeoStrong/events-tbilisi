@@ -1,9 +1,7 @@
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import { CommentEntity, UserProfile } from "@/lib/types";
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import defaultUserImg from "@/public/images/default-user.png";
-import { getImageUrl } from "@/lib/functions/supabaseFunctions";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +9,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import useOptimizedImage from "@/lib/hooks/useOptimizedImage";
+import OptimizedImage from "../ui/optimizedImage";
 
 interface ActivityCommentItemProps {
   user: UserProfile;
@@ -23,23 +23,24 @@ const ActivityCommentItem: React.FC<ActivityCommentItemProps> = ({
   comment,
   isReply,
 }) => {
-  const [avatarUrl, setAvatarUrl] = useState<string>();
-
-  useEffect(() => {
-    (async () => {
-      const image = await getImageUrl(user?.avatar_path || "");
-      setAvatarUrl(image || "");
-    })();
-  }, [user]);
+  const { imageUrl: avatarUrl } = useOptimizedImage(user?.avatar_path || "", {
+    quality: 50,
+    width: 18,
+    height: 18,
+    fallback: defaultUserImg.src,
+  });
 
   return (
     <div className="flex items-start gap-3">
-      <Image
-        src={avatarUrl || defaultUserImg.src}
-        width={isReply ? 18 : 20}
-        height={isReply ? 18 : 20}
-        className={`${isReply ? "h-7 w-7" : "h-8 w-8"} rounded-full object-cover`}
+      <OptimizedImage
+        src={avatarUrl}
+        quality={50}
+        width={18}
+        height={18}
         alt="profile"
+        priority={false}
+        objectFit="cover"
+        containerClassName={`${isReply ? "h-7 w-7" : "h-8 w-8"} rounded-full`}
       />
 
       <div className="w-[90%] rounded-md text-left md:w-[90%]">

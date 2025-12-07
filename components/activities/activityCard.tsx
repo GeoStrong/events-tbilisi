@@ -9,18 +9,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Image from "next/image";
 import defaultActivityImg from "@/public/images/default-activity-img.png";
 import { Category, ActivityEntity } from "@/lib/types";
 import Link from "next/link";
 import { ImLocation2 } from "react-icons/im";
-import {
-  getCategoriesByActivityId,
-  getImageUrl,
-} from "@/lib/functions/supabaseFunctions";
+import { getCategoriesByActivityId } from "@/lib/functions/supabaseFunctions";
 import { BiTimeFive } from "react-icons/bi";
 import { MdDateRange } from "react-icons/md";
 import useMapZoom from "@/lib/hooks/useMapZoom";
+import useOptimizedImage from "@/lib/hooks/useOptimizedImage";
+import OptimizedImage from "../ui/optimizedImage";
 
 interface ActivityCardProps {
   activity: ActivityEntity;
@@ -32,7 +30,6 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
   setSearchParams,
 }) => {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [activityImage, setActivityImage] = useState<string | null>();
   const { handleLocationClick } = useMapZoom(activity.id);
 
   useEffect(() => {
@@ -42,13 +39,12 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
     })();
   }, [activity.id]);
 
-  useEffect(() => {
-    (async () => {
-      const imageUrl = await getImageUrl(activity.image);
-
-      setActivityImage(imageUrl);
-    })();
-  }, [activity.image]);
+  const { imageUrl: activityImage } = useOptimizedImage(activity.image, {
+    quality: 80,
+    width: 800,
+    height: 600,
+    fallback: defaultActivityImg.src,
+  });
 
   return (
     <Card
@@ -61,13 +57,16 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
     >
       <CardHeader className="relative p-0">
         <div className="group relative h-48 w-full overflow-hidden rounded-t-xl bg-white">
-          <Image
-            src={activityImage || defaultActivityImg.src}
+          <OptimizedImage
+            src={activityImage}
             width={100}
             height={100}
+            quality={60}
             alt="activity"
-            className={`h-full w-full transform rounded-t-xl transition-transform duration-300 group-hover:scale-105 ${!activityImage ? "object-contain" : "object-cover"}`}
-            unoptimized={activityImage ? false : true}
+            priority={false}
+            className={`transform rounded-t-xl transition-transform duration-300 group-hover:scale-105`}
+            objectFit={`${!activityImage ? "contain" : "cover"}`}
+            containerClassName="h-full w-full"
           />
         </div>
         <div className="absolute top-0 flex h-4 w-full justify-end px-2 text-right">

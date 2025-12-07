@@ -1,7 +1,7 @@
 "use client";
 
 import { Category, ActivityEntity, UserProfile } from "@/lib/types";
-import Image from "next/image";
+import OptimizedImage from "@/components/ui/optimizedImage";
 import React, { useEffect, useState } from "react";
 import defaultActivityImg from "@/public/images/default-activity-img.png";
 import ActivityDetails from "./activityDetails";
@@ -10,13 +10,13 @@ import Socials from "../general/socials";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { BiUser } from "react-icons/bi";
 import { Button } from "../ui/button";
-import { getImageUrl } from "@/lib/functions/supabaseFunctions";
 import { Badge } from "../ui/badge";
 import useMapZoom from "@/lib/hooks/useMapZoom";
 import { fetchUserInfo } from "@/lib/profile/profile";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import MapWrapper from "../map/map";
 import ActivityComments from "./activityComments";
+import { useOptimizedImage } from "@/lib/hooks/useOptimizedImage";
 
 interface ActivityBodyProps {
   categories: Category[];
@@ -27,22 +27,28 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
   activity,
   categories,
 }) => {
-  const [activityImage, setActivityImage] = useState<string>();
   const { handleLocationClick } = useMapZoom(activity.id);
   const [host, setHost] = useState<UserProfile | null>();
-  const [hostImage, setHostImage] = useState<string | null>();
   const { user } = useGetUserProfile();
   const [mapKey, setMapKey] = useState<string>("");
 
+  const { imageUrl: activityImage } = useOptimizedImage(activity.image, {
+    quality: 80,
+    width: 800,
+    height: 600,
+    fallback: defaultActivityImg.src,
+  });
+
+  const { imageUrl: hostImage } = useOptimizedImage(host?.avatar_path || "", {
+    quality: 60,
+    width: 100,
+    height: 100,
+  });
+
   useEffect(() => {
     (async () => {
-      const imageUrl = await getImageUrl(activity.image);
       const host = (await fetchUserInfo(activity.user_id!)) as UserProfile;
-      const hostImg = await getImageUrl(host.avatar_path || "");
-
-      setActivityImage(imageUrl!);
       setHost(host);
-      setHostImage(hostImg);
     })();
   }, [categories, activity.image, activity.user_id]);
 
@@ -57,13 +63,16 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
       <div className="md:w-3/4">
         <div className="flex flex-col gap-5 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 md:px-6">
           <div className="rounded-md">
-            <Image
-              src={activityImage || defaultActivityImg.src}
-              width={100}
-              height={100}
+            <OptimizedImage
+              src={activityImage}
+              width={800}
+              height={600}
               alt="activity"
-              className={`max-h-96 w-full rounded-md object-center ${activity.image ? "object-cover" : "object-contain"}`}
-              unoptimized={activityImage ? false : true}
+              quality={80}
+              objectFit="cover"
+              priority={true}
+              className="rounded-md"
+              containerClassName="max-h-96 w-full"
             />
           </div>
           <div className="w-full">

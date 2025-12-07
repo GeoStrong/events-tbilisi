@@ -4,12 +4,13 @@ import { Form, Field, ErrorMessage, FormikProps } from "formik";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
-import Image from "next/image";
 import { ActivityCategories, NewActivityEntity } from "@/lib/types";
 import { categories } from "@/lib/data/categories";
 import { useEffect } from "react";
 import { FaMapMarkedAlt } from "react-icons/fa";
 import { useLocation } from "react-use";
+import useOptimizedImage from "@/lib/hooks/useOptimizedImage";
+import OptimizedImage from "../ui/optimizedImage";
 
 interface CreateActivityProps {
   formik: FormikProps<NewActivityEntity>;
@@ -46,6 +47,12 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
       handleImagePreview(URL.createObjectURL(file));
     }
   };
+
+  const { imageUrl: imagePreviewUrl } = useOptimizedImage(imagePreview || "", {
+    quality: 60,
+    width: 18,
+    height: 18,
+  });
 
   return (
     <Form className="h-full">
@@ -299,12 +306,14 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
             className="dark:border-gray-600"
           />
           {imagePreview && (
-            <Image
-              src={imagePreview || ""}
+            <OptimizedImage
+              src={imagePreviewUrl}
               alt="Preview"
               width={100}
               height={100}
-              className="mt-2 h-32 w-32 rounded-md object-cover"
+              containerClassName="mt-2 h-32 w-32 rounded-md"
+              objectFit="cover"
+              priority={false}
             />
           )}
         </div>
