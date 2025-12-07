@@ -54,7 +54,7 @@ const OptimizedImage = React.forwardRef<HTMLDivElement, OptimizedImageProps>(
       alt,
       width,
       height,
-      quality = 75,
+      quality = 50,
       priority = false,
       className = "",
       objectFit = "cover",
@@ -70,7 +70,7 @@ const OptimizedImage = React.forwardRef<HTMLDivElement, OptimizedImageProps>(
     const [srcSet, setSrcSet] = useState<string>("");
     const [optimizedSrc, setOptimizedSrc] = useState<string>("");
     const containerRef = useRef<HTMLDivElement>(null);
-    const inViewRef = useRef(false);
+    const [inView, setInView] = useState(false);
 
     // Generate responsive srcSet
     useEffect(() => {
@@ -98,14 +98,14 @@ const OptimizedImage = React.forwardRef<HTMLDivElement, OptimizedImageProps>(
     // Set up intersection observer for lazy loading
     useEffect(() => {
       if (priority) {
-        inViewRef.current = true;
+        setInView(true);
         return;
       }
 
       const observer = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
-            inViewRef.current = true;
+            setInView(true);
             observer.unobserve(entry.target);
           }
         },
@@ -131,7 +131,7 @@ const OptimizedImage = React.forwardRef<HTMLDivElement, OptimizedImageProps>(
     const blurPlaceholder = placeholder === "blur" ? "blur(10px)" : "none";
 
     // Don't render until image is in view (unless priority)
-    const shouldRender = priority || inViewRef.current;
+    const shouldRender = priority || inView;
 
     return (
       <div
@@ -165,7 +165,7 @@ const OptimizedImage = React.forwardRef<HTMLDivElement, OptimizedImageProps>(
               sizes ||
               `(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 50vw`
             }
-            quality={85} // Next.js quality for next/image optimization
+            quality={50} // Next.js quality for next/image optimization
             priority={priority}
             loading={priority ? "eager" : "lazy"}
             className={`${className} ${

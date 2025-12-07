@@ -9,8 +9,7 @@ import { categories } from "@/lib/data/categories";
 import { useEffect } from "react";
 import { FaMapMarkedAlt } from "react-icons/fa";
 import { useLocation } from "react-use";
-import useOptimizedImage from "@/lib/hooks/useOptimizedImage";
-import OptimizedImage from "../ui/optimizedImage";
+import Image from "next/image";
 
 interface CreateActivityProps {
   formik: FormikProps<NewActivityEntity>;
@@ -47,12 +46,6 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
       handleImagePreview(URL.createObjectURL(file));
     }
   };
-
-  const { imageUrl: imagePreviewUrl } = useOptimizedImage(imagePreview || "", {
-    quality: 60,
-    width: 18,
-    height: 18,
-  });
 
   return (
     <Form className="h-full">
@@ -306,13 +299,12 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
             className="dark:border-gray-600"
           />
           {imagePreview && (
-            <OptimizedImage
-              src={imagePreviewUrl}
+            <Image
+              src={imagePreview}
               alt="Preview"
               width={100}
               height={100}
-              containerClassName="mt-2 h-32 w-32 rounded-md"
-              objectFit="cover"
+              className="mt-2 h-32 w-32 rounded-md object-cover"
               priority={false}
             />
           )}

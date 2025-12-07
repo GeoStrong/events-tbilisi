@@ -52,7 +52,7 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
   });
 
   const { imageUrl: activityImage } = useOptimizedImage(activity.image, {
-    quality: 80,
+    quality: 50,
     width: 800,
     height: 600,
     fallback: defaultActivityImg.src,
@@ -171,7 +171,7 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
                       priority={false}
                       containerClassName="mt-5 rounded-xl h-44 w-full"
                       objectFit="cover"
-                      quality={75}
+                      quality={50}
                     />
                   )}
                   <p className="de mt-4 flex items-center justify-between gap-2 md:justify-start">

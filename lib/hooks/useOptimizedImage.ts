@@ -4,7 +4,10 @@
  */
 
 import { useEffect, useState } from "react";
-import { getOptimizedImageUrl } from "@/lib/functions/supabaseFunctions";
+import {
+  getOptimizedImageUrl,
+  getCachedOptimizedImageUrl,
+} from "@/lib/functions/supabaseFunctions";
 import type { ImageType } from "@/lib/types";
 
 interface UseOptimizedImageOptions {
@@ -17,7 +20,7 @@ interface UseOptimizedImageOptions {
 
 export const useOptimizedImage = (
   imageLocation: ImageType,
-  options: UseOptimizedImageOptions = {}
+  options: UseOptimizedImageOptions = {},
 ) => {
   const [imageUrl, setImageUrl] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
@@ -32,9 +35,31 @@ export const useOptimizedImage = (
 
     let isMounted = true;
 
+    // Try to read a synchronous cache entry to avoid loading flicker
+    let hadCache = false;
+    try {
+      const cached = getCachedOptimizedImageUrl(imageLocation, {
+        quality: options.quality,
+        format: options.format,
+        width: options.width,
+        height: options.height,
+      });
+
+      if (cached) {
+        hadCache = true;
+        setImageUrl(cached);
+        setIsLoading(false);
+        // continue to fetch in background to refresh cache if needed
+      }
+    } catch (e) {
+      // ignore cache errors and proceed to fetch
+    }
+
     const fetchImage = async () => {
       try {
-        setIsLoading(true);
+        // Only set loading if we don't already have a cached URL
+        if (!hadCache) setIsLoading(true);
+
         const url = await getOptimizedImageUrl(imageLocation, {
           quality: options.quality,
           format: options.format,

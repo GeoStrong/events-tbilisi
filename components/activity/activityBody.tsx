@@ -33,14 +33,14 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
   const [mapKey, setMapKey] = useState<string>("");
 
   const { imageUrl: activityImage } = useOptimizedImage(activity.image, {
-    quality: 80,
+    quality: 50,
     width: 800,
     height: 600,
     fallback: defaultActivityImg.src,
   });
 
   const { imageUrl: hostImage } = useOptimizedImage(host?.avatar_path || "", {
-    quality: 60,
+    quality: 50,
     width: 100,
     height: 100,
   });
@@ -68,7 +68,7 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
               width={800}
               height={600}
               alt="activity"
-              quality={80}
+              quality={50}
               objectFit="cover"
               priority={true}
               className="rounded-md"

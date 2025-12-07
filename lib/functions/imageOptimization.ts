@@ -17,14 +17,14 @@ export interface ImageOptimizationOptions {
  */
 export const generateOptimizedImageUrl = (
   signedUrl: string,
-  options: ImageOptimizationOptions = {}
+  options: ImageOptimizationOptions = {},
 ): string => {
   if (!signedUrl) return "";
 
   const {
     width,
     height,
-    quality = 75, // Default quality: 75% to balance quality and file size
+    quality = 50, // Default quality: 50% to balance quality and file size
     format = "webp", // Default to WebP for better compression
     cache = true,
   } = options;
@@ -67,12 +67,12 @@ export const calculateImageDimensions = (
   displayHeight: number,
   devicePixelRatio: number = typeof window !== "undefined"
     ? window.devicePixelRatio
-    : 1
+    : 1,
 ): { width: number; height: number } => {
   // Clamp DPR to reasonable values (1, 1.5, 2, 3)
   const clampedDPR = Math.min(
     Math.max(1, Math.round(devicePixelRatio * 2) / 2),
-    3
+    3,
   );
 
   return {
@@ -89,7 +89,7 @@ export const generateSrcSet = (
   signedUrl: string,
   displayWidth: number,
   displayHeight: number,
-  quality = 75
+  quality = 50,
 ): string => {
   if (!signedUrl) return "";
 
@@ -100,7 +100,7 @@ export const generateSrcSet = (
       const { width, height } = calculateImageDimensions(
         displayWidth,
         displayHeight,
-        dpr
+        dpr,
       );
       const url = generateOptimizedImageUrl(signedUrl, {
         width,
@@ -133,7 +133,7 @@ export const formatFileSize = (bytes: number): string => {
  */
 export const estimateBandwidthSavings = (
   originalSizeBytes: number,
-  optimizationLevel: "low" | "medium" | "high" = "medium"
+  optimizationLevel: "low" | "medium" | "high" = "medium",
 ): string => {
   let savingsPercent = 0;
 

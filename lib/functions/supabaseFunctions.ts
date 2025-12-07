@@ -146,10 +146,40 @@ export const getOptimizedImageUrl = async (
   const image = isString(imageLocation) ? imageLocation : "";
 
   if (!image) return null;
+  // Cache key incorporates image path and transformation options
+  const makeCacheKey = (img: string, opts?: typeof options) =>
+    `${img}::w${opts?.width ?? ""}::h${opts?.height ?? ""}::q${
+      opts?.quality ?? 50
+    }::f${opts?.format ?? "webp"}`;
+
+  // In-memory cache for generated optimized URLs (per instance)
+  // Stored value contains the generated URL and an expiration timestamp
+  type CacheEntry = { url: string; expiresAt: number };
+
+  // Keep cache in module scope to persist across calls during the process lifetime
+  if (!(global as any).__optimizedImageUrlCache) {
+    (global as any).__optimizedImageUrlCache = new Map<string, CacheEntry>();
+  }
+
+  const imageUrlCache: Map<string, CacheEntry> = (global as any)
+    .__optimizedImageUrlCache;
+
+  // Signed URLs are created with a 1 hour TTL; keep a small buffer and reuse until near expiry
+  const SIGNED_URL_TTL_MS = 60 * 60 * 1000; // 1 hour
+  const CACHE_BUFFER_MS = 5 * 60 * 1000; // 5 minutes buffer
+  const CACHE_TTL_MS = SIGNED_URL_TTL_MS - CACHE_BUFFER_MS;
+
+  const cacheKey = makeCacheKey(image, options);
+  const now = Date.now();
+
+  const cached = imageUrlCache.get(cacheKey);
+  if (cached && cached.expiresAt > now) {
+    return cached.url;
+  }
 
   const { data: imageData } = await supabase.storage
     .from("Events-Tbilisi media")
-    .createSignedUrl(image, 60 * 60);
+    .createSignedUrl(image, SIGNED_URL_TTL_MS / 1000);
 
   if (!imageData?.signedUrl) return null;
 
@@ -161,13 +191,59 @@ export const getOptimizedImageUrl = async (
     "../functions/imageOptimization"
   );
 
-  return generateOptimizedImageUrl(activityImage, {
-    quality: options?.quality || 75,
+  const optimized = generateOptimizedImageUrl(activityImage, {
+    quality: options?.quality || 50,
     format: options?.format || "webp",
     width: options?.width,
     height: options?.height,
     cache: true,
   });
+
+  // Cache the result until shortly before the signed URL expires
+  imageUrlCache.set(cacheKey, {
+    url: optimized,
+    expiresAt: now + CACHE_TTL_MS,
+  });
+
+  return optimized;
+};
+
+/**
+ * Synchronously return a cached optimized URL if available and not expired.
+ * This avoids async calls when a URL was already generated earlier in the session.
+ */
+export const getCachedOptimizedImageUrl = (
+  imageLocation: ImageType,
+  options?: {
+    quality?: number;
+    format?: "webp" | "jpg" | "png";
+    width?: number;
+    height?: number;
+  },
+) => {
+  const image = isString(imageLocation) ? imageLocation : "";
+  if (!image) return null;
+
+  const makeCacheKey = (img: string, opts?: typeof options) =>
+    `${img}::w${opts?.width ?? ""}::h${opts?.height ?? ""}::q${
+      opts?.quality ?? 50
+    }::f${opts?.format ?? "webp"}`;
+
+  if (!(global as any).__optimizedImageUrlCache) return null;
+
+  const imageUrlCache: Map<string, { url: string; expiresAt: number }> = (
+    global as any
+  ).__optimizedImageUrlCache;
+
+  const cacheKey = makeCacheKey(image, options);
+  const entry = imageUrlCache.get(cacheKey);
+  if (!entry) return null;
+  if (entry.expiresAt <= Date.now()) {
+    imageUrlCache.delete(cacheKey);
+    return null;
+  }
+
+  return entry.url;
 };
 
 export const deleteImageFromStorage = async (imagePath: string | null) => {

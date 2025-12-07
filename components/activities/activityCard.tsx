@@ -40,7 +40,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
   }, [activity.id]);
 
   const { imageUrl: activityImage } = useOptimizedImage(activity.image, {
-    quality: 80,
+    quality: 50,
     width: 800,
     height: 600,
     fallback: defaultActivityImg.src,
@@ -61,7 +61,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
             src={activityImage}
             width={100}
             height={100}
-            quality={60}
+            quality={50}
             alt="activity"
             priority={false}
             className={`transform rounded-t-xl transition-transform duration-300 group-hover:scale-105`}

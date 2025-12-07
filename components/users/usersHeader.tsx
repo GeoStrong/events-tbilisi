@@ -25,7 +25,7 @@ const UsersHeader: React.FC<{ user: UserProfile }> = async ({ user }) => {
             alt="profile"
             priority={true}
             objectFit="cover"
-            quality={60}
+            quality={50}
             objectPosition="center"
             containerClassName="h-16 w-16 rounded-full md:h-44 md:w-44"
           />
