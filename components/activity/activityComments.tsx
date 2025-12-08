@@ -25,8 +25,6 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-  DialogTrigger,
-  DialogClose,
 } from "@/components/ui/dialog";
 import Form from "next/form";
 import { IoIosSend } from "react-icons/io";
@@ -42,6 +40,7 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
   const { user } = useGetUserProfile();
   const [snap, setSnap] = React.useState<number | string | null>(snapPoints[0]);
   const [commentTextInput, setCommentTextInput] = useState<string>("");
+  const [commentParentId, setCommentParentId] = useState<string | null>("");
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
@@ -92,21 +91,25 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
             )}
             <h3 className="mb-3 text-lg font-bold">Comments</h3>
             <div className="flex items-center gap-3">
-              <div className="w-10">
-                <OptimizedImage
-                  src={avatarUrl}
-                  width={20}
-                  height={20}
-                  containerClassName="h-8 w-8 rounded-full"
-                  alt="profile"
-                  priority={false}
-                />
-              </div>
-              <p className="text-sm font-extralight">
-                {comments && comments.length > 0
-                  ? (comments[0].text || "").slice(0, 40) + "..."
-                  : "No comments yet"}
-              </p>
+              {comments && comments.length > 0 ? (
+                <>
+                  <div className="w-10">
+                    <OptimizedImage
+                      src={avatarUrl}
+                      width={20}
+                      height={20}
+                      containerClassName="h-8 w-8 rounded-full"
+                      alt="profile"
+                      priority={false}
+                    />
+                  </div>
+                  <p className="text-sm font-extralight">
+                    {(comments[0].text || "").slice(0, 40) + "..."}
+                  </p>
+                </>
+              ) : (
+                <p className="text-sm font-extralight">No comments yet</p>
+              )}
             </div>
           </div>
         </AnimatePresence>
@@ -135,7 +138,7 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
                   transition={{ type: "spring", stiffness: 250, damping: 25 }}
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <div className="h-[90vh] w-full max-w-[50vw] overflow-y-scroll">
+                  <div className="h-[90vh] w-[50vw] overflow-y-scroll">
                     <div className="absolute right-1/2 w-full translate-x-1/2 border-b bg-white dark:border-b-gray-500 dark:bg-gray-800">
                       <div className="flex justify-between px-5 shadow-md">
                         <div className=""></div>
@@ -150,6 +153,11 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
                       </div>
                     </div>
                     <div className="my-20">
+                      {groupedComments.length === 0 && (
+                        <p className="text-center text-gray-500">
+                          No comments yet. Be the first to comment!
+                        </p>
+                      )}
                       {groupedComments.map(({ root, replies }) => (
                         <div key={root.id} className="w-full">
                           <ActivityCommentItem
@@ -164,9 +172,11 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
                             }}
                             onReplyTo={(id, username) => {
                               const prefix = username ? `@${username} ` : "@";
+                              setCommentTextInput("");
                               setCommentTextInput((prev) =>
                                 prev ? `${prev} ${prefix}` : prefix,
                               );
+                              setCommentParentId(id);
                             }}
                           />
 
@@ -192,6 +202,7 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
                                     setCommentTextInput((prev) =>
                                       prev ? `${prev} ${prefix}` : prefix,
                                     );
+                                    setCommentParentId(id);
                                   }}
                                 />
                               ))}
@@ -208,7 +219,8 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
                           src={avatarUrl}
                           width={20}
                           height={20}
-                          containerClassName="h-12 w-12 rounded-full"
+                          containerClassName="w-14 rounded-full"
+                          className="h-12 w-12"
                           alt="profile"
                           priority={false}
                         />
@@ -226,9 +238,14 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
                               );
                               setEditingCommentId(null);
                             } else {
-                              await addComment(user.id, commentTextInput);
+                              await addComment(
+                                user.id,
+                                commentTextInput,
+                                commentParentId,
+                              );
                             }
                             setCommentTextInput("");
+                            setCommentParentId(null);
                             await refresh();
                           }}
                         >
@@ -276,20 +293,24 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
             <div className="relative w-full rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900">
               <h3 className="mb-3 text-left font-bold">Comments</h3>
               <div className="flex items-center gap-3 rounded-md bg-gray-100 p-2 dark:bg-gray-700">
-                <OptimizedImage
-                  quality={50}
-                  src={avatarUrl}
-                  width={20}
-                  height={20}
-                  containerClassName="h-8 w-8 rounded-full"
-                  alt="profile"
-                  priority={false}
-                />
-                <p className="text-sm font-extralight">
-                  {comments && comments.length > 0
-                    ? (comments[0].text || "").slice(0, 40) + "..."
-                    : "No comments yet"}
-                </p>
+                {comments && comments.length > 0 ? (
+                  <>
+                    <OptimizedImage
+                      quality={50}
+                      src={avatarUrl}
+                      width={20}
+                      height={20}
+                      containerClassName="h-8 w-8 rounded-full"
+                      alt="profile"
+                      priority={false}
+                    />
+                    <p className="text-sm font-extralight">
+                      {(comments[0].text || "").slice(0, 40) + "..."}
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-sm font-extralight">No comments yet</p>
+                )}
               </div>
             </div>
           </DrawerTrigger>
@@ -300,6 +321,11 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
                 <DrawerDescription className="hidden">
                   Comments
                 </DrawerDescription>
+                {groupedComments.length === 0 && (
+                  <p className="text-center text-gray-500">
+                    No comments yet. Be the first to comment!
+                  </p>
+                )}
                 {groupedComments.map(({ root, replies }) => (
                   <div key={root.id} className="mb-6">
                     <ActivityCommentItem
@@ -313,6 +339,13 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
                         if (!user?.id) return;
                         await removeComment(id, user.id);
                         await refresh();
+                      }}
+                      onReplyTo={(id, username) => {
+                        const prefix = username ? `@${username} ` : "@";
+                        setCommentTextInput((prev) =>
+                          prev ? `${prev} ${prefix}` : prefix,
+                        );
+                        setCommentParentId(id);
                       }}
                     />
 
@@ -333,6 +366,13 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
                               await removeComment(id, user.id);
                               await refresh();
                             }}
+                            onReplyTo={(id, username) => {
+                              const prefix = username ? `@${username} ` : "@";
+                              setCommentTextInput((prev) =>
+                                prev ? `${prev} ${prefix}` : prefix,
+                              );
+                              setCommentParentId(id);
+                            }}
                           />
                         ))}
                       </div>
@@ -347,7 +387,9 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
                   width={20}
                   height={20}
                   containerClassName="h-12 w-12 rounded-full"
+                  className="w-20"
                   alt="profile"
+                  objectFit="cover"
                   priority={false}
                 />
                 <Form
@@ -364,9 +406,14 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
                       );
                       setEditingCommentId(null);
                     } else {
-                      await addComment(user.id, commentTextInput);
+                      await addComment(
+                        user.id,
+                        commentTextInput,
+                        commentParentId,
+                      );
                     }
                     setCommentTextInput("");
+                    setCommentParentId(null);
                     await refresh();
                   }}
                 >
@@ -376,7 +423,7 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
                     onChange={(event) => {
                       setCommentTextInput(event.target.value);
                     }}
-                    className="h-12 rounded-full border dark:border-gray-500"
+                    className="h-12 rounded-full border pr-16 dark:border-gray-500"
                   />
                   <AnimatePresence>
                     {commentTextInput !== "" && (

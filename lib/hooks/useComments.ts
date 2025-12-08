@@ -15,7 +15,7 @@ interface UseCommentsResult {
   addComment: (
     userId: string,
     text: string,
-    parentCommentId?: string | null,
+    parent_comment_id?: string | null,
   ) => Promise<CommentEntity | null>;
   editComment: (
     commentId: string,
@@ -53,18 +53,23 @@ const useComments = (
   }, [fetch]);
 
   const addComment = useCallback(
-    async (userId: string, text: string, parentCommentId?: string | null) => {
+    async (userId: string, text: string, parent_comment_id?: string | null) => {
       if (!activityId) return null;
       try {
         const created = await postComment(
           activityId,
           userId,
           text,
-          parentCommentId,
+          parent_comment_id,
         );
         setComments((prev) => [...prev, created as CommentEntity]);
         return created as CommentEntity;
       } catch (err) {
+        // Diagnostic: log raw error to browser console for easier debugging
+        console.error("addComment failed", {
+          err,
+          payload: { activityId, userId, text, parent_comment_id },
+        });
         setError(
           err instanceof Error ? err : new Error("Failed to post comment"),
         );

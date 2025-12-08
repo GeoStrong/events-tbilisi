@@ -12,6 +12,7 @@ import {
 import useOptimizedImage from "@/lib/hooks/useOptimizedImage";
 import OptimizedImage from "../ui/optimizedImage";
 import { fetchUserInfo } from "@/lib/profile/profile";
+import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 
 interface ActivityCommentItemProps {
   comment: CommentEntity;
@@ -33,6 +34,7 @@ const ActivityCommentItem: React.FC<ActivityCommentItemProps> = ({
   onDelete,
 }) => {
   const [profile, setProfile] = useState<Partial<UserProfile> | null>(null);
+  const { user: currentUser } = useGetUserProfile();
 
   useEffect(() => {
     (async () => {
@@ -75,30 +77,34 @@ const ActivityCommentItem: React.FC<ActivityCommentItemProps> = ({
 
             <p className="text-base">{comment.text}</p>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <BiDotsVerticalRounded />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="dark:bg-gray-700">
-              <DropdownMenuLabel className="hidden">Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => {
-                  if (onRequestEdit) onRequestEdit(comment.id, comment.text);
-                  if (onEdit) onEdit(comment.id, comment.text);
-                }}
-              >
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  if (onRequestDelete) onRequestDelete(comment.id);
-                  if (onDelete) onDelete(comment.id);
-                }}
-              >
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {currentUser?.id === comment.user_id && (
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <BiDotsVerticalRounded />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="dark:bg-gray-700">
+                <DropdownMenuLabel className="hidden">
+                  Actions
+                </DropdownMenuLabel>
+                <DropdownMenuItem
+                  onClick={() => {
+                    if (onRequestEdit) onRequestEdit(comment.id, comment.text);
+                    if (onEdit) onEdit(comment.id, comment.text);
+                  }}
+                >
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    if (onRequestDelete) onRequestDelete(comment.id);
+                    if (onDelete) onDelete(comment.id);
+                  }}
+                >
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
 
         <button

@@ -71,6 +71,7 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
               quality={50}
               objectFit="cover"
               priority={true}
+              objectPosition="center"
               className="rounded-md"
               containerClassName="max-h-96 w-full"
             />

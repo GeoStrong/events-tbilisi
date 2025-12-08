@@ -86,12 +86,12 @@ export interface ActivityEntity {
 
 export interface CommentEntity {
   id: string;
-  activityid: string;
+  activity_id: string;
   user_id: string;
   text: string;
   created_at: Date | string | null;
   updated_at?: Date | string | null;
-  parentCommentId?: string;
+  parent_comment_id?: string | null;
 }
 
 export type NewActivityEntity = Omit<ActivityEntity, "id">;

@@ -2,6 +2,7 @@
 import {
   ActivityCategories,
   ActivityEntity,
+  CommentEntity,
   ImageType,
   NewActivityEntity,
 } from "../types";
@@ -404,14 +405,14 @@ export const getCommentsByActivityId = async (activityId: string) => {
     return [];
   }
 
-  const comments = (data || []).map((c: any) => ({
+  const comments = (data || []).map((c: CommentEntity) => ({
     id: c.id,
-    activityid: c.activity_id,
+    activity_id: c.activity_id,
     user_id: c.user_id,
     text: c.text,
     created_at: c.created_at,
     updated_at: c.updated_at,
-    parentCommentId: c.parent_comment_id || null,
+    parent_comment_id: c.parent_comment_id || null,
   }));
 
   return comments;
@@ -421,36 +422,43 @@ export const postComment = async (
   activityId: string,
   userId: string,
   text: string,
-  parentCommentId?: string | null,
+  parent_comment_id?: string | null,
 ) => {
   if (!activityId || !userId || !text)
     throw new Error("Missing required fields");
 
-  const insertObj: any = {
+  const insertObj: Partial<CommentEntity> = {
     activity_id: activityId,
     user_id: userId,
     text,
+    parent_comment_id: parent_comment_id || null,
   };
 
-  if (parentCommentId) insertObj.parent_comment_id = parentCommentId;
+  try {
+    const { data, error } = await supabase
+      .from("activity_comments")
+      .insert([insertObj])
+      .select()
+      .single();
 
-  const { data, error } = await supabase
-    .from("activity_comments")
-    .insert([insertObj])
-    .select()
-    .single();
+    if (error) {
+      console.error("postComment error:", error);
+      throw error;
+    }
 
-  if (error) throw error;
-
-  return {
-    id: data.id,
-    activityid: data.activity_id,
-    user_id: data.user_id,
-    text: data.text,
-    created_at: data.created_at,
-    updated_at: data.updated_at,
-    parentCommentId: data.parent_comment_id || null,
-  };
+    return {
+      id: data.id,
+      activity_id: data.activity_id,
+      user_id: data.user_id,
+      text: data.text,
+      created_at: data.created_at,
+      updated_at: data.updated_at,
+      parent_comment_id: data.parent_comment_id || null,
+    };
+  } catch (e) {
+    console.error("postComment unexpected error:", e);
+    throw e;
+  }
 };
 
 export const updateComment = async (
@@ -473,12 +481,12 @@ export const updateComment = async (
 
   return {
     id: data.id,
-    activityid: data.activity_id,
+    activity_id: data.activity_id,
     user_id: data.user_id,
     text: data.text,
     created_at: data.created_at,
     updated_at: data.updated_at,
-    parentCommentId: data.parent_comment_id || null,
+    parent_comment_id: data.parent_comment_id || null,
   };
 };
 

@@ -54,8 +54,8 @@ const isCommentDescendant = (
   rootId: string,
 ): boolean => {
   let current = comment;
-  while (current.parentCommentId) {
-    const parent = all.find((c) => c.id === current.parentCommentId);
+  while (current.parent_comment_id) {
+    const parent = all.find((c) => c.id === current.parent_comment_id);
     if (!parent) return false;
     if (parent.id === rootId) return true;
     current = parent;
@@ -64,12 +64,12 @@ const isCommentDescendant = (
 };
 
 export const groupCommentsOneLevel = (comments: CommentEntity[]) => {
-  const roots = comments.filter((c) => !c.parentCommentId);
+  const roots = comments.filter((c) => !c.parent_comment_id);
 
   return roots.map((root) => {
     const replies = comments.filter(
       (c) =>
-        c.parentCommentId === root.id ||
+        c.parent_comment_id === root.id ||
         isCommentDescendant(comments, c, root.id),
     );
 
