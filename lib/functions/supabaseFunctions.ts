@@ -135,6 +135,7 @@ export const getImageUrl = async (imageLocation: ImageType) => {
     if (cached) return cached;
   } catch (e) {
     // ignore cache read errors
+    console.debug("getCachedOptimizedImageUrl cache read error:", e);
   }
 
   // Fall back to generating an optimized URL (this will create a signed URL and cache it)
@@ -147,13 +148,20 @@ export const getImageUrl = async (imageLocation: ImageType) => {
     });
     return optimized;
   } catch (e) {
+    console.debug("getOptimizedImageUrl generation error:", e);
     // As a last resort, attempt to generate a short-lived signed URL without optimization
     try {
-      const { data: imageData } = await supabase.storage
-        .from("Events-Tbilisi media")
-        .createSignedUrl(image, 60 * 60);
-      return isValidImage(imageData?.signedUrl) || null;
+      const res = await fetch(`/api/get-image-signed-url`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ filePath: image, expiresIn: 60 * 60 }),
+      });
+      if (!res.ok) return null;
+      const json = await res.json();
+      const signedUrl = json?.signedUrl;
+      return isValidImage(signedUrl) || null;
     } catch (err) {
+      console.debug("fallback signed URL generation failed:", err);
       return null;
     }
   }
@@ -205,13 +213,21 @@ export const getOptimizedImageUrl = async (
     return cached.url;
   }
 
-  const { data: imageData } = await supabase.storage
-    .from("Events-Tbilisi media")
-    .createSignedUrl(image, SIGNED_URL_TTL_MS / 1000);
+  const res = await fetch(`/api/get-image-signed-url`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      filePath: image,
+      expiresIn: SIGNED_URL_TTL_MS / 1000,
+    }),
+  });
 
-  if (!imageData?.signedUrl) return null;
+  if (!res.ok) return null;
+  const respJson = await res.json();
+  const signedUrl = respJson?.signedUrl;
+  if (!signedUrl) return null;
 
-  const activityImage = isValidImage(imageData.signedUrl);
+  const activityImage = isValidImage(signedUrl);
 
   if (!activityImage) return null;
 
@@ -276,9 +292,21 @@ export const getCachedOptimizedImageUrl = (
 
 export const deleteImageFromStorage = async (imagePath: string | null) => {
   if (!imagePath) return;
-  return await supabase.storage
-    .from("Events-Tbilisi media")
-    .remove([imagePath]);
+  try {
+    const res = await fetch(`/api/delete-image`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ filePath: imagePath }),
+    });
+    if (!res.ok) {
+      const json = await res.json().catch(() => ({}));
+      throw new Error(json?.error || `Failed to delete ${imagePath}`);
+    }
+    return true;
+  } catch (err) {
+    console.error("deleteImageFromStorage error:", err);
+    throw err;
+  }
 };
 
 export const postNewActivity = async (activity: NewActivityEntity) => {

@@ -5,9 +5,8 @@ import { ActivityEntity, SavedActivityEntity, UserProfile } from "../types";
 
 export const handleUploadUserAvatar = async (user: UserProfile, file: File) => {
   const filePath = await handleUploadFile("avatars", file, user);
-  const { data } = supabase.storage
-    .from("Events-Tbilisi media")
-    .getPublicUrl(filePath);
+
+  const publicUrl = `${process.env.NEXT_PUBLIC_R2_DEV_URL}/${filePath}`;
 
   const { error: updateError } = await supabase
     .from("users")
@@ -16,7 +15,7 @@ export const handleUploadUserAvatar = async (user: UserProfile, file: File) => {
 
   if (updateError) throw updateError;
 
-  return data.publicUrl;
+  return publicUrl;
 };
 
 export const handleUploadUserInformation = async (

@@ -1,4 +1,4 @@
-import { supabase } from "../supabase/supabaseClient";
+// import { supabase } from "../supabase/supabaseClient";
 import { CommentEntity, Poi, UserProfile } from "../types";
 
 export const isString = (value: unknown) => {
@@ -39,11 +39,29 @@ export const handleUploadFile = async (
   const fileName = `${crypto.randomUUID()}.${fileExt}`;
   const filePath = `${folderDestination}/${user.id}/${fileName}`;
 
-  const { error: uploadError } = await supabase.storage
-    .from("Events-Tbilisi media")
-    .upload(filePath, file, { upsert: true });
+  const res = await fetch("/api/upload-image", {
+    method: "POST",
+    body: JSON.stringify({ filePath, fileType: file.type }),
+    headers: { "Content-Type": "application/json" },
+  });
 
-  if (uploadError) throw uploadError;
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err?.error || "Failed to request signed URL");
+  }
+
+  const { signedUrl } = await res.json();
+
+  // Upload the file directly to the signed URL
+  const uploadRes = await fetch(signedUrl, {
+    method: "PUT",
+    headers: { "Content-Type": file.type },
+    body: file,
+  });
+
+  if (!uploadRes.ok) {
+    throw new Error("File upload to R2 failed");
+  }
 
   return filePath;
 };

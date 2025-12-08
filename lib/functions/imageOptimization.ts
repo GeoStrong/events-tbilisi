@@ -12,7 +12,6 @@ export interface ImageOptimizationOptions {
 }
 
 /**
- * Generates optimized Supabase image URL with quality and format parameters
  * This uses Supabase's image transformation capabilities
  */
 export const generateOptimizedImageUrl = (
@@ -30,6 +29,20 @@ export const generateOptimizedImageUrl = (
   } = options;
 
   try {
+    // If this is an R2 signed URL, do not attempt to append query params
+    // because the signature will become invalid. We detect by hostname
+    // to avoid relying on environment variables.
+    try {
+      const u = new URL(signedUrl);
+      if (
+        u.hostname.endsWith(".r2.cloudflarestorage.com") ||
+        u.hostname.includes("r2.cloudflarestorage.com")
+      ) {
+        return signedUrl;
+      }
+    } catch {
+      // If URL parsing fails, continue and try to treat it as a normal URL
+    }
     const url = new URL(signedUrl);
 
     // Add quality parameter (lower quality = smaller file = less cache egress)
