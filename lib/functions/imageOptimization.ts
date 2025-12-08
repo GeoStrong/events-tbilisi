@@ -93,8 +93,8 @@ export const generateSrcSet = (
 ): string => {
   if (!signedUrl) return "";
 
-  // Generate URLs for 1x, 1.5x, 2x, and 3x pixel densities
-  const densities = [1, 1.5, 2, 3];
+  // Generate URLs for 1x and 2x pixel densities only to reduce distinct variants
+  const densities = [1, 2];
   const srcSetParts = densities
     .map((dpr) => {
       const { width, height } = calculateImageDimensions(

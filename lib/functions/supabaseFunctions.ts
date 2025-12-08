@@ -122,14 +122,41 @@ export const getActivitiesByUserId = async (userId: string) => {
 
 export const getImageUrl = async (imageLocation: ImageType) => {
   const image = isString(imageLocation) ? imageLocation : "";
+  if (!image) return null;
 
-  const { data: imageData } = await supabase.storage
-    .from("Events-Tbilisi media")
-    .createSignedUrl(image, 60 * 60);
+  // Try to return a cached optimized URL first (synchronous) to avoid extra signed-url calls
+  try {
+    const cached = getCachedOptimizedImageUrl(image, {
+      quality: 50,
+      format: "webp",
+      width: 200,
+      height: 200,
+    });
+    if (cached) return cached;
+  } catch (e) {
+    // ignore cache read errors
+  }
 
-  const activityImage = isValidImage(imageData?.signedUrl);
-
-  return activityImage;
+  // Fall back to generating an optimized URL (this will create a signed URL and cache it)
+  try {
+    const optimized = await getOptimizedImageUrl(image, {
+      quality: 50,
+      format: "webp",
+      width: 200,
+      height: 200,
+    });
+    return optimized;
+  } catch (e) {
+    // As a last resort, attempt to generate a short-lived signed URL without optimization
+    try {
+      const { data: imageData } = await supabase.storage
+        .from("Events-Tbilisi media")
+        .createSignedUrl(image, 60 * 60);
+      return isValidImage(imageData?.signedUrl) || null;
+    } catch (err) {
+      return null;
+    }
+  }
 };
 /**
  * Get optimized image URL with automatic quality adjustment

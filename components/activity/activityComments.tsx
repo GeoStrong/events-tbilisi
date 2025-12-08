@@ -52,14 +52,8 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
     fallback: defaultUserImg.src,
   });
 
-  const {
-    comments,
-    isLoading,
-    addComment,
-    editComment,
-    removeComment,
-    refresh,
-  } = useComments(activityId || "");
+  const { comments, addComment, editComment, removeComment, refresh } =
+    useComments(activityId || "");
 
   useEffect(() => {
     if (open) {
@@ -330,15 +324,13 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
                   <div key={root.id} className="mb-6">
                     <ActivityCommentItem
                       comment={root}
-                      onEdit={async (id: string, newText: string) => {
-                        if (!user?.id) return;
-                        await editComment(id, user.id, newText);
-                        await refresh();
+                      onRequestEdit={(id, text) => {
+                        setEditingCommentId(id);
+                        setCommentTextInput(text);
                       }}
-                      onDelete={async (id: string) => {
-                        if (!user?.id) return;
-                        await removeComment(id, user.id);
-                        await refresh();
+                      onRequestDelete={(id) => {
+                        setDeleteTargetId(id);
+                        setIsDeleteDialogOpen(true);
                       }}
                       onReplyTo={(id, username) => {
                         const prefix = username ? `@${username} ` : "@";
@@ -356,15 +348,13 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
                             key={reply.id}
                             comment={reply}
                             isReply
-                            onEdit={async (id: string, newText: string) => {
-                              if (!user?.id) return;
-                              await editComment(id, user.id, newText);
-                              await refresh();
+                            onRequestEdit={(id, text) => {
+                              setEditingCommentId(id);
+                              setCommentTextInput(text);
                             }}
-                            onDelete={async (id: string) => {
-                              if (!user?.id) return;
-                              await removeComment(id, user.id);
-                              await refresh();
+                            onRequestDelete={(id) => {
+                              setDeleteTargetId(id);
+                              setIsDeleteDialogOpen(true);
                             }}
                             onReplyTo={(id, username) => {
                               const prefix = username ? `@${username} ` : "@";
