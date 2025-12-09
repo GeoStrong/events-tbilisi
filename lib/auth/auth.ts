@@ -80,6 +80,10 @@ export const getUserById = async (userId: string) => {
     .eq("id", userId)
     .maybeSingle();
 
+  if (data === null) {
+    return null;
+  }
+
   if (error) throw error;
 
   return data;

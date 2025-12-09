@@ -14,6 +14,8 @@ import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { Label } from "../ui/label";
 import { signIn, signUp } from "@/lib/auth/auth";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { authActions } from "@/lib/store/authSlice";
 
 interface AuthDialogProps {
   open: boolean;
@@ -23,6 +25,8 @@ interface AuthDialogProps {
 const AuthDialog: React.FC<AuthDialogProps> = ({ open, onOpenChange }) => {
   const [isSignin, setIsSignin] = useState(true);
   const [error, setError] = useState("");
+  // Signup success is handled via global state to survive unmounting
+  const dispatch = useDispatch();
 
   const SignSchema = Yup.object().shape({
     fullName: isSignin
@@ -45,6 +49,11 @@ const AuthDialog: React.FC<AuthDialogProps> = ({ open, onOpenChange }) => {
         window.location.reload();
       } else {
         await signUp(values.email, values.password, values.fullName);
+        // close the auth dialog and show a success confirmation dialog
+        onOpenChange(false);
+        // trigger global dialog via Redux so it can still render after `AuthDialog` unmounts
+        dispatch(authActions.setSignupSuccessOpen(true));
+        return; // stop further flow
       }
 
       onOpenChange(false);
@@ -57,108 +66,111 @@ const AuthDialog: React.FC<AuthDialogProps> = ({ open, onOpenChange }) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Welcome to What&apos;sOn-Tbilisi</DialogTitle>
-          <DialogDescription>
-            {isSignin
-              ? "Sign in to your account"
-              : "Create a new account below"}
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Welcome to What&apos;sOn-Tbilisi</DialogTitle>
+            <DialogDescription>
+              {isSignin
+                ? "Sign in to your account"
+                : "Create a new account below"}
+            </DialogDescription>
+          </DialogHeader>
 
-        <Tabs defaultValue="signin" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="signin" onClick={() => setIsSignin(true)}>
-              Sign In
-            </TabsTrigger>
-            <TabsTrigger value="signup" onClick={() => setIsSignin(false)}>
-              Sign Up
-            </TabsTrigger>
-          </TabsList>
+          <Tabs defaultValue="signin" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="signin" onClick={() => setIsSignin(true)}>
+                Sign In
+              </TabsTrigger>
+              <TabsTrigger value="signup" onClick={() => setIsSignin(false)}>
+                Sign Up
+              </TabsTrigger>
+            </TabsList>
 
-          <Formik
-            initialValues={{
-              fullName: "",
-              email: "",
-              password: "",
-            }}
-            validationSchema={SignSchema}
-            onSubmit={handleSubmit}
-          >
-            {({ isSubmitting }) => (
-              <Form className="mt-4 space-y-4">
-                {!isSignin && (
+            <Formik
+              initialValues={{
+                fullName: "",
+                email: "",
+                password: "",
+              }}
+              validationSchema={SignSchema}
+              onSubmit={handleSubmit}
+            >
+              {({ isSubmitting }) => (
+                <Form className="mt-4 space-y-4">
+                  {!isSignin && (
+                    <div className="space-y-1">
+                      <Label htmlFor="fullName">Full Name</Label>
+                      <Field
+                        name="fullName"
+                        as={Input}
+                        placeholder="John Doe"
+                        id="fullName"
+                      />
+                      <ErrorMessage
+                        name="fullName"
+                        component="div"
+                        className="text-sm text-red-500"
+                      />
+                    </div>
+                  )}
+
                   <div className="space-y-1">
-                    <Label htmlFor="fullName">Full Name</Label>
+                    <Label htmlFor="email">Email</Label>
                     <Field
-                      name="fullName"
+                      name="email"
                       as={Input}
-                      placeholder="John Doe"
-                      id="fullName"
+                      type="email"
+                      placeholder="your@email.com"
+                      id="email"
                     />
                     <ErrorMessage
-                      name="fullName"
+                      name="email"
                       component="div"
                       className="text-sm text-red-500"
                     />
                   </div>
-                )}
 
-                <div className="space-y-1">
-                  <Label htmlFor="email">Email</Label>
-                  <Field
-                    name="email"
-                    as={Input}
-                    type="email"
-                    placeholder="your@email.com"
-                    id="email"
-                  />
-                  <ErrorMessage
-                    name="email"
-                    component="div"
-                    className="text-sm text-red-500"
-                  />
-                </div>
+                  <div className="space-y-1">
+                    <Label htmlFor="password">Password</Label>
+                    <Field
+                      name="password"
+                      as={Input}
+                      type="password"
+                      placeholder="••••••••"
+                      id="password"
+                    />
+                    <ErrorMessage
+                      name="password"
+                      component="div"
+                      className="text-sm text-red-500"
+                    />
+                  </div>
 
-                <div className="space-y-1">
-                  <Label htmlFor="password">Password</Label>
-                  <Field
-                    name="password"
-                    as={Input}
-                    type="password"
-                    placeholder="••••••••"
-                    id="password"
-                  />
-                  <ErrorMessage
-                    name="password"
-                    component="div"
-                    className="text-sm text-red-500"
-                  />
-                </div>
+                  {error && <p className="text-sm text-red-500">{error}</p>}
 
-                {error && <p className="text-sm text-red-500">{error}</p>}
-
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-black hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-100"
-                >
-                  {isSubmitting
-                    ? isSignin
-                      ? "Signing in..."
-                      : "Creating account..."
-                    : isSignin
-                      ? "Sign In"
-                      : "Sign Up"}
-                </Button>
-              </Form>
-            )}
-          </Formik>
-        </Tabs>
-      </DialogContent>
-    </Dialog>
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-black hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-100"
+                  >
+                    {isSubmitting
+                      ? isSignin
+                        ? "Signing in..."
+                        : "Creating account..."
+                      : isSignin
+                        ? "Sign In"
+                        : "Sign Up"}
+                  </Button>
+                </Form>
+              )}
+            </Formik>
+          </Tabs>
+        </DialogContent>
+      </Dialog>
+      {/* Signup success handled via global store and `SignupSuccessDialog` */}
+    </>
   );
 };
 

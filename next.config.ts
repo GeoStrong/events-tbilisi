@@ -13,6 +13,8 @@ const nextConfig: NextConfig = {
     ],
     // Enable automatic WebP conversion and responsive image optimization
     formats: ["image/avif", "image/webp"],
+    // Add qualities used across the app to avoid Next.js unconfigured qualities errors
+    qualities: [50, 60, 65, 70, 75, 80, 85, 90, 95, 100],
     // Optimize device sizes for common breakpoints
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     // Image sizes for responsive images

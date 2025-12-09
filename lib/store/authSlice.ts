@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-const initialState: { authDialogOpen: boolean } = {
+const initialState: { authDialogOpen: boolean; signupSuccessOpen: boolean } = {
   authDialogOpen: false,
+  signupSuccessOpen: false,
 };
 
 export const authSlice = createSlice({
@@ -11,6 +12,9 @@ export const authSlice = createSlice({
   reducers: {
     setAuthDialogOpen: (state, action: PayloadAction<boolean>) => {
       state.authDialogOpen = action.payload;
+    },
+    setSignupSuccessOpen: (state, action: PayloadAction<boolean>) => {
+      state.signupSuccessOpen = action.payload;
     },
   },
 });

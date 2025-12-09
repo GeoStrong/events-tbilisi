@@ -35,6 +35,11 @@ const UsersBody: React.FC<{ user: UserProfile }> = ({ user }) => {
         </TabsList>
         <TabsContent value="posted">
           <div className="grid grid-cols-1 gap-3 p-3 sm:grid-cols-2 md:grid-cols-3">
+            {postedActivities?.length === 0 && (
+              <p className="col-span-full text-center text-lg">
+                This user has not posted any activities yet.
+              </p>
+            )}
             {postedActivities?.map((activity) => (
               <div
                 key={activity.id}

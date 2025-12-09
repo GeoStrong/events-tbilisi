@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,30 +11,28 @@ import { signOut } from "@/lib/auth/auth";
 import ProfileAvatar from "../general/profileAvatar";
 import Link from "next/link";
 import { UserProfile } from "@/lib/types";
-import { getImageUrl } from "@/lib/functions/supabaseFunctions";
 import useScreenSize from "@/lib/hooks/useScreenSize";
+import useOptimizedImage from "@/lib/hooks/useOptimizedImage";
 
 const HeaderProfile: React.FC<{ user: UserProfile | null }> = ({ user }) => {
-  const [image, setImage] = useState("");
   const { isMobile } = useScreenSize();
 
-  useEffect(() => {
-    (async () => {
-      const img = await getImageUrl(user?.avatar_path || "");
-      setImage(img || "");
-    })();
-  }, [user?.avatar_path]);
+  const { imageUrl } = useOptimizedImage(user?.avatar_path || "", {
+    quality: 50,
+    width: 800,
+    height: 600,
+  });
 
   return (
     <>
       {isMobile ? (
         <Link href="/profile">
-          <ProfileAvatar image={image || ""} />
+          <ProfileAvatar image={imageUrl || ""} />
         </Link>
       ) : (
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <ProfileAvatar image={image || ""} />
+            <ProfileAvatar image={imageUrl || ""} />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="center" className="dark:bg-gray-900">
             <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>

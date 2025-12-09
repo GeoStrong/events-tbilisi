@@ -4,7 +4,6 @@ import React from "react";
 import defaultUserImg from "@/public/images/default-user.png";
 import useOptimizedImage from "@/lib/hooks/useOptimizedImage";
 import OptimizedImage from "@/components/ui/optimizedImage";
-// No button use required here
 
 interface UserAvatarProps {
   avatarPath?: string | null;
@@ -29,14 +28,6 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
   });
 
   const src = imageUrl || defaultUserImg.src;
-
-  if (process.env.NODE_ENV === "development") {
-    try {
-      console.debug("UserAvatar src: ", { avatarPath, src });
-    } catch {
-      // Ignore any logging failures
-    }
-  }
 
   return (
     <OptimizedImage

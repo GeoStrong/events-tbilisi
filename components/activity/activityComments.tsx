@@ -30,6 +30,8 @@ import Form from "next/form";
 import { IoIosSend } from "react-icons/io";
 import useOptimizedImage from "@/lib/hooks/useOptimizedImage";
 import OptimizedImage from "../ui/optimizedImage";
+import { UserProfile } from "@/lib/types";
+import { fetchUserInfo } from "@/lib/profile/profile";
 
 const snapPoints = [0.5, 1];
 
@@ -44,13 +46,8 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
-
-  const { imageUrl: avatarUrl } = useOptimizedImage(user?.avatar_path || "", {
-    quality: 50,
-    width: 18,
-    height: 18,
-    fallback: defaultUserImg.src,
-  });
+  const [firstCommentUser, setFirstCommentUser] =
+    useState<Partial<UserProfile> | null>(null);
 
   const { comments, addComment, editComment, removeComment, refresh } =
     useComments(activityId || "");
@@ -66,6 +63,30 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
       document.body.style.overflow = "";
     };
   }, [open]);
+
+  useEffect(() => {
+    (async () => {
+      const user = await fetchUserInfo(comments[0].user_id);
+      setFirstCommentUser(user);
+    })();
+  }, [comments]);
+
+  const { imageUrl: firstUserAvatarUrl } = useOptimizedImage(
+    firstCommentUser?.avatar_path || "",
+    {
+      quality: 50,
+      width: 18,
+      height: 18,
+      fallback: defaultUserImg.src,
+    },
+  );
+
+  const { imageUrl: avatarUrl } = useOptimizedImage(user?.avatar_path || "", {
+    quality: 50,
+    width: 18,
+    height: 18,
+    fallback: defaultUserImg.src,
+  });
 
   const groupedComments = groupCommentsOneLevel(comments || []);
 
@@ -89,7 +110,7 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
                 <>
                   <div className="w-10">
                     <OptimizedImage
-                      src={avatarUrl}
+                      src={firstUserAvatarUrl}
                       width={20}
                       height={20}
                       containerClassName="h-8 w-8 rounded-full"
@@ -291,7 +312,7 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
                   <>
                     <OptimizedImage
                       quality={50}
-                      src={avatarUrl}
+                      src={firstUserAvatarUrl}
                       width={20}
                       height={20}
                       containerClassName="h-8 w-8 rounded-full"
