@@ -59,6 +59,18 @@ export const handleUploadFile = async (
     body: file,
   });
 
+  if (process.env.NODE_ENV === "development") {
+    try {
+      console.debug("handleUploadFile: upload response", {
+        filePath,
+        status: uploadRes.status,
+        statusText: uploadRes.statusText,
+      });
+    } catch (e) {
+      // ignore dev-only logging failures
+    }
+  }
+
   if (!uploadRes.ok) {
     throw new Error("File upload to R2 failed");
   }

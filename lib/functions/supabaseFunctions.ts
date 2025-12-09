@@ -231,6 +231,17 @@ export const getOptimizedImageUrl = async (
 
   if (!activityImage) return null;
 
+  if (process.env.NODE_ENV === "development") {
+    try {
+      console.debug("getOptimizedImageUrl: obtained signedUrl for image", {
+        image,
+        signedUrl,
+      });
+    } catch (e) {
+      // safely ignore logging failures
+    }
+  }
+
   const { generateOptimizedImageUrl } = await import(
     "../functions/imageOptimization"
   );

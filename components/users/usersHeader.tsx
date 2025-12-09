@@ -1,34 +1,17 @@
 import { UserProfile } from "@/lib/types";
 import React from "react";
-import defaultUserImg from "@/public/images/default-user.png";
-import {
-  getActivitiesByUserId,
-  getImageUrl,
-} from "@/lib/functions/supabaseFunctions";
+import UserAvatar from "./userAvatar";
+import { getActivitiesByUserId } from "@/lib/functions/supabaseFunctions";
 import { Button } from "../ui/button";
-import OptimizedImage from "../ui/optimizedImage";
 
 const UsersHeader: React.FC<{ user: UserProfile }> = async ({ user }) => {
-  const profileImg =
-    (user?.avatar_path && (await getImageUrl(user?.avatar_path))) ||
-    defaultUserImg.src;
   const postedActivitiesNumber = (await getActivitiesByUserId(user.id)).length;
 
   return (
     <div className="mt-5 w-full">
       <div className="flex justify-between gap-5 md:items-center md:gap-10">
         <div className="w-1/4 md:w-auto">
-          <OptimizedImage
-            src={profileImg}
-            width={50}
-            height={50}
-            alt="profile"
-            priority={true}
-            objectFit="cover"
-            quality={50}
-            objectPosition="center"
-            containerClassName="h-16 w-16 rounded-full md:h-44 md:w-44"
-          />
+          <UserAvatar avatarPath={user?.avatar_path} priority />
         </div>
         <div className="flex w-full flex-col gap-2 md:w-1/3">
           <h1 className="text-lg font-bold">{user.name}</h1>
