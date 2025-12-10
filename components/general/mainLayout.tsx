@@ -8,8 +8,8 @@ import { categories } from "@/lib/data/categories";
 import { useLocation } from "react-use";
 import SearchSection from "./searchSection";
 import { Toaster } from "../ui/sonner";
-import VerificationDialog from "@/components/auth/verificationDialog";
 import SignupSuccessDialog from "@/components/auth/signupSuccessDialog";
+import VerificationDialogWrapper from "../auth/verificationDialog";
 
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { pathname } = useLocation();
@@ -20,7 +20,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <>
       <Toaster position="top-right" richColors />
-      <VerificationDialog />
+      <VerificationDialogWrapper />
       <SignupSuccessDialog />
       <Header />
       {displayCategories && (

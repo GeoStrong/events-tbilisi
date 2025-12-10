@@ -104,6 +104,50 @@ body {
   }
 }
 
+/* Normalize date/time inputs across all platforms (especially iOS Safari)
+   to keep them consistent with other inputs in the app. */
+@layer base {
+  input[type="date"],
+  input[type="time"],
+  input[type="datetime-local"],
+  input[type="month"],
+  input[type="week"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    box-sizing: border-box;
+    height: 2.25rem; /* Tailwind h-9 */
+    padding: 0.25rem 0.75rem; /* Tailwind py-1 px-3 */
+    border-radius: 0.375rem; /* Tailwind rounded-md */
+    font-size: 1rem;
+    line-height: 1.25;
+    max-width: 100%;
+    background-color: transparent;
+  }
+
+  /* Remove iOS' large inner padding and normalize indicator icon */
+  input[type="date"]::-webkit-datetime-edit,
+  input[type="time"]::-webkit-datetime-edit,
+  input[type="datetime-local"]::-webkit-datetime-edit {
+    padding: 0;
+    margin: 0;
+    line-height: 1.25;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-clear-button,
+  input[type="time"]::-webkit-inner-spin-button,
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+    padding: 0;
+    height: 1.5rem;
+    width: 1.5rem;
+    opacity: 0.9;
+  }
+}
+
 @keyframes drop {
   0% {
     transform: translateY(-40px) scale(0.3);

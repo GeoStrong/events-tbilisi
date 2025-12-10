@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
   Dialog,
@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import Spinner from "../general/spinner";
 
 const VerificationDialog: React.FC = () => {
   const searchParams = useSearchParams();
@@ -25,7 +26,6 @@ const VerificationDialog: React.FC = () => {
 
   const handleClose = () => {
     setOpen(false);
-    // Clear the code from the URL to avoid re-triggering
     const url = new URL(window.location.href);
     url.searchParams.delete("code");
     router.replace(url.pathname + url.search);
@@ -48,4 +48,10 @@ const VerificationDialog: React.FC = () => {
   );
 };
 
-export default VerificationDialog;
+const VerificationDialogWrapper: React.FC = () => (
+  <Suspense fallback={<Spinner />}>
+    <VerificationDialog />
+  </Suspense>
+);
+
+export default VerificationDialogWrapper;
