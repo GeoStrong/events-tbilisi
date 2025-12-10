@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
-import Form from "next/form";
-import { useFormik } from "formik";
+import React from "react";
+import * as Yup from "yup";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import {
   Drawer,
   DrawerClose,
@@ -14,66 +14,43 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "../ui/button";
 import useScreenSize from "@/lib/hooks/useScreenSize";
-import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { ParticipantValues } from "@/lib/types";
+import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
+import useOptimizedImage from "@/lib/hooks/useOptimizedImage";
+import OptimizedImage from "../ui/optimizedImage";
+import { Input } from "../ui/input";
+import {
+  handleUploadUserInformation,
+  participationSignUp,
+} from "@/lib/profile/profile";
+import { toast } from "sonner";
+import { redirect } from "next/navigation";
 
 const ActivityParticipation: React.FC<{
+  activityId: string;
   isNested?: boolean;
   isBtnLarge?: boolean;
-}> = ({ isNested, isBtnLarge }) => {
+}> = ({ activityId, isNested, isBtnLarge }) => {
+  const { user } = useGetUserProfile();
   const { isMobile } = useScreenSize();
-  const [responseError, setResponseError] = useState<string | null>(null);
 
-  const initialValues: ParticipantValues = {
-    name: "",
-    email: "",
-    phone: "",
+  const initialValues = {
+    email: user?.email || "",
+    phone: user?.phone || "",
     additionalInfo: "",
   };
 
-  const validate = (values: ParticipantValues) => {
-    const errors: Partial<ParticipantValues> = {};
+  const validationSchema = Yup.object({
+    phone: Yup.string()
+      .required("Phone number is required")
+      .max(20, "Phone number is too long"),
+    additionalInfo: Yup.string().max(200, "Additional information is too long"),
+  });
 
-    if (!values.name) {
-      errors.name = "Required";
-    }
-
-    if (!values.email) {
-      errors.email = "Required";
-    } else if (
-      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-    ) {
-      errors.email = "Invalid email address";
-    }
-
-    if (values.phone && !/^\d{9}$/i.test(values.phone)) {
-      errors.phone = "Invalid phone number";
-    }
-
-    return errors;
-  };
-
-  const formik = useFormik({
-    initialValues,
-    validate,
-    onSubmit: async (values) => {
-      const response = await fetch("/api/users", {
-        method: "POST",
-        body: JSON.stringify(values),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      setResponseError(null);
-
-      if (!response.ok) {
-        setResponseError(response.statusText);
-      }
-
-      console.log(await response.json());
-    },
+  const { imageUrl } = useOptimizedImage(user?.avatar_path || "", {
+    quality: 50,
+    width: 800,
+    height: 600,
   });
 
   return (
@@ -90,91 +67,104 @@ const ActivityParticipation: React.FC<{
         <DrawerContent className={`w-full ${isNested && "md:w-2/6"}`}>
           <DrawerHeader>
             <DrawerTitle className="mb-3 text-center text-xl">
-              <span className="linear-light">Who are you?</span>
+              <span className="linear-light">Join the Activity!</span>
               😃
             </DrawerTitle>
             <DrawerDescription className="text-base">
-              Let the activity host know who you are by signing up.
+              Please provide any additional information you&apos;d like the
+              organizer to know:
             </DrawerDescription>
-            <Form
-              action=""
-              onSubmit={formik.handleSubmit}
-              className="mt-5 flex flex-col gap-3"
+            <div className="text-left">
+              <h4 className="text-lg">Signing up as</h4>
+              <div className="flex items-center gap-5 rounded-xl p-2 shadow-md">
+                <OptimizedImage
+                  src={imageUrl}
+                  width={20}
+                  height={20}
+                  containerClassName="h-16 w-16 rounded-full"
+                  alt="profile"
+                  priority={false}
+                />
+                <span className="text-lg font-bold">{user?.name}</span>
+              </div>
+            </div>
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={async (values) => {
+                if (!user?.phone || user?.phone !== values.phone) {
+                  await handleUploadUserInformation({
+                    ...user!,
+                    phone: values.phone,
+                  });
+                }
+                await participationSignUp(
+                  user!.id,
+                  activityId,
+                  values.additionalInfo,
+                );
+                toast.success("You have successfully signed up!");
+                setTimeout(() => {
+                  redirect("/");
+                }, 1000);
+              }}
             >
-              {responseError && <p className="text-red-500">{responseError}</p>}
-              <div className="flex flex-col gap-2">
-                {formik.errors.name ? (
-                  <span className="pl-1 text-left text-xs text-red-500">
-                    {formik.errors.name}
-                  </span>
-                ) : null}
-                <Input
-                  type="text"
-                  placeholder="Name"
-                  id="name"
-                  name="name"
-                  onChange={formik.handleChange}
-                  value={formik.values.name}
-                  className={`border border-gray-300 p-4 dark:border-gray-700 ${formik.errors.name ? "!border-red-500" : ""} h-12 w-full rounded-2xl`}
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                {formik.errors.email ? (
-                  <span className="pl-1 text-left text-xs text-red-500">
-                    {formik.errors.email}
-                  </span>
-                ) : null}
-                <Input
-                  type="email"
-                  placeholder="Email"
-                  id="email"
-                  name="email"
-                  onChange={formik.handleChange}
-                  value={formik.values.email}
-                  className={`border border-gray-300 p-4 dark:border-gray-700 ${formik.errors.email ? "!border-red-500" : ""} h-12 w-full rounded-2xl`}
-                />
-              </div>
-              <div className="flex flex-col gap-1">
-                <span
-                  className={`pl-1 text-left text-xs ${formik.errors.phone ? "text-red-500" : "text-gray-500"}`}
-                >
-                  {formik.errors.phone || "(Optional)"}
-                </span>
-                <div className="flex items-center gap-2">
-                  <span className="linear-dark text-lg">+995</span>
-                  <Input
-                    type="tel"
-                    placeholder="Phone"
-                    id="phone"
-                    name="phone"
-                    onChange={formik.handleChange}
-                    value={formik.values.phone}
-                    className={`border border-gray-300 p-4 dark:border-gray-700 ${formik.errors.phone ? "!border-red-500" : ""} h-12 w-full rounded-2xl`}
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col gap-1">
-                <span className="pl-1 text-left text-xs text-gray-500">
-                  (Optional)
-                </span>
-                <Textarea
-                  id="additionalInfo"
-                  name="additionalInfo"
-                  onChange={formik.handleChange}
-                  value={formik.values.additionalInfo}
-                  className="border border-gray-300 p-4 placeholder:p-0 placeholder:text-sm dark:border-gray-700"
-                  placeholder="
-                Additional Information...
-                "
-                />
-              </div>
-              <div className="mt-4 flex flex-col gap-2 md:flex-row-reverse">
-                <Button type="submit" className="h-12 text-base text-white">
-                  Sign me up
-                </Button>
-                <DrawerClose className="h-12 text-base">Cancel</DrawerClose>
-              </div>
-            </Form>
+              {({ isSubmitting }) => (
+                <Form className="mt-5 flex flex-col gap-3">
+                  <div className="flex flex-col gap-2">
+                    <Field
+                      as={Input}
+                      id="email"
+                      name="email"
+                      placeholder={user?.email || "Email"}
+                      className="h-12 border bg-gray-300 text-lg dark:border-gray-600 dark:bg-gray-900"
+                      disabled
+                    />
+                    <div className="text-left text-base text-gray-500">
+                      We will contact you via this email.
+                    </div>
+                    <Field
+                      as={Input}
+                      id="phone"
+                      name="phone"
+                      placeholder="Phone Number"
+                      value={user?.phone || ""}
+                      className="h-12 border text-lg dark:border-gray-600"
+                    />
+                    <ErrorMessage
+                      name="phone"
+                      component="div"
+                      className="text-base text-red-500"
+                    />
+                    <span className="pl-1 text-left text-base text-gray-500">
+                      (Optional)
+                    </span>
+                    <Field
+                      className="text-lg dark:border-gray-600"
+                      as={Textarea}
+                      id="additionalInfo"
+                      name="additionalInfo"
+                      placeholder="Additional Information..."
+                    />
+                    <ErrorMessage
+                      name="additionalInfo"
+                      component="div"
+                      className="text-base text-red-500"
+                    />
+                  </div>
+                  <div className="mt-4 flex flex-col gap-2 md:flex-row-reverse">
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="h-12 text-base text-white"
+                    >
+                      {isSubmitting ? "Signing up..." : "Sign me up!"}
+                    </Button>
+                    <DrawerClose className="h-12 text-base">Close</DrawerClose>
+                  </div>
+                </Form>
+              )}
+            </Formik>
           </DrawerHeader>
         </DrawerContent>
       </Drawer>

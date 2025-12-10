@@ -37,11 +37,7 @@ const MapLayout: React.FC<MapLayoutProps> = ({ mapKey }) => {
     dispatch(mapActions.setIsFloatingEnabled(false));
   }, [dispatch]);
 
-  useEffect(() => {
-    if (activeActivity && activityButtonRef.current) {
-      activityButtonRef.current.click();
-    }
-  }, [activeActivity]);
+  // Drawer is now controlled by `open` prop; no need to programmatically click
 
   const setSearchParams = (query: string, value: string) => {
     const params = new URLSearchParams(searchParams);
@@ -68,6 +64,7 @@ const MapLayout: React.FC<MapLayoutProps> = ({ mapKey }) => {
           buttonRef={activityButtonRef}
           activity={activeActivity}
           setSearchParams={setSearchParams}
+          open={Boolean(activeActivity)}
         />
       )}
     </>

@@ -114,3 +114,47 @@ export const fetchUserInfo = async (userId: string) => {
 
   return data;
 };
+
+export const fetchAllParticipantsByActivityId = async (activityId: string) => {
+  const { data, error } = await supabase
+    .from("activity_participants")
+    .select("*")
+    .eq("activity_id", activityId)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  return data;
+};
+
+export const checkUserParticipation = async (
+  userId: string,
+  activityId: string,
+) => {
+  const { data, error } = await supabase
+    .from("activity_participants")
+    .select("*")
+    .eq("user_id", userId)
+    .eq("activity_id", activityId)
+    .single();
+
+  if (error && error.code !== "PGRST116") {
+    throw error;
+  }
+  return !!data;
+};
+
+export const participationSignUp = async (
+  userId: string,
+  activityId: string,
+  additionalInfo?: string,
+) => {
+  const { error } = await supabase.from("activity_participants").insert([
+    {
+      user_id: userId,
+      activity_id: activityId,
+      additional_info: additionalInfo || null,
+    },
+  ]);
+  if (error) throw error;
+  return true;
+};

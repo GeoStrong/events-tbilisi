@@ -11,15 +11,7 @@ const DisplayActivitiesBtn: React.FC = () => {
   const { searchParams, handleSearch } = useAddSearchQuery();
   const displayIsActive = searchParams.get("display-activities");
 
-  const openDrawer = () => {
-    setTimeout(() => {
-      displayActivitiesBtnRef?.current.click();
-    }, 1);
-  };
-
-  useEffect(() => {
-    if (displayIsActive) openDrawer();
-  }, [displayIsActive]);
+  // Drawer is now controlled by the `open` prop in `DisplayedActivities`.
 
   return (
     <>
@@ -27,6 +19,7 @@ const DisplayActivitiesBtn: React.FC = () => {
         <DisplayedActivities
           buttonRef={displayActivitiesBtnRef}
           setSearchParams={handleSearch}
+          open={Boolean(displayIsActive)}
         />
       )}
       <Button

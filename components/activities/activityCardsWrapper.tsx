@@ -17,15 +17,7 @@ const ActivityCards: React.FC = () => {
   const triggerRef = useRef<HTMLButtonElement>(null!);
   const categoryId = searchParams.get("category");
 
-  const openDrawer = () => {
-    setTimeout(() => {
-      triggerRef?.current.click();
-    }, 1);
-  };
-
-  useEffect(() => {
-    if (activeActivity) openDrawer();
-  }, [activeActivity]);
+  // Drawer will be controlled by the `open` prop — no programmatic click required.
 
   useEffect(() => {
     setGridStyles(
@@ -65,6 +57,7 @@ const ActivityCards: React.FC = () => {
               buttonRef={triggerRef}
               activity={activeActivity}
               setSearchParams={handleSearch}
+              open={Boolean(activeActivity)}
             />
           )}
         </div>

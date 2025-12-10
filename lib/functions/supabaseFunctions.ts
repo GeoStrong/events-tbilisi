@@ -238,7 +238,7 @@ export const getOptimizedImageUrl = async (
         signedUrl,
       });
     } catch (e) {
-      // safely ignore logging failures
+      console.error("Logging signedUrl error:", e);
     }
   }
 
@@ -420,7 +420,7 @@ export const toggleActivityReaction = async (
     p_reaction: reaction,
   });
 
-  if (error) console.log("RPC error â†’", error);
+  if (error) console.log("RPC error", error);
   return data;
 };
 
@@ -448,13 +448,6 @@ export const getUserReaction = async (activityId: string, userId: string) => {
   return data?.reaction ?? null;
 };
 
-// -------------------------
-// Activity comments (CRUD)
-// -------------------------
-
-/**
- * Get profile by id (lightweight)
- */
 export const getCommentsByActivityId = async (activityId: string) => {
   if (!activityId) return [];
 

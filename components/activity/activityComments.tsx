@@ -1,7 +1,6 @@
 import { AiOutlineClose } from "react-icons/ai";
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BiExpandAlt } from "react-icons/bi";
 import { Button } from "../ui/button";
 import {
   Drawer,
@@ -32,6 +31,7 @@ import useOptimizedImage from "@/lib/hooks/useOptimizedImage";
 import OptimizedImage from "../ui/optimizedImage";
 import { UserProfile } from "@/lib/types";
 import { fetchUserInfo } from "@/lib/profile/profile";
+import ExpandableContainer from "../general/expandableContainer";
 
 const snapPoints = [0.5, 1];
 
@@ -53,19 +53,8 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
     useComments(activityId || "");
 
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
-
-  useEffect(() => {
     (async () => {
+      if (!comments || comments.length === 0) return;
       const user = await fetchUserInfo(comments[0].user_id);
       setFirstCommentUser(user);
     })();
@@ -93,210 +82,178 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
   return (
     <>
       <div className="hidden items-center justify-center md:flex">
-        <AnimatePresence>
-          <div className="relative w-full rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900">
-            {!open && (
-              <motion.div
-                layoutId="expandable"
-                onClick={() => setOpen(true)}
-                className="absolute right-0 top-0 flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl"
-              >
-                <BiExpandAlt />
-              </motion.div>
-            )}
-            <h3 className="mb-3 text-lg font-bold">Comments</h3>
-            <div className="flex items-center gap-3">
-              {comments && comments.length > 0 ? (
-                <>
-                  <div className="w-10">
-                    <OptimizedImage
-                      src={firstUserAvatarUrl}
-                      width={20}
-                      height={20}
-                      containerClassName="h-8 w-8 rounded-full"
-                      alt="profile"
-                      priority={false}
-                    />
-                  </div>
-                  <p className="text-sm font-extralight">
-                    {(comments[0].text || "").slice(0, 40) + "..."}
-                  </p>
-                </>
-              ) : (
-                <p className="text-sm font-extralight">No comments yet</p>
-              )}
-            </div>
-          </div>
-        </AnimatePresence>
-
-        <AnimatePresence>
-          {open && (
+        <ExpandableContainer
+          containerTrigger={
             <>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.5 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.25 }}
-                className="pointer-events-none fixed inset-0 z-40 bg-black/50"
-              />
-
-              <motion.div
-                layoutId="expandable"
-                className="fixed inset-0 z-50 flex items-center justify-center"
-                onClick={() => setOpen(false)}
-              >
-                <motion.div
-                  className="relative rounded-2xl bg-white p-6 shadow-xl dark:bg-gray-800"
-                  initial={{ borderRadius: 20 }}
-                  animate={{ borderRadius: 20 }}
-                  exit={{ borderRadius: 20 }}
-                  transition={{ type: "spring", stiffness: 250, damping: 25 }}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className="h-[90vh] w-[50vw] overflow-y-scroll">
-                    <div className="absolute right-1/2 w-full translate-x-1/2 border-b bg-white dark:border-b-gray-500 dark:bg-gray-800">
-                      <div className="flex justify-between px-5 shadow-md">
-                        <div className=""></div>
-                        <h3 className="mb-5 text-xl font-bold">Comments</h3>
-                        <Button
-                          onClick={() => setOpen(false)}
-                          variant="outline"
-                          className="p-2"
-                        >
-                          <AiOutlineClose />
-                        </Button>
-                      </div>
+              <h3 className="mb-3 text-lg font-bold">
+                Comments
+                <span className="inline-block pl-3">{comments.length}</span>
+              </h3>
+              <div className="flex items-center gap-3">
+                {comments && comments.length > 0 ? (
+                  <>
+                    <div className="w-10">
+                      <OptimizedImage
+                        src={firstUserAvatarUrl}
+                        width={20}
+                        height={20}
+                        containerClassName="h-8 w-8 rounded-full"
+                        alt="profile"
+                        priority={false}
+                      />
                     </div>
-                    <div className="my-20">
-                      {groupedComments.length === 0 && (
-                        <p className="text-center text-gray-500">
-                          No comments yet. Be the first to comment!
-                        </p>
-                      )}
-                      {groupedComments.map(({ root, replies }) => (
-                        <div key={root.id} className="w-full">
-                          <ActivityCommentItem
-                            comment={root}
-                            onRequestEdit={(id, text) => {
-                              setEditingCommentId(id);
-                              setCommentTextInput(text);
-                            }}
-                            onRequestDelete={(id) => {
-                              setDeleteTargetId(id);
-                              setIsDeleteDialogOpen(true);
-                            }}
-                            onReplyTo={(id, username) => {
-                              const prefix = username ? `@${username} ` : "@";
-                              setCommentTextInput("");
-                              setCommentTextInput((prev) =>
-                                prev ? `${prev} ${prefix}` : prefix,
-                              );
-                              setCommentParentId(id);
-                            }}
-                          />
+                    <p className="text-sm font-extralight">
+                      {(comments[0].text || "").slice(0, 40) + "..."}
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-sm font-extralight">No comments yet</p>
+                )}
+              </div>
+            </>
+          }
+          openDialog={open}
+          setOpenDialog={setOpen}
+        >
+          <div className="h-[90vh] w-[50vw] overflow-y-scroll">
+            <div className="absolute right-1/2 w-full translate-x-1/2 border-b bg-white dark:border-b-gray-500 dark:bg-gray-800">
+              <div className="flex justify-between px-5 shadow-md">
+                <div className=""></div>
+                <h3 className="mb-5 text-xl font-bold">Comments</h3>
+                <Button
+                  onClick={() => setOpen(false)}
+                  variant="outline"
+                  className="p-2"
+                >
+                  <AiOutlineClose />
+                </Button>
+              </div>
+            </div>
+            <div className="my-20">
+              {groupedComments.length === 0 && (
+                <p className="text-center text-gray-500">
+                  No comments yet. Be the first to comment!
+                </p>
+              )}
+              {groupedComments.map(({ root, replies }) => (
+                <div key={root.id} className="w-full">
+                  <ActivityCommentItem
+                    comment={root}
+                    onRequestEdit={(id, text) => {
+                      setEditingCommentId(id);
+                      setCommentTextInput(text);
+                    }}
+                    onRequestDelete={(id) => {
+                      setDeleteTargetId(id);
+                      setIsDeleteDialogOpen(true);
+                    }}
+                    onReplyTo={(id, username) => {
+                      const prefix = username ? `@${username} ` : "@";
+                      setCommentTextInput("");
+                      setCommentTextInput((prev) =>
+                        prev ? `${prev} ${prefix}` : prefix,
+                      );
+                      setCommentParentId(id);
+                    }}
+                  />
 
-                          {replies.length > 0 && (
-                            <div className="ml-12 mt-4 flex flex-col gap-3 pl-4">
-                              {replies.map((reply) => (
-                                <ActivityCommentItem
-                                  key={reply.id}
-                                  comment={reply}
-                                  isReply
-                                  onRequestEdit={(id, text) => {
-                                    setEditingCommentId(id);
-                                    setCommentTextInput(text);
-                                  }}
-                                  onRequestDelete={(id) => {
-                                    setDeleteTargetId(id);
-                                    setIsDeleteDialogOpen(true);
-                                  }}
-                                  onReplyTo={(id, username) => {
-                                    const prefix = username
-                                      ? `@${username} `
-                                      : "@";
-                                    setCommentTextInput((prev) =>
-                                      prev ? `${prev} ${prefix}` : prefix,
-                                    );
-                                    setCommentParentId(id);
-                                  }}
-                                />
-                              ))}
-                            </div>
-                          )}
-                        </div>
+                  {replies.length > 0 && (
+                    <div className="ml-12 mt-4 flex flex-col gap-3 pl-4">
+                      {replies.map((reply) => (
+                        <ActivityCommentItem
+                          key={reply.id}
+                          comment={reply}
+                          isReply
+                          onRequestEdit={(id, text) => {
+                            setEditingCommentId(id);
+                            setCommentTextInput(text);
+                          }}
+                          onRequestDelete={(id) => {
+                            setDeleteTargetId(id);
+                            setIsDeleteDialogOpen(true);
+                          }}
+                          onReplyTo={(id, username) => {
+                            const prefix = username ? `@${username} ` : "@";
+                            setCommentTextInput((prev) =>
+                              prev ? `${prev} ${prefix}` : prefix,
+                            );
+                            setCommentParentId(id);
+                          }}
+                        />
                       ))}
                     </div>
+                  )}
+                </div>
+              ))}
+            </div>
 
-                    <div className="absolute bottom-0 right-1/2 flex h-20 w-full translate-x-1/2 items-center rounded-b-3xl border bg-white shadow-md dark:border-t-gray-500 dark:bg-gray-800">
-                      <div className="flex w-full items-center justify-between gap-5 px-10">
-                        <OptimizedImage
-                          quality={50}
-                          src={avatarUrl}
-                          width={20}
-                          height={20}
-                          containerClassName="w-14 rounded-full"
-                          className="h-12 w-12"
-                          alt="profile"
-                          priority={false}
-                        />
-                        <Form
-                          action=""
-                          className="relative flex w-full items-center justify-between gap-3"
-                          onSubmit={async (e) => {
-                            e.preventDefault();
-                            if (!commentTextInput || !user?.id) return;
-                            if (editingCommentId) {
-                              await editComment(
-                                editingCommentId,
-                                user.id,
-                                commentTextInput,
-                              );
-                              setEditingCommentId(null);
-                            } else {
-                              await addComment(
-                                user.id,
-                                commentTextInput,
-                                commentParentId,
-                              );
-                            }
-                            setCommentTextInput("");
-                            setCommentParentId(null);
-                            await refresh();
-                          }}
-                        >
-                          <Input
-                            type="text"
-                            value={commentTextInput}
-                            onChange={(event) => {
-                              setCommentTextInput(event.target.value);
-                            }}
-                            className="h-12 rounded-full border !text-lg dark:border-gray-500"
-                          />
-                          <AnimatePresence>
-                            {commentTextInput !== "" && (
-                              <motion.div
-                                key="modal"
-                                initial={{ opacity: 0, scale: 0 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0 }}
-                                className="absolute right-2"
-                              >
-                                <button className="rounded-full bg-primary px-3 py-2">
-                                  <IoIosSend className="text-xl text-white" />
-                                </button>
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
-                        </Form>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
+            <div className="absolute bottom-0 right-1/2 flex h-20 w-full translate-x-1/2 items-center rounded-b-3xl border bg-white shadow-md dark:border-t-gray-500 dark:bg-gray-800">
+              <div className="flex w-full items-center justify-between gap-5 px-10">
+                <OptimizedImage
+                  quality={50}
+                  src={avatarUrl}
+                  width={20}
+                  height={20}
+                  containerClassName="w-14 rounded-full"
+                  className="h-12 w-12"
+                  alt="profile"
+                  priority={false}
+                />
+                <Form
+                  action=""
+                  className="relative flex w-full items-center justify-between gap-3"
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    if (!commentTextInput || !user?.id) return;
+                    if (editingCommentId) {
+                      await editComment(
+                        editingCommentId,
+                        user.id,
+                        commentTextInput,
+                      );
+                      setEditingCommentId(null);
+                    } else {
+                      await addComment(
+                        user.id,
+                        commentTextInput,
+                        commentParentId,
+                      );
+                    }
+                    setCommentTextInput("");
+                    setCommentParentId(null);
+                    await refresh();
+                  }}
+                >
+                  <Input
+                    type="text"
+                    value={commentTextInput}
+                    onChange={(event) => {
+                      setCommentTextInput(event.target.value);
+                    }}
+                    className="h-12 rounded-full border !text-lg dark:border-gray-500"
+                  />
+                  <AnimatePresence>
+                    {commentTextInput !== "" && (
+                      <motion.div
+                        key="modal"
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0 }}
+                        className="absolute right-2"
+                      >
+                        <button className="rounded-full bg-primary px-3 py-2">
+                          <IoIosSend className="text-xl text-white" />
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </Form>
+              </div>
+            </div>
+          </div>
+        </ExpandableContainer>
       </div>
+
       <div className="md:hidden">
         <Drawer
           snapPoints={snapPoints}
@@ -306,7 +263,10 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
         >
           <DrawerTrigger className="w-full">
             <div className="relative w-full rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900">
-              <h3 className="mb-3 text-left font-bold">Comments</h3>
+              <h3 className="mb-3 text-left font-bold">
+                Comments
+                <span className="inline-block pl-3">{comments.length}</span>
+              </h3>
               <div className="flex items-center gap-3 rounded-md bg-gray-100 p-2 dark:bg-gray-700">
                 {comments && comments.length > 0 ? (
                   <>

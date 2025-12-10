@@ -21,11 +21,13 @@ import { categories } from "@/lib/data/categories";
 interface CreateActivityProps {
   buttonRef: React.RefObject<HTMLButtonElement>;
   setSearchParams: (query: string, value: string) => void;
+  open?: boolean;
 }
 
 const DisplayedActivities: React.FC<CreateActivityProps> = ({
   buttonRef,
   setSearchParams,
+  open = false,
 }) => {
   const { isMobile } = useScreenSize();
 
@@ -33,8 +35,9 @@ const DisplayedActivities: React.FC<CreateActivityProps> = ({
     <>
       <Drawer
         direction={isMobile ? "bottom" : "right"}
-        onClose={() => {
-          setSearchParams("display-activities", "");
+        open={open}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) setSearchParams("display-activities", "");
         }}
       >
         <DrawerTrigger ref={buttonRef} className="hidden"></DrawerTrigger>

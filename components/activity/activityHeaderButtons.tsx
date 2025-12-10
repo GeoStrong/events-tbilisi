@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ActivityParticipation from "../activities/activityParticipation";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import { Button } from "../ui/button";
@@ -18,12 +18,14 @@ import {
 import { redirect } from "next/navigation";
 import ActivityUpdate from "./activityUpdate";
 import { Category, ActivityEntity } from "@/lib/types";
+import { checkUserParticipation } from "@/lib/profile/profile";
 
 const ActivityHeaderButtons: React.FC<{
   activity: ActivityEntity;
   categories: Category[];
 }> = ({ activity, categories }) => {
   const { user } = useGetUserProfile();
+  const [isUserParticipant, setIsUserParticipant] = useState<boolean>(false);
 
   const isUserHost = activity.user_id === user?.id;
 
@@ -39,6 +41,15 @@ const ActivityHeaderButtons: React.FC<{
     ...activity,
     categories: categoryIds,
   };
+
+  useEffect(() => {
+    (async () => {
+      if (!user) return;
+      const participant = await checkUserParticipation(user.id, activity.id);
+
+      setIsUserParticipant(participant);
+    })();
+  }, [activity.id, user]);
 
   return (
     <>
@@ -70,8 +81,15 @@ const ActivityHeaderButtons: React.FC<{
             </Dialog>
           </div>
         )}
-        {user?.id !== undefined && !isUserHost && (
-          <ActivityParticipation isBtnLarge />
+        {isUserParticipant ? (
+          <span className="my-4 rounded-lg bg-green-600 p-3 text-center text-lg font-bold text-white">
+            You are participating in this activity!
+          </span>
+        ) : (
+          user?.id !== undefined &&
+          !isUserHost && (
+            <ActivityParticipation activityId={activity.id} isBtnLarge />
+          )
         )}
       </div>
     </>

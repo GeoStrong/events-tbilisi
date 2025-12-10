@@ -28,6 +28,7 @@ import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import { Button } from "../ui/button";
 import useOptimizedImage from "@/lib/hooks/useOptimizedImage";
 import OptimizedImage from "../ui/optimizedImage";
+import { checkUserParticipation } from "@/lib/profile/profile";
 
 const snapPoints = [0.5, 1];
 
@@ -35,17 +36,20 @@ interface ActivityDescriptionProps {
   buttonRef: React.RefObject<HTMLButtonElement>;
   activity: ActivityEntity;
   setSearchParams: (query: string, value: string) => void;
+  open?: boolean;
 }
 
 const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
   buttonRef,
   activity,
   setSearchParams,
+  open = false,
 }) => {
   const { isMobile } = useScreenSize();
   const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
   const [categories, setCategories] = useState<Category[]>([]);
   const { user } = useGetUserProfile();
+  const [isUserParticipant, setIsUserParticipant] = useState<boolean>(false);
 
   useEffectOnce(() => {
     setSnap(1);
@@ -65,6 +69,14 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
     })();
   }, [activity.id]);
 
+  useEffect(() => {
+    (async () => {
+      const participant = await checkUserParticipation(user!.id, activity.id);
+
+      setIsUserParticipant(participant);
+    })();
+  }, [activity.id, user]);
+
   return (
     <>
       <Drawer
@@ -72,8 +84,9 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
         activeSnapPoint={snap}
         setActiveSnapPoint={setSnap}
         direction={isMobile ? "bottom" : "right"}
-        onClose={() => {
-          setSearchParams("activity", "");
+        open={open}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) setSearchParams("activity", "");
         }}
         fadeFromIndex={0}
       >
@@ -188,11 +201,17 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
                     <Button className="h-12">Modify Activity</Button>
                   </Link>
                 )}
-                {user?.id !== undefined && activity.user_id !== user?.id && (
-                  <ActivityParticipation isNested />
-                )}
+                {isUserParticipant ? (
+                  <span className="text-lg font-bold text-green-600">
+                    You are participating in this activity!
+                  </span>
+                ) : !isUserParticipant &&
+                  user?.id !== undefined &&
+                  activity.user_id !== user?.id ? (
+                  <ActivityParticipation isNested activityId={activity.id} />
+                ) : null}
                 <DrawerClose className="h-12 bg-transparent p-2">
-                  Cancel
+                  Close
                 </DrawerClose>
               </DrawerFooter>
               {snap !== 1 && isMobile && (
