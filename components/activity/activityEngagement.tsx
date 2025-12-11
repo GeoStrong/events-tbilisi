@@ -6,9 +6,11 @@ import {
   toggleActivityReaction,
 } from "@/lib/functions/supabaseFunctions";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
+import { authActions } from "@/lib/store/authSlice";
 import React, { useEffect, useState } from "react";
 import { AiFillDislike } from "react-icons/ai";
 import { AiFillLike } from "react-icons/ai";
+import { useDispatch } from "react-redux";
 
 const ActivityEngagement: React.FC<{
   activityId: string;
@@ -21,6 +23,7 @@ const ActivityEngagement: React.FC<{
   const [userReaction, setUserReaction] = useState<"like" | "dislike" | null>(
     null,
   );
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!user) return;
@@ -34,6 +37,11 @@ const ActivityEngagement: React.FC<{
   }, [activityId, user]);
 
   const handleReaction = async (reaction: "like" | "dislike") => {
+    if (!user) {
+      dispatch(authActions.setAuthDialogOpen(true));
+      return;
+    }
+
     await toggleActivityReaction(activityId, reaction, user!.id);
 
     const updated = await getActivityReactions(activityId);

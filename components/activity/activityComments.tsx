@@ -40,7 +40,7 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const { user } = useGetUserProfile();
-  const [snap, setSnap] = React.useState<number | string | null>(snapPoints[0]);
+  const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
   const [commentTextInput, setCommentTextInput] = useState<string>("");
   const [commentParentId, setCommentParentId] = useState<string | null>("");
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
@@ -83,6 +83,7 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
     <>
       <div className="hidden items-center justify-center md:flex">
         <ExpandableContainer
+          layoutId="1"
           containerTrigger={
             <>
               <h3 className="mb-3 text-lg font-bold">

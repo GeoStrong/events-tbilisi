@@ -71,6 +71,7 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
 
   useEffect(() => {
     (async () => {
+      if (user!) return;
       const participant = await checkUserParticipation(user!.id, activity.id);
 
       setIsUserParticipant(participant);
@@ -202,9 +203,10 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
                   </Link>
                 )}
                 {isUserParticipant ? (
-                  <span className="text-lg font-bold text-green-600">
-                    You are participating in this activity!
-                  </span>
+                  <p className="text-lg font-bold">
+                    You are
+                    <span className="pl-2 text-green-600">Going</span>
+                  </p>
                 ) : !isUserParticipant &&
                   user?.id !== undefined &&
                   activity.user_id !== user?.id ? (

@@ -40,11 +40,11 @@ export interface Category {
   category: ActivityCategories;
 }
 
-export interface ParticipantValues {
-  name: string;
-  email: string;
-  phone: string;
-  additionalInfo?: string;
+export interface ActivityParticipantsEntity {
+  user_id: string;
+  activity_id: string;
+  additional_info?: string;
+  created_at: Date | string;
 }
 
 export interface ActivityEntity {
@@ -79,7 +79,7 @@ export interface ActivityEntity {
   status?: "active" | "inactive" | "pending";
   createdAt?: Date;
   updatedAt?: Date;
-  participants?: ParticipantValues[];
+  participants?: ActivityParticipantsEntity[] | null;
   likes?: number;
   dislikes?: number;
 }

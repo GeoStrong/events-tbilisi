@@ -82,9 +82,10 @@ const ActivityHeaderButtons: React.FC<{
           </div>
         )}
         {isUserParticipant ? (
-          <span className="my-4 rounded-lg bg-green-600 p-3 text-center text-lg font-bold text-white">
-            You are participating in this activity!
-          </span>
+          <p className="text-lg font-bold">
+            You are
+            <span className="pl-2 text-green-600">Going</span>
+          </p>
         ) : (
           user?.id !== undefined &&
           !isUserHost && (

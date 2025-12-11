@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { BiExpandAlt } from "react-icons/bi";
 
 interface ExpandableContainerProps {
+  layoutId: string;
   containerTrigger: React.ReactNode;
   children: React.ReactNode;
   openDialog: boolean;
@@ -10,6 +11,7 @@ interface ExpandableContainerProps {
 }
 
 const ExpandableContainer: React.FC<ExpandableContainerProps> = ({
+  layoutId,
   containerTrigger,
   children,
   openDialog,
@@ -34,7 +36,7 @@ const ExpandableContainer: React.FC<ExpandableContainerProps> = ({
         <div className="relative w-full rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900">
           {!openDialog && (
             <motion.div
-              layoutId="expandable"
+              layoutId={`expandable${layoutId}`}
               onClick={() => setOpenDialog(true)}
               className="absolute right-0 top-0 flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl"
             >
@@ -56,7 +58,7 @@ const ExpandableContainer: React.FC<ExpandableContainerProps> = ({
             />
 
             <motion.div
-              layoutId="expandable"
+              layoutId={`expandable${layoutId}`}
               className="fixed inset-0 z-50 flex items-center justify-center"
               onClick={() => setOpenDialog(false)}
             >

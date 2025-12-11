@@ -1,6 +1,11 @@
 "use client";
 
-import { Category, ActivityEntity, UserProfile } from "@/lib/types";
+import {
+  Category,
+  ActivityEntity,
+  UserProfile,
+  ActivityParticipantsEntity,
+} from "@/lib/types";
 import OptimizedImage from "@/components/ui/optimizedImage";
 import React, { useEffect, useState } from "react";
 import defaultActivityImg from "@/public/images/default-activity-img.png";
@@ -12,11 +17,15 @@ import { BiUser } from "react-icons/bi";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import useMapZoom from "@/lib/hooks/useMapZoom";
-import { fetchUserInfo } from "@/lib/profile/profile";
+import {
+  fetchAllParticipantsByActivityId,
+  fetchUserInfo,
+} from "@/lib/profile/profile";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import MapWrapper from "../map/map";
 import ActivityComments from "./activityComments";
 import { useOptimizedImage } from "@/lib/hooks/useOptimizedImage";
+import ActivityParticipants from "./activityParticipants";
 
 interface ActivityBodyProps {
   categories: Category[];
@@ -31,6 +40,9 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
   const [host, setHost] = useState<UserProfile | null>();
   const { user } = useGetUserProfile();
   const [mapKey, setMapKey] = useState<string>("");
+  const [activityParticipants, setActivityParticipants] = useState<
+    ActivityParticipantsEntity[] | null
+  >(null);
 
   const { imageUrl: activityImage } = useOptimizedImage(activity.image, {
     quality: 50,
@@ -51,6 +63,14 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
       setHost(host);
     })();
   }, [categories, activity.image, activity.user_id]);
+
+  useEffect(() => {
+    (async () => {
+      if (!activity.id) return;
+      const participants = await fetchAllParticipantsByActivityId(activity.id);
+      setActivityParticipants(participants);
+    })();
+  }, [activity.id]);
 
   useEffect(() => {
     fetch("/api/use-secret")
@@ -231,9 +251,13 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
             />
           )}
         </div>
-        <div className="">
-          <ActivityComments activityId={activity.id} />
-        </div>
+        <ActivityComments activityId={activity.id} />
+        {activityParticipants && activityParticipants.length > 0 && (
+          <ActivityParticipants
+            isHost={user?.id === activity.user_id}
+            participants={activityParticipants}
+          />
+        )}
       </div>
     </div>
   );

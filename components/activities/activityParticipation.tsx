@@ -25,6 +25,7 @@ import {
 } from "@/lib/profile/profile";
 import { toast } from "sonner";
 import { redirect } from "next/navigation";
+import defaultUserImg from "@/public/images/default-user.png";
 
 const ActivityParticipation: React.FC<{
   activityId: string;
@@ -51,6 +52,7 @@ const ActivityParticipation: React.FC<{
     quality: 50,
     width: 800,
     height: 600,
+    fallback: defaultUserImg.src,
   });
 
   return (
@@ -83,6 +85,7 @@ const ActivityParticipation: React.FC<{
                   height={20}
                   containerClassName="h-16 w-16 rounded-full"
                   alt="profile"
+                  quality={50}
                   priority={false}
                 />
                 <span className="text-lg font-bold">{user?.name}</span>
@@ -93,10 +96,11 @@ const ActivityParticipation: React.FC<{
               validationSchema={validationSchema}
               onSubmit={async (values) => {
                 if (!user?.phone || user?.phone !== values.phone) {
-                  await handleUploadUserInformation({
-                    ...user!,
-                    phone: values.phone,
-                  });
+                  await handleUploadUserInformation(
+                    user!,
+                    user?.name,
+                    values.phone,
+                  );
                 }
                 await participationSignUp(
                   user!.id,
