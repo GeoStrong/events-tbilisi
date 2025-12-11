@@ -15,23 +15,21 @@ import { fetchUserInfo } from "@/lib/profile/profile";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 
 interface ActivityCommentItemProps {
+  activityHostId: string;
   comment: CommentEntity;
   isReply?: boolean;
-  onRequestEdit?: (commentId: string, text: string) => void;
-  onRequestDelete?: (commentId: string) => void;
+  onEdit?: (commentId: string, text: string) => void;
+  onDelete?: (commentId: string) => void;
   onReplyTo?: (commentId: string, username?: string) => void;
-  onEdit?: (commentId: string, newText: string) => Promise<void>;
-  onDelete?: (commentId: string) => Promise<void>;
 }
 
 const ActivityCommentItem: React.FC<ActivityCommentItemProps> = ({
+  activityHostId,
   comment,
   isReply,
-  onRequestEdit,
-  onRequestDelete,
-  onReplyTo,
   onEdit,
   onDelete,
+  onReplyTo,
 }) => {
   const [profile, setProfile] = useState<Partial<UserProfile> | null>(null);
   const { user: currentUser } = useGetUserProfile();
@@ -73,6 +71,11 @@ const ActivityCommentItem: React.FC<ActivityCommentItemProps> = ({
               className={`text-base ${isReply ? "font-semibold" : "font-bold"}`}
             >
               {profile?.name || "User"}
+              {activityHostId === comment.user_id && (
+                <span className="ml-2 rounded-xl border px-2 text-xs font-light text-gray-600 dark:border-gray-400 dark:text-gray-400">
+                  Author
+                </span>
+              )}
             </h4>
 
             <p className="text-base">{comment.text}</p>
@@ -88,7 +91,6 @@ const ActivityCommentItem: React.FC<ActivityCommentItemProps> = ({
                 </DropdownMenuLabel>
                 <DropdownMenuItem
                   onClick={() => {
-                    if (onRequestEdit) onRequestEdit(comment.id, comment.text);
                     if (onEdit) onEdit(comment.id, comment.text);
                   }}
                 >
@@ -96,7 +98,6 @@ const ActivityCommentItem: React.FC<ActivityCommentItemProps> = ({
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => {
-                    if (onRequestDelete) onRequestDelete(comment.id);
                     if (onDelete) onDelete(comment.id);
                   }}
                 >

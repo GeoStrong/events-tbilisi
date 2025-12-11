@@ -47,7 +47,7 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
 }) => {
   const { isMobile } = useScreenSize();
   const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<(Category | null)[]>([]);
   const { user } = useGetUserProfile();
   const [isUserParticipant, setIsUserParticipant] = useState<boolean>(false);
 
@@ -65,18 +65,18 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
   useEffect(() => {
     (async () => {
       const categories = await getCategoriesByActivityId(activity.id);
-      setCategories(categories || []);
+      if (categories) setCategories(categories || []);
     })();
   }, [activity.id]);
 
   useEffect(() => {
     (async () => {
-      if (user!) return;
+      if (user! || !activity) return;
       const participant = await checkUserParticipation(user!.id, activity.id);
 
       setIsUserParticipant(participant);
     })();
-  }, [activity.id, user]);
+  }, [activity, activity.id, user]);
 
   return (
     <>
@@ -97,9 +97,10 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
             headerChildren={
               <Link
                 href={`/activities/${activity.id}`}
-                className="absolute right-5 top-4"
+                className="absolute right-5 top-4 flex items-center gap-2 duration-300 hover:text-primary"
               >
-                <MdOutlineOpenInNew className="linear-yellow duration-300 hover:text-primary" />
+                Open Activity
+                <MdOutlineOpenInNew />
               </Link>
             }
             className={`${isMobile ? "w-full" : "w-auto"} mx-[-1px] flex h-full flex-col border-0 bg-white`}
@@ -110,10 +111,10 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
                   <div className="flex gap-2">
                     {categories.map((category) => (
                       <span
-                        key={category.id}
-                        className={`rounded-full bg-${category.color} px-2 py-1 text-xs text-white`}
+                        key={category?.id}
+                        className={`rounded-full bg-${category?.color} px-2 py-1 text-xs text-white`}
                       >
-                        {category.name}
+                        {category?.name}
                       </span>
                     ))}
                   </div>

@@ -111,7 +111,7 @@ const ActivityParticipants: React.FC<{
                         </Link>
                         <div className="flex items-center gap-3">
                           <Button className="text-sm">Follow</Button>
-                          {!activeUser && isHost && (
+                          {isHost && (
                             <BiDotsVerticalRounded
                               onClick={() => {
                                 const activeUser = participants.find(

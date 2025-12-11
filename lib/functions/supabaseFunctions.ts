@@ -2,6 +2,7 @@
 import {
   ActivityCategories,
   ActivityEntity,
+  Category,
   CommentEntity,
   ImageType,
   NewActivityEntity,
@@ -30,7 +31,7 @@ export const getCategoryById = async (categoryId: number | string) => {
     return null;
   }
 
-  return data;
+  return data as Category[];
 };
 
 export const getCategoriesByActivityId = async (

@@ -29,14 +29,14 @@ import Form from "next/form";
 import { IoIosSend } from "react-icons/io";
 import useOptimizedImage from "@/lib/hooks/useOptimizedImage";
 import OptimizedImage from "../ui/optimizedImage";
-import { UserProfile } from "@/lib/types";
+import { ActivityEntity, UserProfile } from "@/lib/types";
 import { fetchUserInfo } from "@/lib/profile/profile";
 import ExpandableContainer from "../general/expandableContainer";
 
 const snapPoints = [0.5, 1];
 
-const ActivityComments: React.FC<{ activityId?: string }> = ({
-  activityId,
+const ActivityComments: React.FC<{ activity: ActivityEntity }> = ({
+  activity,
 }) => {
   const [open, setOpen] = useState(false);
   const { user } = useGetUserProfile();
@@ -50,7 +50,7 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
     useState<Partial<UserProfile> | null>(null);
 
   const { comments, addComment, editComment, removeComment, refresh } =
-    useComments(activityId || "");
+    useComments(activity.id || "");
 
   useEffect(() => {
     (async () => {
@@ -139,12 +139,13 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
               {groupedComments.map(({ root, replies }) => (
                 <div key={root.id} className="w-full">
                   <ActivityCommentItem
+                    activityHostId={activity.user_id || ""}
                     comment={root}
-                    onRequestEdit={(id, text) => {
+                    onEdit={(id, text) => {
                       setEditingCommentId(id);
                       setCommentTextInput(text);
                     }}
-                    onRequestDelete={(id) => {
+                    onDelete={(id) => {
                       setDeleteTargetId(id);
                       setIsDeleteDialogOpen(true);
                     }}
@@ -162,14 +163,15 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
                     <div className="ml-12 mt-4 flex flex-col gap-3 pl-4">
                       {replies.map((reply) => (
                         <ActivityCommentItem
+                          activityHostId={activity.user_id || ""}
                           key={reply.id}
                           comment={reply}
                           isReply
-                          onRequestEdit={(id, text) => {
+                          onEdit={(id, text) => {
                             setEditingCommentId(id);
                             setCommentTextInput(text);
                           }}
-                          onRequestDelete={(id) => {
+                          onDelete={(id) => {
                             setDeleteTargetId(id);
                             setIsDeleteDialogOpen(true);
                           }}
@@ -305,12 +307,13 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
                 {groupedComments.map(({ root, replies }) => (
                   <div key={root.id} className="mb-6">
                     <ActivityCommentItem
+                      activityHostId={activity.user_id || ""}
                       comment={root}
-                      onRequestEdit={(id, text) => {
+                      onEdit={(id, text) => {
                         setEditingCommentId(id);
                         setCommentTextInput(text);
                       }}
-                      onRequestDelete={(id) => {
+                      onDelete={(id) => {
                         setDeleteTargetId(id);
                         setIsDeleteDialogOpen(true);
                       }}
@@ -327,14 +330,15 @@ const ActivityComments: React.FC<{ activityId?: string }> = ({
                       <div className="ml-12 mt-4 flex flex-col gap-3 pl-4">
                         {replies.map((reply) => (
                           <ActivityCommentItem
+                            activityHostId={activity.user_id || ""}
                             key={reply.id}
                             comment={reply}
                             isReply
-                            onRequestEdit={(id, text) => {
+                            onEdit={(id, text) => {
                               setEditingCommentId(id);
                               setCommentTextInput(text);
                             }}
-                            onRequestDelete={(id) => {
+                            onDelete={(id) => {
                               setDeleteTargetId(id);
                               setIsDeleteDialogOpen(true);
                             }}

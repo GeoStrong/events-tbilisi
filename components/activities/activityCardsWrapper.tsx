@@ -17,8 +17,6 @@ const ActivityCards: React.FC = () => {
   const triggerRef = useRef<HTMLButtonElement>(null!);
   const categoryId = searchParams.get("category");
 
-  // Drawer will be controlled by the `open` prop — no programmatic click required.
-
   useEffect(() => {
     setGridStyles(
       pathname === "/map"

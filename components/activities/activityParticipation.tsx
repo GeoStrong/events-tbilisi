@@ -24,7 +24,6 @@ import {
   participationSignUp,
 } from "@/lib/profile/profile";
 import { toast } from "sonner";
-import { redirect } from "next/navigation";
 import defaultUserImg from "@/public/images/default-user.png";
 
 const ActivityParticipation: React.FC<{
@@ -107,9 +106,10 @@ const ActivityParticipation: React.FC<{
                   activityId,
                   values.additionalInfo,
                 );
+
                 toast.success("You have successfully signed up!");
                 setTimeout(() => {
-                  redirect("/");
+                  location.reload();
                 }, 1000);
               }}
             >
@@ -131,8 +131,8 @@ const ActivityParticipation: React.FC<{
                       as={Input}
                       id="phone"
                       name="phone"
+                      type="tel"
                       placeholder="Phone Number"
-                      value={user?.phone || ""}
                       className="h-12 border text-lg dark:border-gray-600"
                     />
                     <ErrorMessage

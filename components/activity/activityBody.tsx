@@ -251,7 +251,7 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
             />
           )}
         </div>
-        <ActivityComments activityId={activity.id} />
+        <ActivityComments activity={activity} />
         {activityParticipants && activityParticipants.length > 0 && (
           <ActivityParticipants
             isHost={user?.id === activity.user_id}
