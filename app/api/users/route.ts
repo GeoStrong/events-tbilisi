@@ -1,19 +1,23 @@
-import { ParticipantValues } from "@/lib/types";
+import { UserProfile } from "@/lib/types";
 import fs from "fs";
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
+
+type FullUserInfoType = Partial<UserProfile> & {
+  additional_info?: string;
+};
 
 export const GET = async () => {
   return NextResponse.json({ message: "User route" }, { status: 200 });
 };
 
 export const POST = async (request: NextRequest) => {
-  const data: ParticipantValues = await request.json();
+  const data: FullUserInfoType = await request.json();
   const filePath = path.join(process.cwd(), "data", "users.json");
   const fileData = fs.readFileSync(filePath);
   const users = JSON.parse(fileData.toString());
 
-  if (users.find((user: ParticipantValues) => user.email === data.email)) {
+  if (users.find((user: FullUserInfoType) => user.email === data.email)) {
     return NextResponse.json(
       { message: "User already exists" },
       {
