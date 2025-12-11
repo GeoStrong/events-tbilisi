@@ -17,12 +17,12 @@ import {
 } from "../ui/dialog";
 import { redirect } from "next/navigation";
 import ActivityUpdate from "./activityUpdate";
-import { Category, ActivityEntity } from "@/lib/types";
+import { Category, ActivityEntity, ActivityCategories } from "@/lib/types";
 import { checkUserParticipation } from "@/lib/profile/profile";
 
 const ActivityHeaderButtons: React.FC<{
   activity: ActivityEntity;
-  categories: Category[];
+  categories: (Category | null)[];
 }> = ({ activity, categories }) => {
   const { user } = useGetUserProfile();
   const [isUserParticipant, setIsUserParticipant] = useState<boolean>(false);
@@ -35,7 +35,9 @@ const ActivityHeaderButtons: React.FC<{
     redirect("/");
   };
 
-  const categoryIds = categories.map((category) => category.id);
+  const categoryIds = categories.map(
+    (category) => category?.id,
+  ) as ActivityCategories[];
 
   const updatedActivity = {
     ...activity,
@@ -57,6 +59,7 @@ const ActivityHeaderButtons: React.FC<{
         {user?.id !== undefined && isUserHost && (
           <div className="flex w-full flex-row justify-between gap-2 px-6 md:justify-end">
             <ActivityUpdate user={user!} activity={updatedActivity} />
+
             <Dialog>
               <DialogTrigger className="h-10 w-1/2 rounded-md bg-red-600 px-8 py-1 text-white shadow-lg md:w-auto">
                 Delete

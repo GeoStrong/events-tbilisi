@@ -29,7 +29,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
   activity,
   setSearchParams,
 }) => {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<(Category | null)[]>([]);
   const { handleLocationClick } = useMapZoom(activity.id);
 
   useEffect(() => {
@@ -73,10 +73,10 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
           <div className="flex w-2/3 flex-wrap items-center justify-end gap-2">
             {categories.map((category) => (
               <span
-                key={category.id}
-                className={`rounded-full text-center bg-${category.color} px-3 py-1 text-sm text-white`}
+                key={category?.id}
+                className={`rounded-full text-center bg-${category?.color} px-3 py-1 text-sm text-white`}
               >
-                {category.name}
+                {category?.name}
               </span>
             ))}
           </div>

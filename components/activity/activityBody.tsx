@@ -28,7 +28,7 @@ import { useOptimizedImage } from "@/lib/hooks/useOptimizedImage";
 import ActivityParticipants from "./activityParticipants";
 
 interface ActivityBodyProps {
-  categories: Category[];
+  categories: (Category | null)[];
   activity: ActivityEntity;
 }
 
@@ -104,10 +104,10 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
               <div className="flex gap-2">
                 {categories.map((category) => (
                   <span
-                    key={category.id}
-                    className={`rounded-full bg-${category.color} px-2 py-1 text-sm text-white`}
+                    key={category?.id}
+                    className={`rounded-full bg-${category?.color} px-2 py-1 text-sm text-white`}
                   >
-                    {category.name}
+                    {category?.name}
                   </span>
                 ))}
               </div>

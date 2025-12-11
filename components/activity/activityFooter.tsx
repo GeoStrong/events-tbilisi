@@ -14,7 +14,7 @@ import { getActivitiesByCategoryId } from "@/lib/functions/supabaseFunctions";
 import { redirect } from "next/navigation";
 
 const ActivityFooter: React.FC<{
-  categories: Category[];
+  categories: (Category | null)[];
   activityId: string;
 }> = ({ categories, activityId }) => {
   const [firstActivities, setFirstActivities] = useState<ActivityEntity[]>([]);
@@ -28,7 +28,7 @@ const ActivityFooter: React.FC<{
   useEffect(() => {
     (async () => {
       const firstActivities = (await getActivitiesByCategoryId(
-        firstCategory,
+        firstCategory!,
       )) as ActivityEntity[];
 
       setFirstActivities(
@@ -80,7 +80,7 @@ const ActivityFooter: React.FC<{
       {secondCategory && secondActivities.length !== 0 && (
         <div className="mt-10 flex flex-col gap-3">
           <h3 className="font-bold">
-            Discover More {categories[1].name} Activities
+            Discover More {categories[1]?.name} Activities
           </h3>
           <Carousel>
             <CarouselContent>

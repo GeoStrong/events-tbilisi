@@ -10,7 +10,7 @@ import ActivityEngagement from "./activityEngagement";
 
 const ActivityHeader: React.FC<{
   activity: ActivityEntity;
-  categories: Category[];
+  categories: (Category | null)[];
 }> = async ({ activity, categories }) => {
   return (
     <>
