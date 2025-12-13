@@ -17,6 +17,7 @@ import { Button } from "../ui/button";
 import { AiOutlineClose } from "react-icons/ai";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
+import UserFollowButton from "../general/userFollowButton";
 
 const snapPoints = [0.5, 1];
 
@@ -110,7 +111,9 @@ const ActivityParticipants: React.FC<{
                           <span className="text-lg">{user.name}</span>
                         </Link>
                         <div className="flex items-center gap-3">
-                          <Button className="text-sm">Follow</Button>
+                          {!isHost && user.id && (
+                            <UserFollowButton userId={user.id} />
+                          )}
                           {isHost && (
                             <BiDotsVerticalRounded
                               onClick={() => {
@@ -240,7 +243,9 @@ const ActivityParticipants: React.FC<{
                       <span className="text-lg">{user.name}</span>
                     </Link>
                     <div className="flex items-center gap-3">
-                      <Button className="text-sm">Follow</Button>
+                      {!isHost && user.id && (
+                        <UserFollowButton userId={user.id} />
+                      )}
                       {isHost && (
                         <Drawer>
                           <DrawerTrigger>

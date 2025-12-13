@@ -1,6 +1,4 @@
-import Image from "next/image";
 import React from "react";
-import imgTbilisi from "@/public/images/tbilisi.jpg";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Form from "next/form";
@@ -8,14 +6,7 @@ import Form from "next/form";
 const SearchSection: React.FC = () => {
   return (
     <div className="relative mb-8 w-full">
-      <Image
-        src={imgTbilisi.src}
-        width={200}
-        height={100}
-        className="h-[30rem] w-full object-cover object-top brightness-50"
-        alt="Tbilisi"
-        unoptimized
-      />
+      <div className="parallax-effect relative mb-8 h-[30rem] w-full bg-[url(@/public/images/tbilisi.jpg)] brightness-50"></div>
       <div className="absolute top-1/2 flex w-full flex-col items-center gap-3">
         <h1 className="text-center text-4xl font-bold text-white">
           Discover Social Activities in Tbilisi

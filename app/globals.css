@@ -85,6 +85,12 @@ body {
     -webkit-text-fill-color: transparent;
     @apply bg-clip-text text-2xl font-bold;
   }
+  .parallax-effect {
+    background-attachment: fixed;
+    background-position: center 2rem;
+    background-repeat: no-repeat;
+    background-size: cover
+  }
   @media (min-width: 768px) {
     .section-title {
       @apply text-xl font-bold;

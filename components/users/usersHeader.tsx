@@ -2,7 +2,8 @@ import { UserProfile } from "@/lib/types";
 import React from "react";
 import UserAvatar from "./userAvatar";
 import { getActivitiesByUserId } from "@/lib/functions/supabaseFunctions";
-import { Button } from "../ui/button";
+import UserFollowButton from "../general/userFollowButton";
+import UsersRealtimeFollows from "./usersRealtimeFollows";
 
 const UsersHeader: React.FC<{ user: UserProfile }> = async ({ user }) => {
   const postedActivitiesNumber = (await getActivitiesByUserId(user.id)).length;
@@ -20,17 +21,12 @@ const UsersHeader: React.FC<{ user: UserProfile }> = async ({ user }) => {
               <p className="text-lg font-bold">{postedActivitiesNumber}</p>
               <p className="text-base">Activities</p>
             </div>
-            <div className="space-y-1 text-center">
-              <p className="text-lg font-bold">50</p>
-              <p className="text-base">Followers</p>
-            </div>
-            <div className="space-y-1 text-center">
-              <p className="text-lg font-bold">150</p>
-              <p className="text-base">Following</p>
-            </div>
+            <UsersRealtimeFollows userId={user.id} />
           </div>
         </div>
-        <Button className="hidden p-6 text-xl md:flex">Follow</Button>
+        <div className="hidden md:flex">
+          <UserFollowButton userId={user.id} className="p-6 text-xl" />
+        </div>
       </div>
       <div className="mt-4 w-full">
         <p className="text-base text-gray-500">
@@ -42,7 +38,7 @@ const UsersHeader: React.FC<{ user: UserProfile }> = async ({ user }) => {
         </p>
         <p className="text-lg">{user.additionalInfo}</p>
         <div className="mt-4 flex w-full justify-center md:hidden">
-          <Button className="w-2/3 py-6 text-xl">Follow</Button>
+          <UserFollowButton userId={user.id} className="w-2/3 py-6 text-xl" />
         </div>
       </div>
     </div>

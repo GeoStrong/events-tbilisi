@@ -14,7 +14,6 @@ import Link from "next/link";
 import Socials from "../general/socials";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { BiUser } from "react-icons/bi";
-import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import useMapZoom from "@/lib/hooks/useMapZoom";
 import {
@@ -26,6 +25,7 @@ import MapWrapper from "../map/map";
 import ActivityComments from "./activityComments";
 import { useOptimizedImage } from "@/lib/hooks/useOptimizedImage";
 import ActivityParticipants from "./activityParticipants";
+import UserFollowButton from "../general/userFollowButton";
 
 interface ActivityBodyProps {
   categories: (Category | null)[];
@@ -199,10 +199,10 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
               className="flex w-full items-center justify-between gap-2"
             >
               <span className="text-center text-base">{host?.name}</span>
-              {user?.id !== activity.user_id && (
-                <Button className="text">Follow</Button>
-              )}
             </Link>
+            {activity.user_id && user?.id !== activity.user_id && (
+              <UserFollowButton userId={activity.user_id} />
+            )}
           </div>
         </div>
         <div className="rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">

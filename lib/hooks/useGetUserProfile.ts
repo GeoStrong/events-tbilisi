@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { fetchUserProfile } from "../auth/auth";
 import { UserProfile } from "../types";

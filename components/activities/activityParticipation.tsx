@@ -25,6 +25,7 @@ import {
 } from "@/lib/profile/profile";
 import { toast } from "sonner";
 import defaultUserImg from "@/public/images/default-user.png";
+import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
 
 const ActivityParticipation: React.FC<{
   activityId: string;
@@ -33,6 +34,7 @@ const ActivityParticipation: React.FC<{
 }> = ({ activityId, isNested, isBtnLarge }) => {
   const { user } = useGetUserProfile();
   const { isMobile } = useScreenSize();
+  const { handleReplace } = useAddSearchQuery();
 
   const initialValues = {
     email: user?.email || "",
@@ -108,9 +110,8 @@ const ActivityParticipation: React.FC<{
                 );
 
                 toast.success("You have successfully signed up!");
-                setTimeout(() => {
-                  location.reload();
-                }, 1000);
+                handleReplace(new URLSearchParams(""));
+                location.reload();
               }}
             >
               {({ isSubmitting }) => (

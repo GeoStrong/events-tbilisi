@@ -158,3 +158,68 @@ export const participationSignUp = async (
   if (error) throw error;
   return true;
 };
+
+export const fetchAllFollowersByUserId = async (userId: string) => {
+  const { data, error } = await supabase
+    .from("followers")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+
+  return data;
+};
+
+export const fetchAllFollowingsByUserId = async (userId: string) => {
+  const { data, error } = await supabase
+    .from("followers")
+    .select("*")
+    .eq("follower_id", userId)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+
+  return data;
+};
+
+export const checkUserFollow = async (userId: string, followerId: string) => {
+  const { data, error } = await supabase
+    .from("followers")
+    .select("*")
+    .eq("user_id", userId)
+    .eq("follower_id", followerId)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+
+  if (data.length === 0) {
+    return false;
+  }
+
+  return true;
+};
+
+export const handleFollowUser = async (userId: string, followerId: string) => {
+  const { error } = await supabase.from("followers").insert([
+    {
+      user_id: userId,
+      follower_id: followerId,
+    },
+  ]);
+
+  if (error) throw error;
+};
+
+export const handleUnfollowUser = async (
+  userId: string,
+  followerId: string,
+) => {
+  const { error } = await supabase
+    .from("followers")
+    .delete()
+    .eq("user_id", userId)
+    .eq("follower_id", followerId);
+
+  if (error) throw error;
+};

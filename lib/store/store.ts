@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import mapReducer from "./mapSlice";
 import authReducer from "./authSlice";
+import followerReducer from "./followerSlice";
 
 export const store = configureStore({
   reducer: {
     map: mapReducer,
     auth: authReducer,
+    follower: followerReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
