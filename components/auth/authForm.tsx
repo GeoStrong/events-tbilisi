@@ -25,7 +25,6 @@ interface AuthDialogProps {
 const AuthDialog: React.FC<AuthDialogProps> = ({ open, onOpenChange }) => {
   const [isSignin, setIsSignin] = useState(true);
   const [error, setError] = useState("");
-  // Signup success is handled via global state to survive unmounting
   const dispatch = useDispatch();
 
   const SignSchema = Yup.object().shape({
@@ -49,11 +48,9 @@ const AuthDialog: React.FC<AuthDialogProps> = ({ open, onOpenChange }) => {
         window.location.reload();
       } else {
         await signUp(values.email, values.password, values.fullName);
-        // close the auth dialog and show a success confirmation dialog
         onOpenChange(false);
-        // trigger global dialog via Redux so it can still render after `AuthDialog` unmounts
         dispatch(authActions.setSignupSuccessOpen(true));
-        return; // stop further flow
+        return;
       }
 
       onOpenChange(false);
@@ -68,7 +65,7 @@ const AuthDialog: React.FC<AuthDialogProps> = ({ open, onOpenChange }) => {
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="w-[90%] sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Welcome to What&apos;sOn-Tbilisi</DialogTitle>
             <DialogDescription>
@@ -169,7 +166,6 @@ const AuthDialog: React.FC<AuthDialogProps> = ({ open, onOpenChange }) => {
           </Tabs>
         </DialogContent>
       </Dialog>
-      {/* Signup success handled via global store and `SignupSuccessDialog` */}
     </>
   );
 };

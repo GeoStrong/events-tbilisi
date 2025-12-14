@@ -41,7 +41,7 @@ const CreateActivityAlert: React.FC<CreateActivityAlertProps> = ({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogAction>
-              <Link href="/">Main Menu</Link>
+              <Link href="/">Feed</Link>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

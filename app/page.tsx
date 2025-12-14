@@ -1,10 +1,10 @@
-import ActivityCardsWrapper from "@/components/activities/activityCardsWrapper";
 import React from "react";
+import Feed from "@/components/feed/Feed";
 
 const App: React.FC = async () => {
   return (
     <>
-      <ActivityCardsWrapper />
+      <Feed />
     </>
   );
 };

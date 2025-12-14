@@ -10,6 +10,9 @@ const Footer: React.FC = () => {
         <div className="hidden w-full md:block">
           <div className="flex flex-col items-center justify-around md:items-start">
             <Link className="text-lg" href="/">
+              Feed
+            </Link>
+            <Link className="text-lg" href="/activities">
               Activities
             </Link>
             <Link className="text-lg" href="/discover">

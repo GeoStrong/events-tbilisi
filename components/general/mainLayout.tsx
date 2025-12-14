@@ -14,8 +14,8 @@ import VerificationDialogWrapper from "../auth/verificationDialog";
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { pathname } = useLocation();
 
-  const displayCategories = pathname === "/" || pathname === "/map";
-  const displaySearchSection = pathname === "/";
+  const displayCategories = pathname === "/activities" || pathname === "/map";
+  const displaySearchSection = pathname === "/activities";
 
   return (
     <>

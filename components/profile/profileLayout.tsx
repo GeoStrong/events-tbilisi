@@ -58,7 +58,7 @@ const ProfileLayout: React.FC = () => {
           <div className="w-full px-2 py-8">
             <Link href="/" className="mb-6 flex items-center gap-3">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Activities
+              Back to Feed
             </Link>
 
             <div className="grid gap-6">

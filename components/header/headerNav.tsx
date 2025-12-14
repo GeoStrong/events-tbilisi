@@ -8,10 +8,11 @@ import { Button } from "../ui/button";
 import { User } from "lucide-react";
 import HeaderProfile from "./headerProfile";
 import HeaderProfileLoader from "./headerProfileLoader";
-import { AiOutlineHome, AiOutlinePlusCircle } from "react-icons/ai";
+import { AiOutlineAppstore } from "react-icons/ai";
+import { AiOutlinePlusCircle } from "react-icons/ai";
 import { FiMapPin } from "react-icons/fi";
 import { UserProfile } from "@/lib/types";
-import { RiCompassDiscoverLine } from "react-icons/ri";
+import { BiHomeAlt2, BiSearchAlt2 } from "react-icons/bi";
 
 interface HeaderNavProps {
   onAuthClick: () => void;
@@ -33,8 +34,8 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick, userProfile }) => {
                 href="/"
                 className="mb-1 flex flex-col items-center gap-1 px-3 text-sm"
               >
-                <AiOutlineHome className="text-base" />
-                Activities
+                <BiHomeAlt2 className="text-base" />
+                Feed
               </Link>
               {pathname === "/" && (
                 <motion.div
@@ -44,16 +45,33 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick, userProfile }) => {
               )}
             </li>
             <li
-              className={`relative flex flex-col items-center gap-1 hover:text-primary ${pathname === "/discover" && "border-primary text-primary"}`}
+              className={`relative hover:text-primary ${pathname === "/activities" && "border-primary text-primary"}`}
+            >
+              <Link
+                href="/activities"
+                className="mb-1 flex flex-col items-center gap-1 px-3 text-sm"
+              >
+                <AiOutlineAppstore className="text-base" />
+                Activities
+              </Link>
+              {pathname === "/activities" && (
+                <motion.div
+                  layoutId="underline"
+                  className="absolute bottom-0 h-[2px] w-full bg-primary"
+                />
+              )}
+            </li>
+            <li
+              className={`relative flex flex-col items-center gap-1 hover:text-primary ${pathname === "/search" && "border-primary text-primary"}`}
             >
               <Link
                 href="/discover"
                 className="mb-1 flex flex-col items-center gap-1 px-3 text-sm"
               >
-                <RiCompassDiscoverLine className="text-base" />
-                Discover
+                <BiSearchAlt2 className="text-lg" />
+                Search
               </Link>
-              {pathname === "/discover" && (
+              {pathname === "/search" && (
                 <motion.div
                   layoutId="underline"
                   className="absolute bottom-0 h-[2px] w-full bg-primary"

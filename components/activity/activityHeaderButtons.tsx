@@ -32,7 +32,7 @@ const ActivityHeaderButtons: React.FC<{
   const deleteActivityHandler = async () => {
     if (!user?.id) return;
     await deleteActivityByUser(user.id, activity.id);
-    redirect("/");
+    redirect("/activities");
   };
 
   const categoryIds = categories.map(

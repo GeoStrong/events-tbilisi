@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -24,12 +24,12 @@ const Share: React.FC<{
   const { href } = useLocation();
   const [copied, setCopied] = useState(false);
 
-  const copyToClipboard = () => {
+  const copyToClipboard = useCallback(() => {
     navigator.clipboard.writeText(href || "");
     setTimeout(() => {
       setCopied(true);
-    }, 1000);
-  };
+    }, 100);
+  }, [href]);
 
   const { imageUrl: activityImage } = useOptimizedImage(activity.image || "", {
     quality: 50,

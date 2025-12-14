@@ -108,9 +108,6 @@ const UsersRealtimeFollows: React.FC<{
   //     };
   //   }, [supabase]);
 
-  console.log(followers);
-  console.log(followings);
-
   return (
     <>
       <div className="flex items-center justify-between">

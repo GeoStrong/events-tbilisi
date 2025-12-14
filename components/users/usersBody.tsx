@@ -23,18 +23,20 @@ const UsersBody: React.FC<{ user: UserProfile }> = ({ user }) => {
     <div className="my-5 w-full">
       <Tabs
         defaultValue="posted"
-        className="flex w-full flex-col items-center rounded-xl py-5 dark:bg-gray-900"
+        className="flex w-full flex-col rounded-xl py-5 dark:bg-gray-900"
       >
-        <TabsList className="py-1">
-          <TabsTrigger className="text-base" value="posted">
-            Posted Activities
-          </TabsTrigger>
-          <TabsTrigger className="text-base" value="attended">
-            Attended Activities
-          </TabsTrigger>
-        </TabsList>
+        <div className="flex w-full justify-center">
+          <TabsList>
+            <TabsTrigger className="text-base" value="posted">
+              Posted Activities
+            </TabsTrigger>
+            <TabsTrigger className="text-base" value="attended">
+              Attended Activities
+            </TabsTrigger>
+          </TabsList>
+        </div>
         <TabsContent value="posted">
-          <div className="grid grid-cols-1 gap-3 p-3 sm:grid-cols-2 md:grid-cols-3">
+          <div className="grid w-full grid-cols-1 gap-3 p-3 sm:grid-cols-2 md:grid-cols-3">
             {postedActivities?.length === 0 && (
               <p className="col-span-full text-center text-lg">
                 This user has not posted any activities yet.
@@ -52,7 +54,9 @@ const UsersBody: React.FC<{ user: UserProfile }> = ({ user }) => {
             ))}
           </div>
         </TabsContent>
-        <TabsContent value="attended">In the development...</TabsContent>
+        <TabsContent value="attended" className="text-center">
+          In the development...
+        </TabsContent>
       </Tabs>
     </div>
   );
