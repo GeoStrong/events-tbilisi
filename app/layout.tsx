@@ -30,7 +30,7 @@ export default function RootLayout({
         <ProgressiveBarProvider>
           <StoreProvider>
             <ThemeProvider attribute="class" enableSystem defaultTheme="system">
-              <main className="flex min-h-[90vh] flex-col">
+              <main className="flex min-h-[90dvh] flex-col">
                 <MainLayout>{children}</MainLayout>
               </main>
               <Footer />

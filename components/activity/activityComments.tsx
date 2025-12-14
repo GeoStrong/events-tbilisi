@@ -116,7 +116,7 @@ const ActivityComments: React.FC<{ activity: ActivityEntity }> = ({
           openDialog={open}
           setOpenDialog={setOpen}
         >
-          <div className="h-[90vh] w-[50vw] overflow-y-scroll">
+          <div className="h-[90dvh] w-[50vw] overflow-y-scroll">
             <div className="absolute right-1/2 w-full translate-x-1/2 border-b bg-white dark:border-b-gray-500 dark:bg-gray-800">
               <div className="flex justify-between px-5 shadow-md">
                 <div className=""></div>
