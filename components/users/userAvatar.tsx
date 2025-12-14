@@ -32,14 +32,14 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
   return (
     <OptimizedImage
       src={src}
-      width={size}
-      height={size}
+      width={20}
+      height={20}
       alt="profile"
       priority={priority}
       objectFit="cover"
       quality={50}
       objectPosition="center"
-      containerClassName={`h-16 w-16 rounded-full md:h-44 md:w-44 ${containerClassName}`}
+      containerClassName={`h-${size} w-${size} rounded-full ${containerClassName}`}
       className={className}
     />
   );

@@ -13,6 +13,7 @@ import useOptimizedImage from "@/lib/hooks/useOptimizedImage";
 import OptimizedImage from "../ui/optimizedImage";
 import { fetchUserInfo } from "@/lib/profile/profile";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
+import Link from "next/link";
 
 interface ActivityCommentItemProps {
   activityHostId: string;
@@ -53,30 +54,34 @@ const ActivityCommentItem: React.FC<ActivityCommentItemProps> = ({
 
   return (
     <div className="flex items-start gap-3">
-      <OptimizedImage
-        src={avatarUrl}
-        quality={50}
-        width={18}
-        height={18}
-        alt="profile"
-        priority={false}
-        objectFit="cover"
-        containerClassName={`${isReply ? "h-7 w-7" : "h-8 w-8"} rounded-full`}
-      />
+      <Link href={`/users/${comment.user_id}`}>
+        <OptimizedImage
+          src={avatarUrl}
+          quality={50}
+          width={18}
+          height={18}
+          alt="profile"
+          priority={false}
+          objectFit="cover"
+          containerClassName={`${isReply ? "h-7 w-7" : "h-8 w-8"} rounded-full`}
+        />
+      </Link>
 
       <div className="w-[90%] rounded-md text-left md:w-[90%]">
         <div className="flex items-start justify-between">
           <div className="w-full">
-            <h4
-              className={`text-base ${isReply ? "font-semibold" : "font-bold"}`}
-            >
-              {profile?.name || "User"}
-              {activityHostId === comment.user_id && (
-                <span className="ml-2 rounded-xl border px-2 text-xs font-light text-gray-600 dark:border-gray-400 dark:text-gray-400">
-                  Author
-                </span>
-              )}
-            </h4>
+            <Link href={`/users/${comment.user_id}`}>
+              <h4
+                className={`text-base ${isReply ? "font-semibold" : "font-bold"}`}
+              >
+                {profile?.name || "User"}
+                {activityHostId === comment.user_id && (
+                  <span className="ml-2 rounded-xl border px-2 text-xs font-light text-gray-600 dark:border-gray-400 dark:text-gray-400">
+                    Author
+                  </span>
+                )}
+              </h4>
+            </Link>
 
             <p className="text-base">{comment.text}</p>
           </div>

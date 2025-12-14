@@ -1,7 +1,12 @@
 import { handleUploadFile } from "../functions/helperFunctions";
 import { getActivityById } from "../functions/supabaseFunctions";
 import { supabase } from "../supabase/supabaseClient";
-import { ActivityEntity, SavedActivityEntity, UserProfile } from "../types";
+import {
+  ActivityEntity,
+  FollowersEntity,
+  SavedActivityEntity,
+  UserProfile,
+} from "../types";
 
 export const handleUploadUserAvatar = async (user: UserProfile, file: File) => {
   const filePath = await handleUploadFile("avatars", file, user);
@@ -168,7 +173,7 @@ export const fetchAllFollowersByUserId = async (userId: string) => {
 
   if (error) throw error;
 
-  return data;
+  return data as FollowersEntity[];
 };
 
 export const fetchAllFollowingsByUserId = async (userId: string) => {
@@ -180,7 +185,7 @@ export const fetchAllFollowingsByUserId = async (userId: string) => {
 
   if (error) throw error;
 
-  return data;
+  return data as FollowersEntity[];
 };
 
 export const checkUserFollow = async (userId: string, followerId: string) => {

@@ -12,12 +12,11 @@ import {
 import { ActivityParticipantsEntity, UserProfile } from "@/lib/types";
 import { fetchUserInfo } from "@/lib/profile/profile";
 import ExpandableContainer from "../general/expandableContainer";
-import ParticipantAvatars from "../general/participantAvatars";
 import { Button } from "../ui/button";
 import { AiOutlineClose } from "react-icons/ai";
-import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
-import UserFollowButton from "../general/userFollowButton";
+import UserAvatar from "../users/userAvatar";
+import UserCard from "../users/userCard";
 
 const snapPoints = [0.5, 1];
 
@@ -61,9 +60,10 @@ const ActivityParticipants: React.FC<{
               </h3>
               <div className="flex items-center gap-2">
                 {participantUserInfo?.map((user) => (
-                  <ParticipantAvatars
+                  <UserAvatar
                     key={user.id}
-                    userImagePath={user.avatar_path || ""}
+                    avatarPath={user.avatar_path || ""}
+                    size={8}
                   />
                 ))}
               </div>
@@ -96,24 +96,10 @@ const ActivityParticipants: React.FC<{
               <div className="flex gap-2">
                 <AnimatePresence>
                   <div className={`mt-5 ${activeUser ? "w-1/2" : "w-full"}`}>
-                    {participantUserInfo?.map((user) => (
-                      <div
-                        key={user.id}
-                        className="mb-4 flex items-center justify-between border-b px-5 pb-3 dark:border-b-gray-600"
-                      >
-                        <Link
-                          className="flex items-center gap-4"
-                          href={user.id ? `/users/${user.id}` : "#"}
-                        >
-                          <ParticipantAvatars
-                            userImagePath={user.avatar_path || ""}
-                          />
-                          <span className="text-lg">{user.name}</span>
-                        </Link>
-                        <div className="flex items-center gap-3">
-                          {!isHost && user.id && (
-                            <UserFollowButton userId={user.id} />
-                          )}
+                    {participantUserInfo?.map((user) => {
+                      if (!user.id) return;
+                      return (
+                        <UserCard key={user.id} userId={user.id}>
                           {isHost && (
                             <BiDotsVerticalRounded
                               onClick={() => {
@@ -131,9 +117,9 @@ const ActivityParticipants: React.FC<{
                               }}
                             />
                           )}
-                        </div>
-                      </div>
-                    ))}
+                        </UserCard>
+                      );
+                    })}
                   </div>
                 </AnimatePresence>
                 <AnimatePresence mode="wait">
@@ -159,8 +145,8 @@ const ActivityParticipants: React.FC<{
                       </div>
                       <div className="p-4">
                         <div className="flex w-full justify-center">
-                          <ParticipantAvatars
-                            userImagePath={activeUser.avatar_path || ""}
+                          <UserAvatar
+                            avatarPath={activeUser.avatar_path || ""}
                             size={20}
                           />
                         </div>
@@ -212,9 +198,10 @@ const ActivityParticipants: React.FC<{
             </h3>
             <div className="flex items-center gap-2">
               {participantUserInfo?.map((user) => (
-                <ParticipantAvatars
+                <UserAvatar
                   key={user.id}
-                  userImagePath={user.avatar_path || ""}
+                  avatarPath={user.avatar_path || ""}
+                  size={8}
                 />
               ))}
             </div>
@@ -228,24 +215,10 @@ const ActivityParticipants: React.FC<{
                 </DrawerDescription>
               </DrawerHeader>
               <div className="w-full">
-                {participantUserInfo?.map((user) => (
-                  <div
-                    key={user.id}
-                    className="mb-4 flex items-center justify-between border-b px-5 pb-3 dark:border-b-gray-600"
-                  >
-                    <Link
-                      className="flex items-center gap-4"
-                      href={user.id ? `/users/${user.id}` : "#"}
-                    >
-                      <ParticipantAvatars
-                        userImagePath={user.avatar_path || ""}
-                      />
-                      <span className="text-lg">{user.name}</span>
-                    </Link>
-                    <div className="flex items-center gap-3">
-                      {!isHost && user.id && (
-                        <UserFollowButton userId={user.id} />
-                      )}
+                {participantUserInfo?.map((user) => {
+                  if (!user.id) return;
+                  return (
+                    <UserCard key={user.id} userId={user.id}>
                       {isHost && (
                         <Drawer>
                           <DrawerTrigger>
@@ -271,10 +244,8 @@ const ActivityParticipants: React.FC<{
                               <DrawerDescription></DrawerDescription>
                               <div className="p-4 text-left">
                                 <div className="flex w-full justify-center">
-                                  <ParticipantAvatars
-                                    userImagePath={
-                                      activeUser?.avatar_path || ""
-                                    }
+                                  <UserAvatar
+                                    avatarPath={activeUser?.avatar_path || ""}
                                     size={20}
                                   />
                                 </div>
@@ -308,9 +279,9 @@ const ActivityParticipants: React.FC<{
                           </DrawerContent>
                         </Drawer>
                       )}
-                    </div>
-                  </div>
-                ))}
+                    </UserCard>
+                  );
+                })}
               </div>
               <DrawerFooter className="fixed bottom-0 flex w-full flex-row items-center justify-between gap-3 border border-t-gray-100 bg-white shadow-md dark:border-t-gray-600 dark:bg-gray-800"></DrawerFooter>
             </div>

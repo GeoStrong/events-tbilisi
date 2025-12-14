@@ -102,3 +102,9 @@ export interface SavedActivityEntity {
 }
 
 export type Poi = { key: string; location: google.maps.LatLngLiteral };
+
+export type FollowersEntity = {
+  user_id: string;
+  follower_id: string;
+  created_at: Date | string | null;
+};

@@ -23,6 +23,7 @@ import {
   getImageUrl,
 } from "@/lib/functions/supabaseFunctions";
 import OptimizedImage from "../ui/optimizedImage";
+import UsersRealtimeFollows from "../users/usersRealtimeFollows";
 
 interface ProfileHeaderProps {
   user: UserProfile | null;
@@ -146,8 +147,18 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             </div>
 
             <div className="flex-1 space-y-4 text-base">
-              <div>
+              <div className="space-y-2">
                 <h2 className="text-lg">{user?.name}</h2>
+                {user && (
+                  <div className="w-full justify-center md:flex">
+                    <div className="md:w-1/2">
+                      <UsersRealtimeFollows
+                        userId={user.id}
+                        userName={user.name}
+                      />
+                    </div>
+                  </div>
+                )}
                 {user && <p className="text-muted-foreground">{user.email}</p>}
               </div>
 
