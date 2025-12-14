@@ -55,7 +55,7 @@ const Footer: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="fixed bottom-0 md:hidden">
+        <div className="fixed bottom-0 h-20 w-full bg-white dark:bg-gray-900 md:hidden">
           <FooterNavMobile />
         </div>
       </footer>

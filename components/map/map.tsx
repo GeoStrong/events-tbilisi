@@ -28,7 +28,7 @@ interface MapProps {
 
 const MapComponent: React.FC<MapProps> = ({
   displayActivities = true,
-  mapHeight = "h-screen md:min-h-[500px]",
+  mapHeight = "h-dvh md:min-h-[500px]",
   selectedActivity,
 }) => {
   const map = useMap();

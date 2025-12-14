@@ -12,7 +12,7 @@ const FooterNavMobile: React.FC = () => {
   const { pathname } = useLocation();
 
   return (
-    <footer className="fixed bottom-0 w-full bg-white py-3 dark:bg-gray-900 md:hidden">
+    <footer className="w-full py-3 md:hidden">
       <ul className="flex items-center justify-around">
         <li className="">
           <Link href="/">

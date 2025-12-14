@@ -44,7 +44,7 @@ const DisplayedActivities: React.FC<CreateActivityProps> = ({
         <DrawerOverlay className="fixed inset-0 bg-black/40" />
         <DrawerPortal>
           <DrawerContent className="mx-[-1px] flex h-full w-full flex-col border-0 bg-white">
-            <div className="flex h-screen w-full flex-col overflow-y-auto">
+            <div className="flex h-dvh w-full flex-col overflow-y-auto">
               <DrawerHeader className="relative">
                 <DrawerTitle className="mt-3 text-center text-xl font-bold">
                   All Activities

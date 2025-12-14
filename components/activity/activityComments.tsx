@@ -293,7 +293,7 @@ const ActivityComments: React.FC<{ activity: ActivityEntity }> = ({
             </div>
           </DrawerTrigger>
           <DrawerContent className="w-full" headerChildren={"Comments"}>
-            <div className="mb-20 h-screen overflow-y-auto">
+            <div className="mb-20 h-dvh overflow-y-auto">
               <DrawerHeader>
                 <DrawerTitle className="hidden">Comments</DrawerTitle>
                 <DrawerDescription className="hidden">

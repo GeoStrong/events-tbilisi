@@ -207,7 +207,7 @@ const ActivityParticipants: React.FC<{
             </div>
           </DrawerTrigger>
           <DrawerContent className="w-full" headerChildren={"Participants"}>
-            <div className="mb-20 h-screen overflow-y-auto">
+            <div className="mb-20 h-dvh overflow-y-auto">
               <DrawerHeader>
                 <DrawerTitle className="hidden">Participants</DrawerTitle>
                 <DrawerDescription className="hidden">

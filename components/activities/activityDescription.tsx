@@ -105,7 +105,7 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
             }
             className={`${isMobile ? "w-full" : "w-auto"} mx-[-1px] flex h-full flex-col border-0 bg-white`}
           >
-            <div className="flex h-screen w-full flex-col overflow-y-auto">
+            <div className="flex h-dvh w-full flex-col overflow-y-auto">
               <DrawerHeader className="relative">
                 <div className="absolute left-5 top-0 z-20 flex w-[91%] items-center justify-between">
                   <div className="flex gap-2">
