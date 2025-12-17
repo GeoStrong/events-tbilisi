@@ -108,3 +108,17 @@ export type FollowersEntity = {
   follower_id: string;
   created_at: Date | string | null;
 };
+
+export interface FeedPostEntity {
+  id: string;
+  user_id: string;
+  activity_id: string;
+  comment: string | null;
+  created_at: Date | string;
+  updated_at: Date | string;
+}
+
+export interface FeedPostWithActivity extends FeedPostEntity {
+  activity: ActivityEntity;
+  author: UserProfile;
+}

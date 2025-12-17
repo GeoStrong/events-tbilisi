@@ -18,6 +18,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FollowersEntity } from "@/lib/types";
 import UserCard from "./userCard";
+import { Skeleton } from "../ui/skeleton";
 
 const UsersRealtimeFollows: React.FC<{
   userId: string;
@@ -112,7 +113,13 @@ const UsersRealtimeFollows: React.FC<{
     <>
       <div className="flex items-center justify-between">
         <div className="space-y-1 text-center">
-          <p className="text-lg font-bold">{postedActivitiesNumber || 0}</p>
+          <p className="flex justify-center text-lg font-bold">
+            {postedActivitiesNumber === null ? (
+              <Skeleton className="h-6 w-4" />
+            ) : (
+              postedActivitiesNumber
+            )}
+          </p>
           <p className="text-base">Activities</p>
         </div>
         <button
@@ -122,7 +129,13 @@ const UsersRealtimeFollows: React.FC<{
             setActiveTab("Followers");
           }}
         >
-          <p className="text-lg font-bold">{followers?.length}</p>
+          <p className="flex justify-center text-lg font-bold">
+            {followers === null ? (
+              <Skeleton className="h-6 w-4" />
+            ) : (
+              followers.length
+            )}
+          </p>
           <p className="text-base">Followers</p>
         </button>
         <button
@@ -132,7 +145,13 @@ const UsersRealtimeFollows: React.FC<{
             setActiveTab("Following");
           }}
         >
-          <p className="text-lg font-bold">{followings?.length}</p>
+          <p className="flex justify-center text-lg font-bold">
+            {followings === null ? (
+              <Skeleton className="h-6 w-4" />
+            ) : (
+              followings.length
+            )}
+          </p>
           <p className="text-base">Following</p>
         </button>
       </div>

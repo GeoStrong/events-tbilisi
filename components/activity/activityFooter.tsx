@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import { Category, ActivityEntity } from "@/lib/types";
 import {
   Carousel,
@@ -10,41 +10,39 @@ import {
   // CarouselPrevious,
 } from "@/components/ui/carousel";
 import ActivityCard from "../activities/activityCard";
-import { getActivitiesByCategoryId } from "@/lib/functions/supabaseFunctions";
+import { useActivitiesByCategory } from "@/lib/hooks/useActivities";
 import { redirect } from "next/navigation";
 
 const ActivityFooter: React.FC<{
   categories: (Category | null)[];
   activityId: string;
 }> = ({ categories, activityId }) => {
-  const [firstActivities, setFirstActivities] = useState<ActivityEntity[]>([]);
-  const [secondActivities, setSecondActivities] = useState<ActivityEntity[]>(
-    [],
-  );
   // const { isMobile } = useScreenSize();
   const firstCategory = categories[0]?.id;
   const secondCategory = categories[1]?.id;
 
-  useEffect(() => {
-    (async () => {
-      const firstActivities = (await getActivitiesByCategoryId(
-        firstCategory!,
-      )) as ActivityEntity[];
+  // Fetch activities in parallel using React Query (automatic caching and deduplication)
+  const { data: firstCategoryActivities = [] } = useActivitiesByCategory(
+    firstCategory || null,
+  );
+  const { data: secondCategoryActivities = [] } = useActivitiesByCategory(
+    secondCategory || null,
+  );
 
-      setFirstActivities(
-        firstActivities.filter((activity) => activity.id !== activityId),
-      );
+  // Filter out current activity
+  const firstActivities = useMemo(
+    () =>
+      firstCategoryActivities.filter((activity) => activity.id !== activityId),
+    [firstCategoryActivities, activityId],
+  );
 
-      const secondActivities = secondCategory
-        ? ((await getActivitiesByCategoryId(
-            secondCategory,
-          )) as ActivityEntity[])
-        : [];
-      setSecondActivities(
-        secondActivities.filter((activity) => activity.id !== activityId),
-      );
-    })();
-  }, [activityId, firstCategory, secondCategory]);
+  const secondActivities = useMemo(
+    () =>
+      secondCategoryActivities.filter(
+        (activity) => activity.id !== activityId,
+      ),
+    [secondCategoryActivities, activityId],
+  );
 
   return (
     <footer className="py-4">

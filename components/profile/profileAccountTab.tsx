@@ -15,6 +15,9 @@ import { Label } from "../ui/label";
 import { UserProfile } from "@/lib/types";
 import { Button } from "../ui/button";
 import { signOut } from "@/lib/auth/auth";
+import { useDispatch } from "react-redux";
+import { userActions } from "@/lib/store/userSlice";
+import { AppDispatch } from "@/lib/store/store";
 
 interface ProfileAccountTabProps {
   user: UserProfile | null;
@@ -31,6 +34,7 @@ const ProfileAccountTab: React.FC<ProfileAccountTabProps> = ({
 }) => {
   const [nameValue, phoneValue, bioValue] = userDataValues;
   const [handleName, handlePhone, handleBio] = onSetUserDataFunctions;
+  const dispatch = useDispatch<AppDispatch>();
 
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -154,6 +158,7 @@ const ProfileAccountTab: React.FC<ProfileAccountTabProps> = ({
                   variant="destructive"
                   onClick={async () => {
                     await signOut();
+                    dispatch(userActions.logout());
                     window.location.reload();
                   }}
                   className="p-5 text-lg"

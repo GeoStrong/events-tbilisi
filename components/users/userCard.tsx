@@ -1,25 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import UserAvatar from "./userAvatar";
 import UserFollowButton from "../general/userFollowButton";
-import { fetchUserInfo } from "@/lib/profile/profile";
-import { UserProfile } from "@/lib/types";
+import { useUser } from "@/lib/hooks/useUser";
 
 const UserCard: React.FC<{
   userId: string;
   children?: React.ReactNode;
 }> = ({ userId, children }) => {
-  const [activeUser, setActiveUser] =
-    useState<Partial<UserProfile | null>>(null);
-
-  useEffect(() => {
-    (async () => {
-      const user = await fetchUserInfo(userId);
-      setActiveUser(user);
-    })();
-  }, [userId]);
+  const { data: activeUser } = useUser(userId);
 
   return (
     <>

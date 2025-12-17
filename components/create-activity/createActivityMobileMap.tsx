@@ -1,17 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Dialog,
   DialogClose,
   DialogContent,
   DialogHeader,
   DialogTrigger,
+  DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import MapWrapper from "../map/map";
-import { DialogTitle } from "@mui/material";
 import { Button } from "../ui/button";
-import { DialogDescription } from "@radix-ui/react-dialog";
+import { env } from "@/lib/utils/env";
 
 interface CreateActivityMobileMapProps {
   buttonRef: React.RefObject<HTMLButtonElement | null>;
@@ -20,13 +21,7 @@ interface CreateActivityMobileMapProps {
 const CreateActivityMobileMap: React.FC<CreateActivityMobileMapProps> = ({
   buttonRef,
 }) => {
-  const [mapKey, setMapKey] = useState<string>("");
-
-  useEffect(() => {
-    fetch("/api/use-secret")
-      .then((res) => res.json())
-      .then((data) => setMapKey(data));
-  }, []);
+  const mapKey = env.googleMapsApiKey || "";
 
   return (
     <>

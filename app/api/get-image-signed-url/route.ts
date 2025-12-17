@@ -2,31 +2,37 @@ import { NextRequest, NextResponse } from "next/server";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { r2 } from "@/lib/r2/r2";
+import { withAuth } from "@/lib/middleware/auth";
+import { createError } from "@/lib/utils/errorHandler";
+import { env } from "@/lib/utils/env";
 
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { filePath, expiresIn = 60 * 60 } = body;
+async function handleGetSignedUrl(request: NextRequest) {
+  const body = await request.json();
+  const { filePath, expiresIn = 60 * 60 } = body;
 
-    if (!filePath) {
-      return NextResponse.json({ error: "Missing filePath" }, { status: 400 });
-    }
+  if (!filePath) {
+    throw createError.validation("Missing filePath");
+  }
 
-    const command = new GetObjectCommand({
-      Bucket: process.env.R2_BUCKET || "activities-tbilisi",
+  // Validate file path format
+  if (filePath.includes('..') || filePath.startsWith('/')) {
+    throw createError.validation("Invalid file path");
+  }
+
+  // Validate expiresIn is reasonable (max 24 hours)
+  const maxExpiresIn = 60 * 60 * 24;
+  const validExpiresIn = Math.min(Math.max(expiresIn, 60), maxExpiresIn);
+
+  const command = new GetObjectCommand({
+      Bucket: env.r2.bucket,
       Key: filePath,
     });
 
-    const signedUrl = await getSignedUrl(r2, command, {
-      expiresIn,
-    });
+  const signedUrl = await getSignedUrl(r2, command, {
+    expiresIn: validExpiresIn,
+  });
 
-    return NextResponse.json({ signedUrl });
-  } catch (error) {
-    console.error("Error generating signed GET URL:", error);
-    return NextResponse.json(
-      { error: "Failed to generate signed URL" },
-      { status: 500 },
-    );
-  }
+  return NextResponse.json({ signedUrl });
 }
+
+export const POST = withAuth(handleGetSignedUrl);

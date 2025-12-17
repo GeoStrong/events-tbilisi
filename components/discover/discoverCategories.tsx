@@ -33,20 +33,22 @@ const DiscoverCategories: React.FC<DiscoverCategoriesProps> = ({
       <h2 className="mb-4 font-semibold">Categories</h2>
 
       <div className="flex h-44 flex-col gap-3 overflow-y-auto pr-2">
-        {categories.map((category) => (
-          <Label
-            key={category.id}
-            className="flex cursor-pointer items-center gap-3"
-          >
-            <Input
-              type="checkbox"
-              checked={selectedCategories.includes(category.id)}
-              onChange={() => toggleCategory(category.id)}
-              className="h-4 w-4"
-            />
-            {category.name}
-          </Label>
-        ))}
+        {categories.map((category) => {
+          return (
+            <Label
+              key={category.id}
+              className="flex cursor-pointer items-center gap-3"
+            >
+              <Input
+                type="checkbox"
+                checked={selectedCategories.includes(category.id)}
+                onChange={() => toggleCategory(category.id)}
+                className="h-4 w-4 checked:bg-primary"
+              />
+              {category.name}
+            </Label>
+          );
+        })}
       </div>
     </>
   );

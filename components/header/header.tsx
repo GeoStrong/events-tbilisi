@@ -8,7 +8,6 @@ import { useLocation } from "react-use";
 import useScreenSize from "@/lib/hooks/useScreenSize";
 import AuthDialog from "../auth/authForm";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
-import HeaderProfileLoader from "./headerProfileLoader";
 import { Button } from "../ui/button";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -19,7 +18,7 @@ import HeaderProfile from "./headerProfile";
 const Header: React.FC = () => {
   const dispatch = useDispatch();
   const { authDialogOpen } = useSelector((state: RootState) => state.auth);
-  const { userProfile } = useGetUserProfile();
+  const { user, isLoading, isAuthenticated } = useGetUserProfile();
 
   const { pathname } = useLocation();
   const { isMobile } = useScreenSize();
@@ -29,31 +28,43 @@ const Header: React.FC = () => {
       ? "bg-transparent border-none"
       : "bg-white dark:bg-gray-900";
 
-  const setAuthDialogOpen = async (value: boolean) => {
+  const setAuthDialogOpen = (value: boolean) => {
     dispatch(authActions.setAuthDialogOpen(value));
   };
 
-  const openAuthDialog = () => setAuthDialogOpen(true);
+  const openAuthDialog = () => {
+    setAuthDialogOpen(true);
+  };
 
   return (
     <header
-      className={`sticky top-0 z-40 flex w-full items-center justify-between border-b dark:border-gray-600 md:px-20 ${headerBg} px-6 pb-2 pt-2 md:pb-0`}
+      className={`sticky top-0 z-40 flex w-full items-center justify-between border-b bg-white backdrop-blur-md dark:border-slate-700 dark:bg-slate-900 md:px-20 ${headerBg ? "border-none bg-transparent backdrop-blur-none" : ""} px-6 pb-2 pt-2 transition-colors md:pb-0`}
     >
-      <Link href="/" className="linear-yellow flex items-center gap-2">
+      <Link
+        href="/"
+        className="linear-yellow flex items-center gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+        aria-label="What'sOnTbilisi Home"
+      >
         <IoMdMegaphone className="text-4xl text-primary" />
-        <span className="linear-dark hidden md:inline">
+        <span className="gradient-primary hidden bg-clip-text text-2xl font-bold text-transparent lg:inline">
           What&apos;sOnTbilisi
         </span>
       </Link>
-      <HeaderNav userProfile={userProfile} onAuthClick={openAuthDialog} />
+      <HeaderNav
+        user={user}
+        isLoading={isLoading}
+        isAuthenticated={isAuthenticated}
+        onAuthClick={openAuthDialog}
+      />
       <div className="md:hidden">
-        {userProfile == null && <HeaderProfileLoader />}
-        {userProfile?.length === 0 ? (
+        {isLoading ? (
+          <div className="h-10 w-20 animate-pulse rounded-md bg-gray-200 dark:bg-gray-700" />
+        ) : !isAuthenticated || !user ? (
           <Button onClick={openAuthDialog} variant="outline" className="gap-2">
             Sign in
           </Button>
         ) : (
-          userProfile && <HeaderProfile user={userProfile[0]} />
+          <HeaderProfile user={user} />
         )}
       </div>
 

@@ -36,6 +36,8 @@ const useModifyActivity: (props: useModifyActivityProps) => {
   formikComponent: JSX.Element;
   openMobileMapRef: RefObject<HTMLButtonElement | null>;
   openCreateActivityAlertRef: RefObject<HTMLButtonElement | null>;
+  createdActivityId: string | null;
+  createdActivityTitle: string | null;
 } = ({
   user,
   activityId,
@@ -46,6 +48,8 @@ const useModifyActivity: (props: useModifyActivityProps) => {
   image,
 }) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [createdActivityId, setCreatedActivityId] = useState<string | null>(null);
+  const [createdActivityTitle, setCreatedActivityTitle] = useState<string | null>(null);
   const openMobileMapRef = useRef<HTMLButtonElement | null>(null);
   const openCreateActivityAlertRef = useRef<HTMLButtonElement | null>(null);
   const dispatch = useDispatch();
@@ -136,6 +140,9 @@ const useModifyActivity: (props: useModifyActivityProps) => {
       }
     } else {
       await postNewActivityCategories(activity[0].id, values.categories!);
+      // Store created activity info for feed posting
+      setCreatedActivityId(activity[0].id);
+      setCreatedActivityTitle(activity[0].title);
     }
   };
 
@@ -191,7 +198,13 @@ const useModifyActivity: (props: useModifyActivityProps) => {
     </Formik>
   );
 
-  return { formikComponent, openMobileMapRef, openCreateActivityAlertRef };
+  return { 
+    formikComponent, 
+    openMobileMapRef, 
+    openCreateActivityAlertRef,
+    createdActivityId,
+    createdActivityTitle,
+  };
 };
 
 export default useModifyActivity;

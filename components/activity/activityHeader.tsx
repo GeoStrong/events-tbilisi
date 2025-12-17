@@ -1,20 +1,33 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { FiShare } from "react-icons/fi";
+import { FiFileText } from "react-icons/fi";
 import Share from "../general/share";
 import { Category, ActivityEntity } from "@/lib/types";
 import BookmarkButton from "../general/bookmarkButton";
 import ActivityHeaderButtons from "./activityHeaderButtons";
 import ActivityEngagement from "./activityEngagement";
+import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
+import { useCheckActivityPosted } from "@/lib/hooks/useFeedPosts";
+import { Button } from "../ui/button";
+import { Loader2 } from "lucide-react";
 
 const ActivityHeader: React.FC<{
   activity: ActivityEntity;
   categories: (Category | null)[];
-}> = async ({ activity, categories }) => {
+}> = ({ activity, categories }) => {
+  const { user } = useGetUserProfile();
+  const { data: feedPost, isLoading: checkingPost } = useCheckActivityPosted(
+    user || ({} as any),
+    activity.id,
+  );
+
   return (
     <>
-      <header className="sticky top-20 z-40 mt-5 flex items-center justify-start gap-5 rounded-xl bg-white px-2 py-4 shadow-md dark:bg-gray-900 md:static md:px-6">
+      <header className="sticky top-20 z-40 mt-5 flex items-center justify-start gap-5 rounded-xl border bg-white px-2 py-4 shadow-md dark:bg-gray-800 md:static md:px-6">
         <div className="flex flex-col gap-3">
           <Link
             href="/"
@@ -27,11 +40,27 @@ const ActivityHeader: React.FC<{
           <h2 className="text-xl font-bold md:text-3xl">{activity.title}</h2>
           <div className="flex gap-3">
             <ActivityEngagement
+              user={user || null}
               activityId={activity.id}
               activityLikes={activity.likes || 0}
               activityDislikes={activity.dislikes || 0}
             />
             <BookmarkButton activityId={activity.id} />
+            {user && (
+              <>
+                {checkingPost ? (
+                  <Button variant="outline" size="sm" disabled>
+                    <Loader2 className="h-4 w-4 animate-spin md:h-5 md:w-5" />
+                  </Button>
+                ) : feedPost ? (
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href={`/?postId=${feedPost.id}`}>
+                      <FiFileText className="text-lg md:text-2xl" />
+                    </Link>
+                  </Button>
+                ) : null}
+              </>
+            )}
             <Share activity={activity}>
               <FiShare className="text-lg md:text-2xl" />
             </Share>

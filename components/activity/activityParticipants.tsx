@@ -191,7 +191,7 @@ const ActivityParticipants: React.FC<{
           setActiveSnapPoint={setSnap}
           fadeFromIndex={0}
         >
-          <DrawerTrigger className="w-full rounded-xl bg-white px-3 py-4 text-left shadow-md dark:bg-gray-900">
+          <DrawerTrigger className="w-full rounded-xl bg-white px-3 py-4 text-left shadow-md dark:bg-gray-800">
             <h3 className="mb-3 font-bold md:text-lg">
               Participants
               <span className="inline-block pl-3">{participants.length}</span>

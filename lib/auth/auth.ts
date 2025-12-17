@@ -1,5 +1,13 @@
 import { supabase } from "../supabase/supabaseClient";
 
+/**
+ * Sign up a new user
+ * @param email - User's email address
+ * @param password - User's password
+ * @param name - User's full name
+ * @returns Promise resolving to the signup response data
+ * @throws Error if signup fails
+ */
 export const signUp = async (email: string, password: string, name: string) => {
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -12,6 +20,13 @@ export const signUp = async (email: string, password: string, name: string) => {
   return data;
 };
 
+/**
+ * Sign in an existing user
+ * @param email - User's email address
+ * @param password - User's password
+ * @returns Promise resolving to the signin response data
+ * @throws Error if signin fails
+ */
 export const signIn = async (email: string, password: string) => {
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
@@ -21,6 +36,10 @@ export const signIn = async (email: string, password: string) => {
   return data;
 };
 
+/**
+ * Sign out the current user
+ * @throws Error if signout fails
+ */
 export const signOut = async () => {
   const { error } = await supabase.auth.signOut();
   if (error) throw error;
@@ -40,6 +59,11 @@ export const getUser = async () => {
   return user;
 };
 
+/**
+ * Fetch the current user's profile
+ * Creates a user profile if it doesn't exist
+ * @returns Promise resolving to an array containing the user profile or empty array if not authenticated
+ */
 export const fetchUserProfile = async () => {
   const {
     data: { user },

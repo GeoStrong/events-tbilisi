@@ -19,7 +19,7 @@ import { mapActions } from "@/lib/store/mapSlice";
 
 const CreateActivityLayout: React.FC<{ mapKey: string }> = ({ mapKey }) => {
   const dispatch = useDispatch();
-  const { userProfile, user } = useGetUserProfile();
+  const { user, isLoading, isAuthenticated } = useGetUserProfile();
   const { latLng } = useSelector((state: RootState) => state.map);
   const { isMobile } = useScreenSize();
 
@@ -41,14 +41,19 @@ const CreateActivityLayout: React.FC<{ mapKey: string }> = ({ mapKey }) => {
     dislikes: 0,
   };
 
-  const { formikComponent, openCreateActivityAlertRef, openMobileMapRef } =
-    useModifyActivity({
-      user: user,
-      latLng: latLng,
-      initialValues: initialValues,
-      isUpdatingActivity: false,
-      enableMapFloating: true,
-    });
+  const {
+    formikComponent,
+    openCreateActivityAlertRef,
+    openMobileMapRef,
+    createdActivityId,
+    createdActivityTitle,
+  } = useModifyActivity({
+    user: user,
+    latLng: latLng,
+    initialValues: initialValues,
+    isUpdatingActivity: false,
+    enableMapFloating: true,
+  });
 
   useEffectOnce(() => {
     dispatch(mapActions.setLatLng(null));
@@ -70,8 +75,9 @@ const CreateActivityLayout: React.FC<{ mapKey: string }> = ({ mapKey }) => {
         </div>
       )}
       <div className="w-full p-3 pb-10 md:pb-0">
-        {!userProfile && <CreateActivityLoading />}
-        {userProfile?.length === 0 ? (
+        {isLoading ? (
+          <CreateActivityLoading />
+        ) : !isAuthenticated || !user ? (
           <div className="flex flex-col items-center gap-4">
             <p className="text-center text-xl">
               Please sign up or log in to your account to create an activity
@@ -87,12 +93,14 @@ const CreateActivityLayout: React.FC<{ mapKey: string }> = ({ mapKey }) => {
             </Button>
           </div>
         ) : (
-          userProfile && <>{formikComponent}</>
+          <>{formikComponent}</>
         )}
       </div>
       <CreateActivityAlert
         buttonRef={openCreateActivityAlertRef}
         isActivityCreated={true}
+        activityId={createdActivityId || undefined}
+        activityTitle={createdActivityTitle || undefined}
       />
     </div>
   );

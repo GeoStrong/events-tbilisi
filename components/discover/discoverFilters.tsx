@@ -39,7 +39,7 @@ const DiscoverFilters: React.FC<DiscoverFiltersProps> = ({
 
   return (
     <>
-      <div className="md:hidden">
+      <div className="lg:hidden">
         <Sheet>
           <SheetTrigger className="flex w-full justify-center">
             <div className="flex items-center justify-center gap-3 rounded-md border bg-white p-3 shadow-md dark:bg-gray-900">
@@ -56,7 +56,7 @@ const DiscoverFilters: React.FC<DiscoverFiltersProps> = ({
                     Select Categories
                   </AccordionTrigger>
                   <AccordionContent>
-                    <div className="rounded-xl bg-white p-4 shadow-md dark:bg-gray-900 md:block md:w-64">
+                    <div className="rounded-xl bg-white p-4 shadow-md dark:bg-slate-800 md:block md:w-64">
                       <DiscoverCategories
                         selectedCategories={selectedCategories}
                         onSelectedCategories={setSelectedCategories}
@@ -80,7 +80,7 @@ const DiscoverFilters: React.FC<DiscoverFiltersProps> = ({
           </SheetContent>
         </Sheet>
       </div>
-      <div className="hidden h-fit w-full rounded-xl bg-white p-4 shadow-md dark:bg-gray-900 md:block md:w-64">
+      <div className="hidden h-fit w-full rounded-xl bg-white p-4 shadow-md dark:bg-slate-800 md:w-64 lg:block">
         <div className="mb-4">
           <DiscoverClearFilters
             onSearch={setSearch}

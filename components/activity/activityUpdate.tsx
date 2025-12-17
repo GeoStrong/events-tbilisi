@@ -43,7 +43,7 @@ const ActivityUpdate: React.FC<{
   const dispatch = useDispatch();
   const { latLng } = useSelector((state: RootState) => state.map);
   const { isMobile } = useScreenSize();
-  const [snap, setSnap] = React.useState<number | string | null>(snapPoints[0]);
+  const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
 
   useEffect(() => {
     if (isDrawerOpen) dispatch(mapActions.setLatLng(null));

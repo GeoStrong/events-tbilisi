@@ -8,6 +8,7 @@ interface ExpandableContainerProps {
   children: React.ReactNode;
   openDialog: boolean;
   setOpenDialog: (open: boolean) => void;
+  customOpenIcon?: React.ReactNode;
 }
 
 const ExpandableContainer: React.FC<ExpandableContainerProps> = ({
@@ -16,6 +17,7 @@ const ExpandableContainer: React.FC<ExpandableContainerProps> = ({
   children,
   openDialog,
   setOpenDialog,
+  customOpenIcon,
 }) => {
   useEffect(() => {
     if (openDialog) {
@@ -31,20 +33,40 @@ const ExpandableContainer: React.FC<ExpandableContainerProps> = ({
 
   return (
     <>
-      {" "}
       <AnimatePresence>
-        <div className="relative w-full rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900">
-          {!openDialog && (
-            <motion.div
-              layoutId={`expandable${layoutId}`}
-              onClick={() => setOpenDialog(true)}
-              className="absolute right-0 top-0 flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl"
-            >
-              <BiExpandAlt />
-            </motion.div>
-          )}
-          {containerTrigger}
-        </div>
+        {customOpenIcon ? (
+          <div className="relative inline-block">
+            {!openDialog && (
+              <motion.button
+                layoutId={layoutId}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setOpenDialog(true);
+                }}
+                className="flex cursor-pointer items-center justify-center rounded-xl border-0 bg-transparent p-0"
+                type="button"
+              >
+                {customOpenIcon}
+              </motion.button>
+            )}
+          </div>
+        ) : (
+          <div className="relative w-full rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-800">
+            {!openDialog && (
+              <motion.div
+                layoutId={`expandable${layoutId}`}
+                onClick={() => setOpenDialog(true)}
+                className="absolute right-0 top-0 flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl"
+              >
+                <BiExpandAlt />
+              </motion.div>
+            )}
+            <button onClick={() => setOpenDialog(true)}>
+              {containerTrigger}
+            </button>
+          </div>
+        )}
       </AnimatePresence>
       <AnimatePresence>
         {openDialog && (

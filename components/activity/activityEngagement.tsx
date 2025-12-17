@@ -5,56 +5,61 @@ import {
   getUserReaction,
   toggleActivityReaction,
 } from "@/lib/functions/supabaseFunctions";
-import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import { authActions } from "@/lib/store/authSlice";
-import React, { useEffect, useState } from "react";
+import { UserProfile } from "@/lib/types";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { AiFillDislike } from "react-icons/ai";
 import { AiFillLike } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 
 const ActivityEngagement: React.FC<{
+  user: UserProfile | null;
   activityId: string;
   activityLikes: number;
   activityDislikes: number;
-}> = ({ activityId, activityLikes, activityDislikes }) => {
+}> = ({ user, activityId, activityLikes, activityDislikes }) => {
   const [likes, setLikes] = useState<number>(activityLikes);
   const [dislikes, setDislikes] = useState<number>(activityDislikes);
-  const { user } = useGetUserProfile();
   const [userReaction, setUserReaction] = useState<"like" | "dislike" | null>(
     null,
   );
   const dispatch = useDispatch();
 
+  const userId = useMemo(() => user?.id, [user?.id]);
+
   useEffect(() => {
-    if (!user) return;
+    if (!userId) return;
 
     const loadReaction = async () => {
-      const reaction = await getUserReaction(activityId, user.id);
+      const reaction = await getUserReaction(activityId, userId);
       setUserReaction(reaction);
     };
 
     loadReaction();
-  }, [activityId, user]);
+  }, [activityId, userId]);
 
-  const handleReaction = async (reaction: "like" | "dislike") => {
-    if (!user) {
-      dispatch(authActions.setAuthDialogOpen(true));
-      return;
-    }
+  const handleReaction = useCallback(
+    async (reaction: "like" | "dislike") => {
+      if (!userId) {
+        dispatch(authActions.setAuthDialogOpen(true));
+        return;
+      }
 
-    await toggleActivityReaction(activityId, reaction, user!.id);
+      await toggleActivityReaction(activityId, reaction, userId);
 
-    const updated = await getActivityReactions(activityId);
+      const updated = await getActivityReactions(activityId);
 
-    setLikes(updated.likes);
-    setDislikes(updated.dislikes);
+      setLikes(updated.likes);
+      setDislikes(updated.dislikes);
 
-    if (userReaction === reaction) {
-      setUserReaction(null);
-    } else {
-      setUserReaction(reaction);
-    }
-  };
+      if (userReaction === reaction) {
+        setUserReaction(null);
+      } else {
+        setUserReaction(reaction);
+      }
+    },
+    [activityId, userId, userReaction, dispatch],
+  );
 
   return (
     <>
@@ -80,4 +85,5 @@ const ActivityEngagement: React.FC<{
     </>
   );
 };
+
 export default ActivityEngagement;

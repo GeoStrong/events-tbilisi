@@ -1,4 +1,4 @@
-﻿import { supabase } from "../supabase/supabaseClient";
+import { supabase } from "../supabase/supabaseClient";
 import {
   ActivityCategories,
   ActivityEntity,
@@ -6,9 +6,15 @@ import {
   CommentEntity,
   ImageType,
   NewActivityEntity,
+  UserProfile,
+  FeedPostWithActivity,
 } from "../types";
 import { isString, isValidImage } from "./helperFunctions";
 
+/**
+ * Fetch all categories from the database
+ * @returns Promise resolving to an array of Category objects
+ */
 export const getCategories = async () => {
   const { data, error } = await supabase.from("categories").select("*");
 
@@ -34,44 +40,193 @@ export const getCategoryById = async (categoryId: number | string) => {
   return data as Category[];
 };
 
+/**
+ * Get categories by activity ID using a join to avoid N+1 queries
+ * @param activityId - The ID of the activity
+ * @returns Promise resolving to an array of Category objects associated with the activity
+ */
 export const getCategoriesByActivityId = async (
   activityId: number | string,
 ) => {
-  const { data: categoryId, error: categoryIdError } = await supabase
+  // Use a join query instead of multiple queries to avoid N+1 problem
+  const { data, error } = await supabase
     .from("activity_categories")
-    .select("category_id")
+    .select(
+      `
+      category_id,
+      categories (
+        id,
+        name,
+        icon,
+        color,
+        category
+      )
+    `,
+    )
     .eq("activity_id", activityId);
 
-  if (categoryIdError) {
-    console.error("Error fetching categories for activity:", categoryIdError);
+  if (error) {
+    console.error("Error fetching categories for activity:", error);
     return [];
   }
 
-  const categories = (
-    await Promise.all(
-      categoryId?.map((item) =>
-        getCategoryById(item.category_id).then((category) => category),
-      ),
-    )
-  ).flat();
-
-  return categories;
+  // Transform the joined data to match Category type
+  return (data || [])
+    .map((item: any) => {
+      const category = item.categories;
+      if (!category) return null;
+      return {
+        id: category.id,
+        name: category.name,
+        icon: category.icon,
+        color: category.color,
+        category: category.category,
+      };
+    })
+    .filter((cat: Category | null) => cat !== null) as Category[];
 };
 
-export const getActivities = async () => {
-  const { data, error } = await supabase
+export interface PaginationParams {
+  page?: number;
+  limit?: number;
+  offset?: number;
+}
+
+export interface ActivityFilters {
+  search?: string;
+  date?: string;
+  categories?: string[];
+  userId?: string;
+}
+
+export interface PaginatedResult<T> {
+  data: T[];
+  page: number;
+  limit: number;
+  total: number;
+  hasMore: boolean;
+}
+
+/**
+ * Get activities with pagination and server-side filtering support
+ */
+export const getActivities = async (
+  params?: PaginationParams & { filters?: ActivityFilters },
+): Promise<ActivityEntity[] | PaginatedResult<ActivityEntity>> => {
+  const limit = params?.limit || 20;
+  const offset =
+    params?.offset || (params?.page ? (params.page - 1) * limit : 0);
+  const filters = params?.filters;
+
+  let query = supabase
     .from("activities")
-    .select("*")
-    .order("updated_at", { ascending: false });
+    .select("*", { count: params ? "exact" : undefined });
+
+  // Apply server-side filters
+  if (filters) {
+    // Filter by user ID
+    if (filters.userId) {
+      query = query.eq("user_id", filters.userId);
+    }
+
+    // Filter by date (exact match)
+    if (
+      filters.date &&
+      filters.date !== "weekend" &&
+      filters.date !== "month"
+    ) {
+      // For exact date match
+      const dateStr = filters.date.split("T")[0];
+      query = query
+        .gte("date", `${dateStr}T00:00:00`)
+        .lt("date", `${dateStr}T23:59:59`);
+    } else if (filters.date === "weekend") {
+      // Weekend filter: Saturday (6) or Sunday (0)
+      // This requires a more complex query - for now, we'll do client-side
+      // In production, consider a database function or computed column
+    } else if (filters.date === "month") {
+      // Current month filter
+      const now = new Date();
+      const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+      const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+      query = query
+        .gte("date", firstDay.toISOString())
+        .lte("date", lastDay.toISOString());
+    }
+
+    // Filter by categories (if provided)
+    // Note: This requires a join, so we'll handle it separately if needed
+    // For now, categories filtering is done via getActivitiesByCategoryId
+  }
+
+  // Order by updated_at descending
+  query = query.order("updated_at", { ascending: false });
+
+  if (params) {
+    query = query.range(offset, offset + limit - 1);
+  }
+
+  const { data, error, count } = await query;
 
   if (error) {
     console.error("Error fetching activities:", error);
-    return [];
+    return params
+      ? { data: [], page: params.page || 1, limit, total: 0, hasMore: false }
+      : [];
   }
 
-  return data;
+  let filteredData = data || [];
+
+  // Apply client-side filters that can't be done server-side efficiently
+  if (filters) {
+    // Search filter (text search across title, location, description)
+    if (filters.search) {
+      const searchLower = filters.search.toLowerCase();
+      filteredData = filteredData.filter(
+        (a) =>
+          a.title?.toLowerCase().includes(searchLower) ||
+          a.location?.toLowerCase().includes(searchLower) ||
+          a.description?.toLowerCase().includes(searchLower),
+      );
+    }
+
+    // Weekend filter (client-side for now)
+    if (filters.date === "weekend") {
+      filteredData = filteredData.filter((a) => {
+        if (!a.date) return false;
+        const day = new Date(a.date).getDay();
+        return day === 0 || day === 6; // Sunday or Saturday
+      });
+    }
+
+    // Category filtering via join (if categories are provided and not already filtered)
+    // This is handled separately via getActivitiesByCategoryId
+  }
+
+  if (params && count !== null) {
+    // Adjust count for client-side filtering
+    const adjustedCount =
+      filters?.search || filters?.date === "weekend"
+        ? filteredData.length
+        : count;
+
+    return {
+      data: filteredData,
+      page: params.page || 1,
+      limit,
+      total: adjustedCount,
+      hasMore: offset + limit < adjustedCount,
+    };
+  }
+
+  return filteredData;
 };
 
+/**
+ * Fetch a single activity by its ID
+ * @param activityId - The ID of the activity to fetch
+ * @returns Promise resolving to the ActivityEntity or null if not found
+ */
 export const getActivityById = async (activityId: number | string) => {
   const { data, error } = await supabase
     .from("activities")
@@ -86,26 +241,40 @@ export const getActivityById = async (activityId: number | string) => {
   return data;
 };
 
+/**
+ * Get activities by category ID using a join to avoid N+1 queries
+ * @param categoryId - The ID of the category
+ * @returns Promise resolving to an array of ActivityEntity objects in the specified category
+ */
 export const getActivitiesByCategoryId = async (categoryId: string) => {
-  const { data: activityIds, error: activityIdsError } = await supabase
+  // Use a join query instead of multiple queries to avoid N+1 problem
+  const { data, error } = await supabase
     .from("activity_categories")
-    .select("activity_id")
+    .select(
+      `
+      activity_id,
+      activities (
+*
+      )
+    `,
+    )
     .eq("category_id", categoryId);
 
-  if (activityIdsError) {
-    console.error("Error fetching activity categories:", activityIdsError);
+  if (error) {
+    console.error("Error fetching activities by category:", error);
     return [];
   }
 
-  const activities = (
-    await Promise.all(
-      activityIds!.map((item) =>
-        getActivityById(item.activity_id).then((activity) => activity),
-      ),
-    )
-  ).flat();
-
-  return activities;
+  // Transform the joined data to match ActivityEntity type
+  return (data || [])
+    .map((item: any) => {
+      const activity = item.activities;
+      if (!activity || Array.isArray(activity)) return null;
+      return activity as ActivityEntity;
+    })
+    .filter(
+      (activity: ActivityEntity | null) => activity !== null,
+    ) as ActivityEntity[];
 };
 
 export const getActivitiesByUserId = async (userId: string) => {
@@ -116,6 +285,46 @@ export const getActivitiesByUserId = async (userId: string) => {
 
   if (activityIdsError) {
     console.error("Error fetching activity categories:", activityIdsError);
+    return [];
+  }
+
+  return data as ActivityEntity[];
+};
+
+/**
+ * Get activities from users that the current user follows
+ * @param userId - The ID of the user whose followed users' activities to fetch
+ * @returns Promise resolving to an array of ActivityEntity objects from followed users
+ */
+export const getActivitiesFromFollowedUsers = async (userId: string) => {
+  // First, get all users that the current user follows
+  const { data: followings, error: followingsError } = await supabase
+    .from("followers")
+    .select("user_id")
+    .eq("follower_id", userId);
+
+  if (followingsError) {
+    console.error("Error fetching followings:", followingsError);
+    return [];
+  }
+
+  // If user doesn't follow anyone, return empty array
+  if (!followings || followings.length === 0) {
+    return [];
+  }
+
+  // Extract user IDs from followings
+  const followedUserIds = followings.map((f) => f.user_id);
+
+  // Get activities from followed users, ordered by most recent
+  const { data, error } = await supabase
+    .from("activities")
+    .select("*")
+    .in("user_id", followedUserIds)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching activities from followed users:", error);
     return [];
   }
 
@@ -564,4 +773,354 @@ export const deleteComment = async (commentId: string, userId: string) => {
   if (error) throw error;
 
   return data;
+};
+
+/**
+ * Feed Posts Functions
+ */
+
+/**
+ * Create a new feed post
+ * @param activityId - The ID of the activity to post
+ * @param userId - The ID of the user creating the post
+ * @param comment - Optional comment text
+ * @returns Promise resolving to the created FeedPostEntity
+ */
+export const createFeedPost = async (
+  activityId: string,
+  userId: string,
+  comment?: string | null,
+) => {
+  if (!activityId || !userId) {
+    throw new Error("Missing required fields: activityId and userId");
+  }
+
+  const { data, error } = await supabase
+    .from("feed_posts")
+    .insert([
+      {
+        user_id: userId,
+        activity_id: activityId,
+        comment: comment || null,
+      },
+    ])
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error creating feed post:", error);
+    throw error;
+  }
+
+  return data;
+};
+
+/**
+ * Get feed posts from users that the current user follows
+ * @param userId - The ID of the user whose followed users' posts to fetch
+ * @returns Promise resolving to an array of FeedPostWithActivity objects
+ */
+export const getFeedPostsFromFollowedUsers = async (userId: string) => {
+  // First, get all users that the current user follows
+  const { data: followings, error: followingsError } = await supabase
+    .from("followers")
+    .select("user_id")
+    .eq("follower_id", userId);
+
+  if (followingsError) {
+    console.error("Error fetching followings:", followingsError);
+    return [];
+  }
+
+  // Extract user IDs from followings and include the current user's own posts
+  const followedUserIds = followings ? followings.map((f) => f.user_id) : [];
+  const allUserIds = [...followedUserIds, userId]; // Include current user
+
+  // Get posts from followed users AND current user with activity and author info
+  const { data, error } = await supabase
+    .from("feed_posts")
+    .select(
+      `
+      *,
+      activities (*)
+    `,
+    )
+    .in("user_id", allUserIds)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching feed posts from followed users:", error);
+    return [];
+  }
+
+  if (!data || data.length === 0) {
+    return [];
+  }
+
+  // Get user IDs from posts
+  const userIds = [...new Set(data.map((item: any) => item.user_id))];
+
+  // Fetch user profiles separately
+  const { data: usersData, error: usersError } = await supabase
+    .from("users")
+    .select("id, email, name, avatar_path, created_at")
+    .in("id", userIds);
+
+  if (usersError) {
+    console.error("Error fetching users for feed posts:", usersError);
+    return [];
+  }
+
+  // Create a map of user_id to user profile
+  const usersMap = new Map(
+    (usersData || []).map((user: any) => [user.id, user as UserProfile]),
+  );
+
+  // Transform the data to match FeedPostWithActivity type
+  const transformedPosts = (data || [])
+    .map((item: any) => {
+      const activity = Array.isArray(item.activities)
+        ? item.activities[0]
+        : item.activities;
+      const author = usersMap.get(item.user_id);
+
+      if (!activity || !author) {
+        console.warn("Missing activity or author for post:", item.id, {
+          hasActivity: !!activity,
+          hasAuthor: !!author,
+          userId: item.user_id,
+        });
+        return null;
+      }
+
+      return {
+        id: item.id,
+        user_id: item.user_id,
+        activity_id: item.activity_id,
+        comment: item.comment,
+        created_at: item.created_at,
+        updated_at: item.updated_at,
+        activity: activity as ActivityEntity,
+        author: author as UserProfile,
+      };
+    })
+    .filter((post: any): post is FeedPostWithActivity => post !== null);
+
+  return transformedPosts;
+};
+
+/**
+ * Get a single feed post by ID
+ * @param postId - The ID of the post to fetch
+ * @returns Promise resolving to FeedPostWithActivity or null
+ */
+export const getFeedPostById = async (postId: string) => {
+  const { data, error } = await supabase
+    .from("feed_posts")
+    .select(
+      `
+      *,
+      activities (*)
+    `,
+    )
+    .eq("id", postId)
+    .single();
+
+  if (error) {
+    console.error("Error fetching feed post:", error);
+    return null;
+  }
+
+  if (!data) return null;
+
+  const activity = Array.isArray(data.activities)
+    ? data.activities[0]
+    : data.activities;
+
+  if (!activity) {
+    console.error("Activity not found for feed post:", postId);
+    return null;
+  }
+
+  // Fetch user profile separately
+  const { data: userData, error: userError } = await supabase
+    .from("users")
+    .select("id, email, name, avatar_path, created_at")
+    .eq("id", data.user_id)
+    .single();
+
+  if (userError || !userData) {
+    console.error("Error fetching user for feed post:", userError);
+    return null;
+  }
+
+  return {
+    id: data.id,
+    user_id: data.user_id,
+    activity_id: data.activity_id,
+    comment: data.comment,
+    created_at: data.created_at,
+    updated_at: data.updated_at,
+    activity: activity as ActivityEntity,
+    author: userData as UserProfile,
+  };
+};
+
+/**
+ * Update a feed post's comment
+ * @param postId - The ID of the post to update
+ * @param userId - The ID of the user updating the post
+ * @param comment - The new comment text
+ * @returns Promise resolving to the updated FeedPostEntity
+ */
+export const updateFeedPost = async (
+  postId: string,
+  userId: string,
+  comment: string | null,
+) => {
+  if (!postId || !userId) {
+    throw new Error("Missing required fields: postId and userId");
+  }
+
+  const { data, error } = await supabase
+    .from("feed_posts")
+    .update({ comment: comment || null })
+    .eq("id", postId)
+    .eq("user_id", userId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error updating feed post:", error);
+    throw error;
+  }
+
+  return data;
+};
+
+/**
+ * Delete a feed post
+ * @param postId - The ID of the post to delete
+ * @param userId - The ID of the user deleting the post
+ * @returns Promise resolving to the deleted post data
+ */
+export const deleteFeedPost = async (postId: string, userId: string) => {
+  if (!postId || !userId) {
+    throw new Error("Missing required fields: postId and userId");
+  }
+
+  const { data, error } = await supabase
+    .from("feed_posts")
+    .delete()
+    .eq("id", postId)
+    .eq("user_id", userId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error deleting feed post:", error);
+    throw error;
+  }
+
+  return data;
+};
+
+/**
+ * Check if an activity has been posted by a user
+ * @param activityId - The ID of the activity to check
+ * @param userId - The ID of the user to check
+ * @returns Promise resolving to FeedPostEntity or null
+ */
+export const checkIfActivityPosted = async (
+  activityId: string,
+  userId: string,
+) => {
+  if (!activityId || !userId) {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("feed_posts")
+    .select("*")
+    .eq("activity_id", activityId)
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Error checking if activity posted:", error);
+    return null;
+  }
+
+  return data;
+};
+
+/**
+ * Get feed posts by user ID
+ * @param userId - The ID of the user whose posts to fetch
+ * @returns Promise resolving to an array of FeedPostWithActivity objects
+ */
+export const getFeedPostsByUserId = async (userId: string) => {
+  if (!userId) {
+    return [];
+  }
+
+  // Get posts from the user with activity and author info
+  const { data, error } = await supabase
+    .from("feed_posts")
+    .select(
+      `
+      *,
+      activities (*)
+    `,
+    )
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching feed posts by user ID:", error);
+    return [];
+  }
+
+  if (!data || data.length === 0) {
+    return [];
+  }
+
+  // Get user profile
+  const { data: userData, error: userError } = await supabase
+    .from("users")
+    .select("id, email, name, avatar_path, created_at")
+    .eq("id", userId)
+    .single();
+
+  if (userError || !userData) {
+    console.error("Error fetching user for feed posts:", userError);
+    return [];
+  }
+
+  // Transform the data to match FeedPostWithActivity type
+  const transformedPosts = (data || [])
+    .map((item: any) => {
+      const activity = Array.isArray(item.activities)
+        ? item.activities[0]
+        : item.activities;
+
+      if (!activity) {
+        console.warn("Missing activity for post:", item.id);
+        return null;
+      }
+
+      return {
+        id: item.id,
+        user_id: item.user_id,
+        activity_id: item.activity_id,
+        comment: item.comment,
+        created_at: item.created_at,
+        updated_at: item.updated_at,
+        activity: activity as ActivityEntity,
+        author: userData as UserProfile,
+      };
+    })
+    .filter((post: any): post is FeedPostWithActivity => post !== null);
+
+  return transformedPosts;
 };

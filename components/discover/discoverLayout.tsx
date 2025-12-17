@@ -73,14 +73,14 @@ const DiscoverLayout: React.FC = () => {
             Discover Activities
           </h1>
 
-          <div className="flex w-full flex-col gap-3 md:flex-row md:gap-8">
+          <div className="flex w-full flex-col gap-4 md:gap-8 lg:flex-row">
             <DiscoverFilters
               setSearch={setSearch}
               setSelectedDate={setSelectedDate}
             />
 
             <div className="flex-1">
-              <div className="mb-6 rounded-xl bg-white p-6 shadow-md dark:bg-gray-900">
+              <div className="mb-6 rounded-xl bg-white p-6 shadow-md dark:border-slate-700 dark:bg-slate-800">
                 <div className="mb-6 md:block">
                   <DiscoverSearch search={search} onSearch={setSearch} />
                 </div>
@@ -93,7 +93,7 @@ const DiscoverLayout: React.FC = () => {
                           key={b}
                           variant="outline"
                           onClick={() => setQuickDate(b)}
-                          className="whitespace-nowrap rounded-full border px-4 py-2 dark:bg-gray-700"
+                          className="whitespace-nowrap rounded-full border-2 px-4 py-2 dark:border-slate-700 dark:bg-slate-800"
                         >
                           {b}
                         </Button>
@@ -105,7 +105,7 @@ const DiscoverLayout: React.FC = () => {
                     type="date"
                     value={selectedDate}
                     onChange={(e) => onDateSelect(e.target.value)}
-                    className="w-full dark:bg-gray-700 md:w-[20%]"
+                    className="w-full dark:border-slate-700 dark:bg-slate-800 md:w-[20%]"
                     min={new Date().toISOString().split("T")[0]}
                   />
                 </div>
@@ -116,7 +116,7 @@ const DiscoverLayout: React.FC = () => {
                   No activities found
                 </p>
               )}
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {activities?.map((activity) => (
                   <div
                     key={activity.id}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useEffect, useRef } from "react";
+import React, { Suspense, useRef } from "react";
 import { Button } from "../ui/button";
 import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
 import DisplayedActivities from "./displayedActivities";
@@ -10,8 +10,6 @@ const DisplayActivitiesBtn: React.FC = () => {
   const displayActivitiesBtnRef = useRef<HTMLButtonElement>(null!);
   const { searchParams, handleSearch } = useAddSearchQuery();
   const displayIsActive = searchParams.get("display-activities");
-
-  // Drawer is now controlled by the `open` prop in `DisplayedActivities`.
 
   return (
     <>
