@@ -44,7 +44,7 @@ const FeedActivityCard: React.FC<FeedActivityCardProps> = ({ activity }) => {
       className="group mb-4 block overflow-hidden rounded-lg border bg-card transition-all hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
     >
       <div className="flex gap-4">
-        <div className="relative h-32 w-32 flex-shrink-0 overflow-hidden rounded-l-lg md:h-40 md:w-40">
+        <div className="relative w-32 flex-shrink-0 overflow-hidden rounded-l-lg md:h-40 md:w-40">
           <OptimizedImage
             src={activityImage}
             width={160}

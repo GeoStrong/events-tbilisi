@@ -47,7 +47,7 @@ const FooterNavMobile: React.FC = () => {
         <li className="flex items-start">
           <Link
             href="/create-activity"
-            className="rounded-lg p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+            className="-translate-y-2 rounded-lg p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             aria-label="Create Activity"
             aria-current={pathname === "/create-activity" ? "page" : undefined}
           >
