@@ -1,16 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { withAuth } from "@/lib/middleware/auth";
 import { env } from "@/lib/utils/env";
 
-async function handleGetSecret(request: NextRequest) {
+async function handleGetSecret() {
+  // process.env.GOOGLE_MAPS_API_KEY
   const key = env.googleMapsApiKey || "";
-  const maskedKey = key
-    ? `${key.substring(0, 4)}...${key.substring(key.length - 4)}`
-    : "";
 
   return NextResponse.json({
-    key: process.env.NODE_ENV === "development" ? key : maskedKey,
-    warning: "This endpoint exposes sensitive data. Remove in production.",
+    key,
   });
 }
 

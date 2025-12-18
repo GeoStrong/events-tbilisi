@@ -78,9 +78,9 @@ const ActivityParticipants: React.FC<{
             }}
             transition={{ duration: 0.3 }}
             ref={containerRef}
-            className="h-[90dvh] overflow-y-auto"
+            className="h-[70dvh]"
           >
-            <div className="absolute right-1/2 w-full translate-x-1/2 bg-white dark:bg-gray-800">
+            <div className="absolute right-1/2 top-5 w-full translate-x-1/2 bg-white dark:bg-gray-800">
               <div className="flex justify-between px-5 shadow-md">
                 <div className=""></div>
                 <h3 className="mb-5 text-xl font-bold">Participants</h3>
@@ -93,7 +93,7 @@ const ActivityParticipants: React.FC<{
                 </Button>
               </div>
 
-              <div className="flex gap-2 px-5">
+              <div className="flex h-1/2 gap-2 overflow-y-scroll px-5">
                 <AnimatePresence>
                   <div className={`mt-5 ${activeUser ? "w-1/2" : "w-full"}`}>
                     {participantUserInfo?.map((user) => {

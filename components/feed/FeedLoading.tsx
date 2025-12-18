@@ -34,8 +34,6 @@ export const FeedPostSkeleton: React.FC = () => {
           {/* Dislike button skeleton */}
           <Skeleton className="h-8 w-16" />
         </div>
-        {/* View Activity button skeleton */}
-        <Skeleton className="h-9 w-32" />
       </div>
     </div>
   );

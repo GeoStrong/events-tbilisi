@@ -40,10 +40,12 @@ export const useFeedPosts = (userId: string | null) => {
       }
     },
     enabled: !!userId,
-    staleTime: Infinity, // Never consider data stale - prevent automatic refetches
+    staleTime: Infinity, // Never consider data stale - prevent automatic background refetches
     gcTime: 1000 * 60 * 10, // 10 minutes - keep in cache longer
     refetchOnWindowFocus: false, // Prevent refetch on window focus
-    refetchOnMount: false, // Don't refetch if data exists in cache
+    // When the feed page mounts again (e.g., after posting from activity page),
+    // always refetch so newly created posts are included.
+    refetchOnMount: true,
     refetchOnReconnect: false, // Don't refetch on reconnect
     retry: false, // Don't retry on failure to prevent infinite loops
   });
@@ -87,14 +89,17 @@ export const useCreateFeedPost = (user: UserProfile) => {
       return await createFeedPost(activityId, userId, comment);
     },
     onSuccess: useCallback(() => {
-      if (userId) {
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.feedPosts.fromFollowedUsers(userId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.feedPosts.all,
-        });
-      }
+      if (!userId) return;
+
+      // Mark the followed-users feed as stale so the next mount refetches it
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.feedPosts.fromFollowedUsers(userId),
+      });
+
+      // Keep broader aggregates in sync via invalidation
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.feedPosts.all,
+      });
     }, [queryClient, userId]),
   });
 };
@@ -118,16 +123,38 @@ export const useUpdateFeedPost = (user: UserProfile) => {
       return await updateFeedPost(postId, userId, comment);
     },
     onSuccess: useCallback(
-      (_: unknown, variables: { postId: string; comment: string | null }) => {
-        // Invalidate feed posts queries
-        if (userId) {
-          queryClient.invalidateQueries({
-            queryKey: queryKeys.feedPosts.detail(variables.postId),
-          });
-          queryClient.invalidateQueries({
-            queryKey: queryKeys.feedPosts.fromFollowedUsers(userId),
-          });
-        }
+      (
+        updatedPost: unknown,
+        variables: { postId: string; comment: string | null },
+      ) => {
+        if (!userId) return;
+
+        const postId = variables.postId;
+        const newComment = variables.comment;
+
+        // Update single-post detail cache if it exists
+        queryClient.setQueryData(
+          queryKeys.feedPosts.detail(postId),
+          (oldData: unknown) => {
+            if (!oldData || typeof oldData !== "object")
+              return updatedPost || oldData;
+            return {
+              ...(oldData as Record<string, unknown>),
+              comment: newComment,
+            };
+          },
+        );
+
+        // Update the comment field inside the followed-users feed list cache
+        queryClient.setQueryData(
+          queryKeys.feedPosts.fromFollowedUsers(userId),
+          (oldData: unknown) => {
+            if (!Array.isArray(oldData)) return oldData;
+            return oldData.map((post: any) =>
+              post?.id === postId ? { ...post, comment: newComment } : post,
+            );
+          },
+        );
       },
       [queryClient, userId],
     ),

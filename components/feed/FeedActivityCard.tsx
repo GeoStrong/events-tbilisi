@@ -16,7 +16,7 @@ interface FeedActivityCardProps {
 }
 
 const FeedActivityCard: React.FC<FeedActivityCardProps> = ({ activity }) => {
-  const { imageUrl: activityImage } = useOptimizedImage(activity.image, {
+  const { imageUrl: activityImage } = useOptimizedImage(activity?.image, {
     quality: 50,
     width: 300,
     height: 200,
@@ -24,23 +24,23 @@ const FeedActivityCard: React.FC<FeedActivityCardProps> = ({ activity }) => {
   });
 
   const formattedDate = useMemo(() => {
-    if (!activity.date) return null;
-    const date = new Date(activity.date);
+    if (!activity?.date) return null;
+    const date = new Date(activity?.date);
     return date.toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
       year: "numeric",
     });
-  }, [activity.date]);
+  }, [activity?.date]);
 
   const formattedTime = useMemo(() => {
-    if (!activity.time) return null;
-    return isString(activity?.time) ? activity.time : "";
-  }, [activity.time]);
+    if (!activity?.time) return null;
+    return isString(activity?.time) ? activity?.time : "";
+  }, [activity?.time]);
 
   return (
     <Link
-      href={`/activities/${activity.id}`}
+      href={`/activities/${activity?.id}`}
       className="group mb-4 block overflow-hidden rounded-lg border bg-card transition-all hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
     >
       <div className="flex gap-4">
@@ -51,19 +51,19 @@ const FeedActivityCard: React.FC<FeedActivityCardProps> = ({ activity }) => {
             height={160}
             containerClassName="h-full w-full"
             className="h-full w-full object-cover transition-transform group-hover:scale-105"
-            alt={activity.title}
+            alt={activity?.title}
             priority={false}
           />
         </div>
 
         <div className="flex flex-1 flex-col justify-center gap-2 p-3">
           <h3 className="line-clamp-2 text-base font-semibold group-hover:text-primary md:text-lg">
-            {activity.title}
+            {activity?.title}
           </h3>
 
-          {activity.description && (
+          {activity?.description && (
             <p className="line-clamp-2 text-sm text-muted-foreground">
-              {activity.description}
+              {activity?.description}
             </p>
           )}
 
@@ -82,10 +82,10 @@ const FeedActivityCard: React.FC<FeedActivityCardProps> = ({ activity }) => {
               </div>
             )}
 
-            {activity.location && (
+            {activity?.location && (
               <div className="flex items-center gap-1.5">
                 <ImLocation2 className="h-3.5 w-3.5 flex-shrink-0" />
-                <span className="line-clamp-1">{activity.location}</span>
+                <span className="line-clamp-1">{activity?.location}</span>
               </div>
             )}
           </div>

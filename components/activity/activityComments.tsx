@@ -119,21 +119,17 @@ const ActivityComments: React.FC<{
           setOpenDialog={setOpen}
           customOpenIcon={customIcon}
         >
-          <div className="h-[90dvh] w-[50vw] overflow-y-scroll">
-            <div className="absolute right-1/2 w-full translate-x-1/2 border-b bg-white dark:border-b-gray-500 dark:bg-gray-800">
-              <div className="flex justify-between px-5 shadow-md">
+          <div className="h-[70dvh] w-[50vw]">
+            <div className="absolute right-1/2 top-5 w-full translate-x-1/2 border-b bg-white dark:border-b-gray-500 dark:bg-gray-800">
+              <div className="flex items-start justify-between px-5 shadow-md">
                 <div className=""></div>
                 <h3 className="mb-5 text-xl font-bold">Comments</h3>
-                <Button
-                  onClick={() => setOpen(false)}
-                  variant="outline"
-                  className="p-2"
-                >
+                <button onClick={() => setOpen(false)} className="pt-2">
                   <AiOutlineClose />
-                </Button>
+                </button>
               </div>
             </div>
-            <div className="my-20">
+            <div className="mt-14 h-[88%] overflow-y-auto">
               {groupedComments.length === 0 && (
                 <p className="text-center text-gray-500">
                   No comments yet. Be the first to comment!

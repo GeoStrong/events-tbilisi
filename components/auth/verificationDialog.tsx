@@ -10,7 +10,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import Spinner from "../general/spinner";
 
 const VerificationDialog: React.FC = () => {
   const searchParams = useSearchParams();
@@ -49,7 +48,7 @@ const VerificationDialog: React.FC = () => {
 };
 
 const VerificationDialogWrapper: React.FC = () => (
-  <Suspense fallback={<Spinner />}>
+  <Suspense fallback={<>Loading...</>}>
     <VerificationDialog />
   </Suspense>
 );

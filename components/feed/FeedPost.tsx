@@ -4,7 +4,6 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { FeedPostWithActivity, UserProfile } from "@/lib/types";
 import UserAvatar from "../users/userAvatar";
 import ActivityEngagement from "../activity/activityEngagement";
-import Link from "next/link";
 import { Button } from "../ui/button";
 import { useDeleteFeedPost, useUpdateFeedPost } from "@/lib/hooks/useFeedPosts";
 import { Pencil, Trash2, X, Check } from "lucide-react";
@@ -96,9 +95,9 @@ const FeedPost: React.FC<FeedPostProps> = ({ user, post }) => {
     <div className="rounded-xl border bg-card p-4 shadow-md dark:border-slate-700 dark:bg-slate-800 md:p-6">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <UserAvatar avatarPath={post.author.avatar_path} size={12} />
+          <UserAvatar avatarPath={post.author?.avatar_path} size={12} />
           <div>
-            <p className="font-semibold">{post.author.name}</p>
+            <p className="font-semibold">{post.author?.name}</p>
             <p className="text-xs text-muted-foreground">{formattedDate}</p>
           </div>
         </div>
@@ -173,18 +172,17 @@ const FeedPost: React.FC<FeedPostProps> = ({ user, post }) => {
       <div className="flex items-center justify-between border-t pt-4 dark:border-slate-700">
         <ActivityEngagement
           user={user!}
-          activityId={post.activity.id}
-          activityLikes={post.activity.likes || 0}
-          activityDislikes={post.activity.dislikes || 0}
+          activityId={post.activity?.id}
+          activityLikes={post.activity?.likes || 0}
+          activityDislikes={post.activity?.dislikes || 0}
         />
-        <ActivityComments
-          user={user}
-          activity={post.activity}
-          customIcon={<FaRegComment className="text-xl" />}
-        />
-        <Button variant="outline" size="sm" asChild>
-          <Link href={`/activities/${post.activity.id}`}>View Activity</Link>
-        </Button>
+        {post.activity && (
+          <ActivityComments
+            user={user}
+            activity={post.activity}
+            customIcon={<FaRegComment className="text-xl" />}
+          />
+        )}
       </div>
 
       {/* Delete confirmation dialog */}
