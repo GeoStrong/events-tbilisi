@@ -4,7 +4,6 @@ import React from "react";
 import Link from "next/link";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { FiShare } from "react-icons/fi";
-import { FiFileText } from "react-icons/fi";
 import Share from "../general/share";
 import { Category, ActivityEntity } from "@/lib/types";
 import BookmarkButton from "../general/bookmarkButton";
