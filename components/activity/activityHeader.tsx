@@ -7,11 +7,14 @@ import { Category, ActivityEntity } from "@/lib/types";
 import BookmarkButton from "../general/bookmarkButton";
 import ActivityHeaderButtons from "./activityHeaderButtons";
 import ActivityEngagement from "./activityEngagement";
+import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 
 const ActivityHeader: React.FC<{
   activity: ActivityEntity;
   categories: (Category | null)[];
-}> = async ({ activity, categories }) => {
+}> = ({ activity, categories }) => {
+  const { user } = useGetUserProfile();
+
   return (
     <>
       <header className="sticky top-20 z-40 mt-5 flex items-center justify-start gap-5 rounded-xl bg-white px-2 py-4 shadow-md dark:bg-gray-900 md:static md:px-6">
@@ -32,6 +35,7 @@ const ActivityHeader: React.FC<{
               activityDislikes={activity.dislikes || 0}
             />
             <BookmarkButton activityId={activity.id} />
+
             <Share activity={activity}>
               <FiShare className="text-lg md:text-2xl" />
             </Share>

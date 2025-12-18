@@ -55,7 +55,7 @@ const ActivityHeaderButtons: React.FC<{
 
   return (
     <>
-      <div className="fixed bottom-16 left-0 flex w-full justify-center md:static md:bottom-0 md:justify-end">
+      <div className="fixed bottom-24 left-0 flex w-full justify-center md:static md:bottom-0 md:justify-end">
         {user?.id !== undefined && isUserHost && (
           <div className="flex w-full flex-row justify-between gap-2 px-6 md:justify-end">
             <ActivityUpdate user={user!} activity={updatedActivity} />
@@ -85,7 +85,7 @@ const ActivityHeaderButtons: React.FC<{
           </div>
         )}
         {isUserParticipant ? (
-          <p className="text-lg font-bold">
+          <p className="rounded-md border p-4 text-lg font-bold shadow-md">
             You are
             <span className="pl-2 text-green-600">Going</span>
           </p>
