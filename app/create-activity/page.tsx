@@ -1,8 +1,11 @@
 import React from "react";
 import CreateActivityLayout from "@/components/create-activity/createActivityLayout";
+import { env } from "@/lib/utils/env";
 
 const Map: React.FC = () => {
-  const key = process.env.API_KEY || "";
+  // Use NEXT_PUBLIC_ prefix so it's available on client side
+
+  const key = env.googleMapsApiKey || "";
 
   return (
     <>

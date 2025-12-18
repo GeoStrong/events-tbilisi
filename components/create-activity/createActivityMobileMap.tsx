@@ -7,11 +7,11 @@ import {
   DialogContent,
   DialogHeader,
   DialogTrigger,
+  DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import MapWrapper from "../map/map";
-import { DialogTitle } from "@mui/material";
 import { Button } from "../ui/button";
-import { DialogDescription } from "@radix-ui/react-dialog";
 
 interface CreateActivityMobileMapProps {
   buttonRef: React.RefObject<HTMLButtonElement | null>;
@@ -23,9 +23,12 @@ const CreateActivityMobileMap: React.FC<CreateActivityMobileMapProps> = ({
   const [mapKey, setMapKey] = useState<string>("");
 
   useEffect(() => {
-    fetch("/api/use-secret")
-      .then((res) => res.json())
-      .then((data) => setMapKey(data));
+    (async () => {
+      const response = await fetch("/api/use-secret");
+
+      const { key } = await response.json();
+      setMapKey(key);
+    })();
   }, []);
 
   return (

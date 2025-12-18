@@ -48,21 +48,31 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
 
   return (
     <Card
-      className="cursor-pointer duration-300 dark:border-gray-600 dark:bg-gray-900"
+      className="flex h-full flex-col cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:border-slate-700 dark:bg-slate-800"
       onClick={() => {
         if (setSearchParams)
           return setSearchParams("activity", activity.id.toString());
       }}
       key={activity.id}
+      role="article"
+      aria-label={`Activity: ${activity.title}`}
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          if (setSearchParams)
+            setSearchParams("activity", activity.id.toString());
+        }
+      }}
     >
-      <CardHeader className="relative p-0">
-        <div className="group relative h-48 w-full overflow-hidden rounded-t-xl bg-white">
+      <CardHeader className="relative flex-shrink-0 p-0">
+        <div className="group relative aspect-video h-48 w-full overflow-hidden rounded-t-xl bg-white">
           <OptimizedImage
             src={activityImage}
             width={100}
             height={100}
             quality={50}
-            alt="activity"
+            alt={activity.title || "Activity image"}
             priority={false}
             className={`transform rounded-t-xl transition-transform duration-300 group-hover:scale-105`}
             objectFit={`${!activityImage ? "contain" : "cover"}`}
@@ -74,21 +84,27 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
             {categories.map((category) => (
               <span
                 key={category?.id}
-                className={`rounded-full text-center bg-${category?.color} px-3 py-1 text-sm text-white`}
+                className={`rounded-full text-center bg-${category?.color} px-3 py-1 text-sm font-medium text-white`}
               >
                 {category?.name}
               </span>
             ))}
           </div>
         </div>
-        <CardTitle className="px-6 text-xl">{activity.title}</CardTitle>
+        <CardTitle className="min-h-[3rem] px-4 pt-4 text-xl leading-tight md:px-6 md:text-2xl">
+          {activity.title}
+        </CardTitle>
         <CardDescription></CardDescription>
       </CardHeader>
-      <CardContent className="flex items-center justify-between pb-0">
-        <p className="text-lg">
-          {activity.location && activity.location.toLocaleString()}
-        </p>
-        <p className="text-muted-foreground">{activity.hostName}</p>
+      <CardContent className="flex min-h-[4rem] flex-shrink-0 items-start justify-between gap-3 p-4 pb-0 md:p-6">
+        <div className="flex-1 min-w-0">
+          <p className="text-lg leading-snug break-words">
+            {activity.location && activity.location.toLocaleString()}
+          </p>
+          {activity.hostName && (
+            <p className="mt-1 text-sm text-muted-foreground">{activity.hostName}</p>
+          )}
+        </div>
         {activity.googleLocation && (
           <Link
             href="/map"
@@ -98,26 +114,29 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
                 handleLocationClick(activity.googleLocation);
               }
             }}
-            className="rounded-md border border-primary bg-transparent p-2"
+            className="flex-shrink-0 rounded-md border-2 border-primary bg-transparent p-2 transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+            aria-label={`View location on map: ${activity.location}`}
           >
-            <ImLocation2 className="text-primary" />
+            <ImLocation2 className="text-primary" aria-hidden="true" />
           </Link>
         )}
       </CardContent>
-      <CardFooter className="flex flex-col items-start gap-3">
+      <CardFooter className="mt-auto flex flex-col items-start gap-3 p-4 pt-4 md:p-6">
         <p className="flex items-center gap-1 text-base text-muted-foreground">
-          <BiTimeFive />
-          {activity.time && activity.time.toLocaleString()}
+          <BiTimeFive className="flex-shrink-0" />
+          <span>{activity.time && activity.time.toLocaleString()}</span>
         </p>
         <p className="flex items-center gap-1 text-base text-muted-foreground">
-          <MdDateRange />
-          {activity.date &&
-            new Date(activity.date).toLocaleDateString("en-US", {
-              month: "long",
-              year: "numeric",
-              weekday: "short",
-              day: "numeric",
-            })}
+          <MdDateRange className="flex-shrink-0" />
+          <span>
+            {activity.date &&
+              new Date(activity.date).toLocaleDateString("en-US", {
+                month: "long",
+                year: "numeric",
+                weekday: "short",
+                day: "numeric",
+              })}
+          </span>
         </p>
       </CardFooter>
     </Card>

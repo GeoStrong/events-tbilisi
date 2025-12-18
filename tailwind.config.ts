@@ -21,7 +21,7 @@ export default {
           foreground: "hsl(var(--popover-foreground))",
         },
         primary: {
-          DEFAULT: "#7C4DFF",
+          DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
@@ -58,6 +58,8 @@ export default {
       },
       backgroundImage: {
         yellow: "linear-gradient(90deg,#f0d466,#d7af31)",
+        "gradient-primary": "linear-gradient(90deg, #6366F1 0%, #8B5CF6 100%)",
+        "gradient-accent": "linear-gradient(90deg, #EC4899 0%, #F97316 100%)",
       },
     },
   },

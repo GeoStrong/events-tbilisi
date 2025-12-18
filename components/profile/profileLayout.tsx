@@ -14,9 +14,11 @@ import { useLocation } from "react-use";
 import { AiOutlineUser } from "react-icons/ai";
 import { BsCalendar2Event } from "react-icons/bs";
 import { FiSettings } from "react-icons/fi";
+import { FiFileText } from "react-icons/fi";
 import { toast } from "sonner";
 import ProfileActivitiesTab from "./profileActivitiesTab";
 import ProfileAccountTab from "./profileAccountTab";
+import ProfilePostsTab from "./profilePostsTab";
 
 const ProfileLayout: React.FC = () => {
   const { user } = useGetUserProfile();
@@ -74,7 +76,7 @@ const ProfileLayout: React.FC = () => {
                 value={activetab || "activities"}
                 className="w-full"
               >
-                <TabsList className="grid w-full grid-cols-3">
+                <TabsList className="grid w-full grid-cols-4">
                   <TabsTrigger
                     value="activities"
                     onClick={() => {
@@ -87,6 +89,19 @@ const ProfileLayout: React.FC = () => {
                       <BsCalendar2Event className="text-lg" />
                     </div>
                     <p className="hidden md:block">Activities</p>
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="posts"
+                    onClick={() => {
+                      goToHash("posts");
+                      setActiveTab("posts");
+                      setEditing(false);
+                    }}
+                  >
+                    <div className="md:hidden">
+                      <FiFileText className="text-lg" />
+                    </div>
+                    <p className="hidden md:block">Posts</p>
                   </TabsTrigger>
                   <TabsTrigger
                     value="account"
@@ -116,6 +131,8 @@ const ProfileLayout: React.FC = () => {
                 </TabsList>
 
                 <ProfileActivitiesTab userId={user.id} />
+
+                <ProfilePostsTab userId={user.id} />
 
                 <ProfileAccountTab
                   user={user}

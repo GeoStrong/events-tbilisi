@@ -12,7 +12,6 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import defaultUserImg from "@/public/images/default-user.png";
-import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import { groupCommentsOneLevel } from "@/lib/functions/helperFunctions";
 import ActivityCommentItem from "./activityCommentItem";
 import useComments from "@/lib/hooks/useComments";
@@ -35,11 +34,12 @@ import ExpandableContainer from "../general/expandableContainer";
 
 const snapPoints = [0.5, 1];
 
-const ActivityComments: React.FC<{ activity: ActivityEntity }> = ({
-  activity,
-}) => {
+const ActivityComments: React.FC<{
+  user: UserProfile | null;
+  activity: ActivityEntity;
+  customIcon?: React.ReactNode;
+}> = ({ user, activity, customIcon }) => {
   const [open, setOpen] = useState(false);
-  const { user } = useGetUserProfile();
   const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
   const [commentTextInput, setCommentTextInput] = useState<string>("");
   const [commentParentId, setCommentParentId] = useState<string | null>("");
@@ -83,38 +83,41 @@ const ActivityComments: React.FC<{ activity: ActivityEntity }> = ({
     <>
       <div className="hidden items-center justify-center md:flex">
         <ExpandableContainer
-          layoutId="1"
+          layoutId={`comments-${activity.id}`}
           containerTrigger={
-            <>
-              <h3 className="mb-3 text-lg font-bold">
-                Comments
-                <span className="inline-block pl-3">{comments.length}</span>
-              </h3>
-              <div className="flex items-center gap-3">
-                {comments && comments.length > 0 ? (
-                  <>
-                    <div className="w-10">
-                      <OptimizedImage
-                        src={firstUserAvatarUrl}
-                        width={20}
-                        height={20}
-                        containerClassName="h-8 w-8 rounded-full"
-                        alt="profile"
-                        priority={false}
-                      />
-                    </div>
-                    <p className="text-sm font-extralight">
-                      {(comments[0].text || "").slice(0, 40) + "..."}
-                    </p>
-                  </>
-                ) : (
-                  <p className="text-sm font-extralight">No comments yet</p>
-                )}
-              </div>
-            </>
+            !customIcon && (
+              <>
+                <h3 className="mb-3 text-lg font-bold">
+                  Comments
+                  <span className="inline-block pl-3">{comments.length}</span>
+                </h3>
+                <div className="flex items-center gap-3">
+                  {comments && comments.length > 0 ? (
+                    <>
+                      <div className="w-10">
+                        <OptimizedImage
+                          src={firstUserAvatarUrl}
+                          width={20}
+                          height={20}
+                          containerClassName="h-8 w-8 rounded-full"
+                          alt="profile"
+                          priority={false}
+                        />
+                      </div>
+                      <p className="text-sm font-extralight">
+                        {(comments[0].text || "").slice(0, 40) + "..."}
+                      </p>
+                    </>
+                  ) : (
+                    <p className="text-sm font-extralight">No comments yet</p>
+                  )}
+                </div>
+              </>
+            )
           }
           openDialog={open}
           setOpenDialog={setOpen}
+          customOpenIcon={customIcon}
         >
           <div className="h-[90dvh] w-[50vw] overflow-y-scroll">
             <div className="absolute right-1/2 w-full translate-x-1/2 border-b bg-white dark:border-b-gray-500 dark:bg-gray-800">
@@ -265,32 +268,36 @@ const ActivityComments: React.FC<{ activity: ActivityEntity }> = ({
           fadeFromIndex={0}
         >
           <DrawerTrigger className="w-full">
-            <div className="relative w-full rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900">
-              <h3 className="mb-3 text-left font-bold">
-                Comments
-                <span className="inline-block pl-3">{comments.length}</span>
-              </h3>
-              <div className="flex items-center gap-3 rounded-md bg-gray-100 p-2 dark:bg-gray-700">
-                {comments && comments.length > 0 ? (
-                  <>
-                    <OptimizedImage
-                      quality={50}
-                      src={firstUserAvatarUrl}
-                      width={20}
-                      height={20}
-                      containerClassName="h-8 w-8 rounded-full"
-                      alt="profile"
-                      priority={false}
-                    />
-                    <p className="text-sm font-extralight">
-                      {(comments[0].text || "").slice(0, 40) + "..."}
-                    </p>
-                  </>
-                ) : (
-                  <p className="text-sm font-extralight">No comments yet</p>
-                )}
+            {customIcon ? (
+              customIcon
+            ) : (
+              <div className="relative w-full rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-800">
+                <h3 className="mb-3 text-left font-bold">
+                  Comments
+                  <span className="inline-block pl-3">{comments.length}</span>
+                </h3>
+                <div className="flex items-center gap-3 rounded-md bg-gray-100 p-2 dark:bg-gray-700">
+                  {comments && comments.length > 0 ? (
+                    <>
+                      <OptimizedImage
+                        quality={50}
+                        src={firstUserAvatarUrl}
+                        width={20}
+                        height={20}
+                        containerClassName="h-8 w-8 rounded-full"
+                        alt="profile"
+                        priority={false}
+                      />
+                      <p className="text-sm font-extralight">
+                        {(comments[0].text || "").slice(0, 40) + "..."}
+                      </p>
+                    </>
+                  ) : (
+                    <p className="text-sm font-extralight">No comments yet</p>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
           </DrawerTrigger>
           <DrawerContent className="w-full" headerChildren={"Comments"}>
             <div className="mb-20 h-dvh overflow-y-auto">

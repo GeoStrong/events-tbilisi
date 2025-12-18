@@ -21,11 +21,12 @@ import {
   fetchUserInfo,
 } from "@/lib/profile/profile";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
-import MapWrapper from "../map/map";
 import ActivityComments from "./activityComments";
 import { useOptimizedImage } from "@/lib/hooks/useOptimizedImage";
 import ActivityParticipants from "./activityParticipants";
 import UserFollowButton from "../general/userFollowButton";
+import ActivityLocation from "./activityLocation";
+import PostToFeedButton from "../activities/PostToFeedButton";
 
 interface ActivityBodyProps {
   categories: (Category | null)[];
@@ -39,7 +40,6 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
   const { handleLocationClick } = useMapZoom(activity.id);
   const [host, setHost] = useState<UserProfile | null>();
   const { user } = useGetUserProfile();
-  const [mapKey, setMapKey] = useState<string>("");
   const [activityParticipants, setActivityParticipants] = useState<
     ActivityParticipantsEntity[] | null
   >(null);
@@ -72,16 +72,10 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
     })();
   }, [activity.id]);
 
-  useEffect(() => {
-    fetch("/api/use-secret")
-      .then((res) => res.json())
-      .then((data) => setMapKey(data));
-  }, []);
-
   return (
     <div className="mb-10 mt-5 flex w-full flex-col gap-5 md:flex-row">
       <div className="md:w-3/4">
-        <div className="flex flex-col gap-5 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 md:px-6">
+        <div className="flex flex-col gap-5 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-800 md:px-6">
           <div className="rounded-md">
             <OptimizedImage
               src={activityImage}
@@ -178,7 +172,7 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
         </div>
       </div>
       <div className="flex flex-col gap-5 md:w-1/4">
-        <div className="max-h-40 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">
+        <div className="max-h-40 rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-800 lg:col-span-1">
           <h3 className="font-bold md:text-lg">Host</h3>
           <div className="flex items-center gap-2">
             <Avatar className="h-12 w-12">
@@ -205,7 +199,7 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
             )}
           </div>
         </div>
-        <div className="rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900 lg:col-span-1">
+        <div className="rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-800 lg:col-span-1">
           <h3 className="font-bold md:text-lg">Additional Info</h3>
           <div className="flex items-center gap-2">
             <div className="mt-2 flex flex-col">
@@ -238,20 +232,17 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
             </div>
           </div>
         </div>
-        <div className="w-full rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-900">
-          <h3 className="mb-3 font-bold md:text-lg">Location on map</h3>
-          {mapKey && (
-            <MapWrapper
-              API_KEY={mapKey}
-              height="h-52"
-              displayActivities={false}
-              selectedActivityLocation={[
-                { key: activity.id, location: activity.googleLocation! },
-              ]}
+        {user?.id === activity.user_id && (
+          <div className="rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-800">
+            <h3 className="mb-3 font-bold md:text-lg">Share to Feed</h3>
+            <PostToFeedButton
+              activityId={activity.id}
+              activityTitle={activity.title}
             />
-          )}
-        </div>
-        <ActivityComments activity={activity} />
+          </div>
+        )}
+        <ActivityLocation activity={activity} />
+        <ActivityComments user={user} activity={activity} />
         {activityParticipants && activityParticipants.length > 0 && (
           <ActivityParticipants
             isHost={user?.id === activity.user_id}

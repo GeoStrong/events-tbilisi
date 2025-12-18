@@ -4,7 +4,7 @@ import React from "react";
 const HeaderProfileLoader: React.FC = () => {
   return (
     <Skeleton
-      className="dark:!bg-gray-600"
+      className="dark:!bg-slate-700"
       variant="circular"
       width={35}
       height={35}

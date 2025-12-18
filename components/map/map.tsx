@@ -115,14 +115,144 @@ const MapWrapper: React.FC<{
   displayActivities?: boolean;
   selectedActivityLocation?: Poi[];
 }> = ({ API_KEY, height, displayActivities, selectedActivityLocation }) => {
+  const [mapError, setMapError] = React.useState<string | null>(null);
+
+  const normalizedApiKey = React.useMemo(() => {
+    if (!API_KEY) return "";
+    return String(API_KEY).trim();
+  }, [API_KEY]);
+
+  const isValidKeyFormat = React.useMemo(() => {
+    if (!normalizedApiKey) return false;
+    return normalizedApiKey.startsWith("AIza") && normalizedApiKey.length >= 35;
+  }, [normalizedApiKey]);
+
+  React.useEffect(() => {
+    // Listen for Google Maps errors
+    const handleError = (event: ErrorEvent) => {
+      if (
+        event.message?.includes("InvalidKeyMapError") ||
+        event.message?.includes("Google Maps JavaScript API error")
+      ) {
+        setMapError(
+          "Invalid Google Maps API key. Please check your API key in .env.local and ensure it's valid and has the Maps JavaScript API enabled.",
+        );
+      }
+    };
+
+    window.addEventListener("error", handleError);
+    return () => window.removeEventListener("error", handleError);
+  }, []);
+
+  if (!normalizedApiKey) {
+    console.error(
+      "Google Maps API key is missing. Please set GOOGLE_MAPS_API_KEY in your .env.local file.",
+    );
+    return (
+      <div className="flex h-full items-center justify-center rounded-2xl bg-gray-100 dark:bg-gray-800">
+        <div className="p-4 text-center">
+          <p className="text-lg font-semibold text-red-600 dark:text-red-400">
+            Google Maps API Key Missing
+          </p>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            Please set GOOGLE_MAPS_API_KEY in your .env.local file.
+          </p>
+          <p className="mt-2 text-xs text-gray-500 dark:text-gray-500">
+            Get your API key from{" "}
+            <a
+              href="https://console.cloud.google.com/google/maps-apis"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 underline"
+            >
+              Google Cloud Console
+            </a>
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isValidKeyFormat) {
+    console.warn(
+      "Google Maps API key format appears invalid. Please verify your API key.",
+    );
+  }
+
+  if (mapError) {
+    return (
+      <div className="flex h-full items-center justify-center rounded-2xl bg-gray-100 dark:bg-gray-800">
+        <div className="p-4 text-center">
+          <p className="text-lg font-semibold text-red-600 dark:text-red-400">
+            Google Maps API Error
+          </p>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            {mapError}
+          </p>
+          <p className="mt-4 text-xs text-gray-500 dark:text-gray-500">
+            <a
+              href="https://console.cloud.google.com/google/maps-apis/credentials"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 underline"
+            >
+              Check your API key settings
+            </a>
+            {" | "}
+            <a
+              href="https://console.cloud.google.com/apis/library/maps-backend.googleapis.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 underline"
+            >
+              Enable Maps JavaScript API
+            </a>
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Suspense fallback={<MapLoadingLayout />}>
-      <APIProvider apiKey={API_KEY}>
-        <MapComponent
-          mapHeight={height}
-          displayActivities={displayActivities}
-          selectedActivity={selectedActivityLocation}
-        />
+      <APIProvider apiKey={normalizedApiKey}>
+        {mapError ? (
+          <div className="flex h-full items-center justify-center rounded-2xl bg-gray-100 dark:bg-gray-800">
+            <div className="p-4 text-center">
+              <p className="text-lg font-semibold text-red-600 dark:text-red-400">
+                Google Maps API Error
+              </p>
+              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                {mapError}
+              </p>
+              <p className="mt-4 text-xs text-gray-500 dark:text-gray-500">
+                <a
+                  href="https://console.cloud.google.com/google/maps-apis/credentials"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 underline"
+                >
+                  Check your API key settings
+                </a>
+                {" | "}
+                <a
+                  href="https://console.cloud.google.com/apis/library/maps-backend.googleapis.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 underline"
+                >
+                  Enable Maps JavaScript API
+                </a>
+              </p>
+            </div>
+          </div>
+        ) : (
+          <MapComponent
+            mapHeight={height}
+            displayActivities={displayActivities}
+            selectedActivity={selectedActivityLocation}
+          />
+        )}
       </APIProvider>
     </Suspense>
   );

@@ -1,36 +1,203 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# What'sOnTbilisi
+
+A modern event discovery and social platform for Tbilisi, Georgia. Discover, create, and participate in local activities and events.
+
+## Features
+
+- **Event Discovery**: Browse activities by category, location, and date
+- **Interactive Map**: View events on an interactive Google Map
+- **User Profiles**: Create profiles, follow users, and track your activities
+- **Activity Management**: Create, edit, and manage your own activities
+- **Social Features**: Follow users, comment on activities, and participate in events
+- **Real-time Updates**: Get real-time notifications and updates
+- **Dark Mode**: Beautiful dark mode support
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **UI Components**: Radix UI, shadcn/ui
+- **State Management**: Redux Toolkit
+- **Database**: Supabase (PostgreSQL)
+- **Storage**: Cloudflare R2
+- **Maps**: Google Maps API
+- **Authentication**: Supabase Auth
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm or yarn
+- Supabase account
+- Cloudflare R2 account (for image storage)
+- Google Maps API key
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/your-username/whatson-tbilisi.git
+cd whatson-tbilisi
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Set up environment variables:
+
+```bash
+cp .env.example .env.local
+```
+
+Fill in your environment variables in `.env.local`:
+
+- `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anonymous key
+- `GOOGLE_MAPS_API_KEY` - Your Google Maps API key (required for map functionality)
+- `R2_ENDPOINT` - Your Cloudflare R2 endpoint
+- `R2_ACCESS_KEY_ID` - Your R2 access key ID
+- `R2_SECRET_ACCESS_KEY` - Your R2 secret access key
+- `R2_BUCKET` - Your R2 bucket name
+
+4. Run database migrations:
+
+   - Set up your Supabase database schema
+   - Run the indexes from `lib/db/indexes.sql` in your Supabase SQL editor
+
+5. Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+6. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `npm run dev` - Start development server with Turbopack
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm test` - Run unit tests
+- `npm run test:watch` - Run tests in watch mode
+- `npm run test:coverage` - Generate test coverage report
+- `npm run test:e2e` - Run E2E tests with Playwright
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+whatson-tbilisi/
+├── app/                    # Next.js App Router pages
+│   ├── api/               # API routes
+│   ├── activities/        # Activity pages
+│   ├── create-activity/   # Activity creation
+│   ├── discover/          # Discovery/search
+│   ├── map/               # Map view
+│   └── profile/           # User profile
+├── components/            # React components
+│   ├── activities/        # Activity components
+│   ├── auth/              # Authentication components
+│   ├── ui/                # Reusable UI components
+│   └── ...
+├── lib/                   # Core utilities
+│   ├── auth/              # Authentication functions
+│   ├── functions/         # Helper functions
+│   ├── hooks/             # Custom React hooks
+│   ├── middleware/        # API middleware
+│   ├── store/             # Redux store
+│   ├── supabase/          # Supabase configuration
+│   └── utils/             # Utility functions
+├── public/                # Static assets
+└── tests/                 # Test files
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Environment Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+See `.env.example` for all required environment variables.
 
-## Deploy on Vercel
+## Database Schema
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The application uses Supabase (PostgreSQL). Key tables:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `users` - User profiles
+- `activities` - Events/activities
+- `activity_categories` - Activity categorization
+- `followers` - User follow relationships
+- `activity_participants` - Event participation
+- `activity_comments` - Comments on activities
+- `saved_activities` - Bookmarked activities
+
+## API Documentation
+
+See [docs/API.md](docs/API.md) for detailed API documentation.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
+
+## Testing
+
+The project includes:
+
+- Unit tests (Jest + React Testing Library)
+- E2E tests (Playwright)
+- Component tests
+
+Run all tests:
+
+```bash
+npm test
+npm run test:e2e
+```
+
+## Deployment
+
+### Vercel (Recommended)
+
+1. Push your code to GitHub
+2. Import your repository in Vercel
+3. Add environment variables in Vercel dashboard
+4. Deploy
+
+### Other Platforms
+
+The application can be deployed to any platform that supports Next.js:
+
+- Netlify
+- AWS Amplify
+- Railway
+- Self-hosted with Node.js
+
+## Security
+
+- All API routes are protected with authentication
+- Environment variables are validated at startup
+- File uploads are validated for type and size
+- Input sanitization is implemented
+
+## Performance
+
+- Image optimization with Next.js Image component
+- Database query optimization with indexes
+- Pagination for large datasets
+- Lazy loading and code splitting
+
+## License
+
+[Add your license here]
+
+## Support
+
+For issues and questions, please open an issue on GitHub.
+
+## Acknowledgments
+
+- Built with Next.js
+- Powered by Supabase
+- Styled with Tailwind CSS

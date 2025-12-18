@@ -1,7 +1,10 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { FiShare } from "react-icons/fi";
+import { FiFileText } from "react-icons/fi";
 import Share from "../general/share";
 import { Category, ActivityEntity } from "@/lib/types";
 import BookmarkButton from "../general/bookmarkButton";
@@ -17,7 +20,7 @@ const ActivityHeader: React.FC<{
 
   return (
     <>
-      <header className="sticky top-20 z-40 mt-5 flex items-center justify-start gap-5 rounded-xl bg-white px-2 py-4 shadow-md dark:bg-gray-900 md:static md:px-6">
+      <header className="sticky top-20 z-40 mt-5 flex items-center justify-start gap-5 rounded-xl border bg-white px-2 py-4 shadow-md dark:bg-gray-800 md:static md:px-6">
         <div className="flex flex-col gap-3">
           <Link
             href="/"
@@ -30,6 +33,7 @@ const ActivityHeader: React.FC<{
           <h2 className="text-xl font-bold md:text-3xl">{activity.title}</h2>
           <div className="flex gap-3">
             <ActivityEngagement
+              user={user || null}
               activityId={activity.id}
               activityLikes={activity.likes || 0}
               activityDislikes={activity.dislikes || 0}

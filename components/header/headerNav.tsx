@@ -16,15 +16,25 @@ import { BiHomeAlt2, BiSearchAlt2 } from "react-icons/bi";
 
 interface HeaderNavProps {
   onAuthClick: () => void;
-  userProfile: UserProfile[] | null;
+  user: UserProfile | null;
+  isLoading: boolean;
+  isAuthenticated: boolean;
 }
 
-const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick, userProfile }) => {
+const HeaderNav: React.FC<HeaderNavProps> = ({
+  onAuthClick,
+  user,
+  isLoading,
+  isAuthenticated,
+}) => {
   const pathname = usePathname();
 
   return (
     <>
-      <nav className="hidden items-center gap-3 md:flex">
+      <nav
+        className="hidden items-center gap-3 md:flex"
+        aria-label="Main navigation"
+      >
         <LayoutGroup>
           <ul className="flex items-center gap-6">
             <li
@@ -32,9 +42,11 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick, userProfile }) => {
             >
               <Link
                 href="/"
-                className="mb-1 flex flex-col items-center gap-1 px-3 text-sm"
+                className="mb-1 flex flex-col items-center gap-1 rounded-lg px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                aria-label="Feed"
+                aria-current={pathname === "/" ? "page" : undefined}
               >
-                <BiHomeAlt2 className="text-base" />
+                <BiHomeAlt2 className="text-base" aria-hidden="true" />
                 Feed
               </Link>
               {pathname === "/" && (
@@ -49,9 +61,11 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick, userProfile }) => {
             >
               <Link
                 href="/activities"
-                className="mb-1 flex flex-col items-center gap-1 px-3 text-sm"
+                className="mb-1 flex flex-col items-center gap-1 rounded-lg px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                aria-label="Activities"
+                aria-current={pathname === "/activities" ? "page" : undefined}
               >
-                <AiOutlineAppstore className="text-base" />
+                <AiOutlineAppstore className="text-base" aria-hidden="true" />
                 Activities
               </Link>
               {pathname === "/activities" && (
@@ -66,9 +80,15 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick, userProfile }) => {
             >
               <Link
                 href="/discover"
-                className="mb-1 flex flex-col items-center gap-1 px-3 text-sm"
+                className="mb-1 flex flex-col items-center gap-1 rounded-lg px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                aria-label="Search and Discover"
+                aria-current={
+                  pathname === "/discover" || pathname === "/search"
+                    ? "page"
+                    : undefined
+                }
               >
-                <BiSearchAlt2 className="text-lg" />
+                <BiSearchAlt2 className="text-lg" aria-hidden="true" />
                 Search
               </Link>
               {pathname === "/search" && (
@@ -83,9 +103,11 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick, userProfile }) => {
             >
               <Link
                 href="/map"
-                className="mb-1 flex flex-col items-center gap-1 px-3 text-sm"
+                className="mb-1 flex flex-col items-center gap-1 rounded-lg px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                aria-label="Map"
+                aria-current={pathname === "/map" ? "page" : undefined}
               >
-                <FiMapPin className="text-base" />
+                <FiMapPin className="text-base" aria-hidden="true" />
                 Map
               </Link>
               {pathname === "/map" && (
@@ -100,9 +122,13 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick, userProfile }) => {
             >
               <Link
                 href="/create-activity"
-                className="mb-1 flex flex-col items-center gap-1 px-3 text-sm"
+                className="mb-1 flex flex-col items-center gap-1 rounded-lg px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                aria-label="Create Activity"
+                aria-current={
+                  pathname === "/create-activity" ? "page" : undefined
+                }
               >
-                <AiOutlinePlusCircle className="text-base" />
+                <AiOutlinePlusCircle className="text-base" aria-hidden="true" />
                 Create Activity
               </Link>
               {pathname === "/create-activity" && (
@@ -114,19 +140,20 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ onAuthClick, userProfile }) => {
             </li>
 
             <li className={`hover:text-primary`}>
-              {userProfile === null && <HeaderProfileLoader />}
-              {userProfile?.length === 0 ||
-              (userProfile && userProfile[0] === null) ? (
+              {isLoading ? (
+                <HeaderProfileLoader />
+              ) : !isAuthenticated || !user ? (
                 <Button
                   onClick={onAuthClick}
                   variant="ghost"
                   className="gap-2 border"
+                  aria-label="Sign in to your account"
                 >
-                  <User className="h-5 w-5" />
+                  <User className="h-5 w-5" aria-hidden="true" />
                   <span className="md:inline">Sign In</span>
                 </Button>
               ) : (
-                <>{userProfile && <HeaderProfile user={userProfile[0]} />}</>
+                <HeaderProfile user={user} />
               )}
             </li>
           </ul>

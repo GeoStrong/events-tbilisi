@@ -15,6 +15,9 @@ import { Label } from "../ui/label";
 import { UserProfile } from "@/lib/types";
 import { Button } from "../ui/button";
 import { signOut } from "@/lib/auth/auth";
+import { useDispatch } from "react-redux";
+import { userActions } from "@/lib/store/userSlice";
+import { AppDispatch } from "@/lib/store/store";
 
 interface ProfileAccountTabProps {
   user: UserProfile | null;
@@ -31,6 +34,7 @@ const ProfileAccountTab: React.FC<ProfileAccountTabProps> = ({
 }) => {
   const [nameValue, phoneValue, bioValue] = userDataValues;
   const [handleName, handlePhone, handleBio] = onSetUserDataFunctions;
+  const dispatch = useDispatch<AppDispatch>();
 
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -73,7 +77,7 @@ const ProfileAccountTab: React.FC<ProfileAccountTabProps> = ({
               <CardContent className="space-y-4">
                 {/* Name */}
                 <div className="space-y-2">
-                  <Label className="text-lg" htmlFor="profile-name">
+                  <Label className="text-base" htmlFor="profile-name">
                     Name
                   </Label>
                   <Field
@@ -82,7 +86,7 @@ const ProfileAccountTab: React.FC<ProfileAccountTabProps> = ({
                     name="name"
                     disabled={!edit}
                     placeholder="Enter your name"
-                    className="p-5 text-lg dark:border-gray-500"
+                    className="p-5 dark:border-gray-500"
                   />
                   <ErrorMessage
                     name="name"
@@ -94,21 +98,21 @@ const ProfileAccountTab: React.FC<ProfileAccountTabProps> = ({
                 {/* Email (readonly) */}
                 {user && (
                   <div className="space-y-2">
-                    <Label className="text-lg" htmlFor="profile-email">
+                    <Label className="text-base" htmlFor="profile-email">
                       Email
                     </Label>
                     <Input
                       id="profile-email"
                       value={user.email}
                       disabled
-                      className="p-5 text-lg dark:border-gray-500"
+                      className="p-5 dark:border-gray-500"
                     />
                   </div>
                 )}
 
                 {/* Phone */}
                 <div className="space-y-2">
-                  <Label className="text-lg" htmlFor="profile-phone">
+                  <Label className="text-base" htmlFor="profile-phone">
                     Phone
                   </Label>
                   <Field
@@ -118,7 +122,7 @@ const ProfileAccountTab: React.FC<ProfileAccountTabProps> = ({
                     type="tel"
                     disabled={!edit}
                     placeholder="+123456789"
-                    className="p-5 text-lg dark:border-gray-500"
+                    className="p-5 dark:border-gray-500"
                   />
                   <ErrorMessage
                     name="phone"
@@ -129,7 +133,7 @@ const ProfileAccountTab: React.FC<ProfileAccountTabProps> = ({
 
                 {/* Bio */}
                 <div className="space-y-2">
-                  <Label className="text-lg" htmlFor="profile-bio">
+                  <Label className="text-base" htmlFor="profile-bio">
                     Bio
                   </Label>
                   <Field
@@ -138,7 +142,7 @@ const ProfileAccountTab: React.FC<ProfileAccountTabProps> = ({
                     name="bio"
                     disabled={!edit}
                     placeholder="Tell us about yourself..."
-                    className="p-5 text-lg dark:border-gray-500"
+                    className="p-5 dark:border-gray-500"
                     rows={4}
                   />
                   <ErrorMessage
@@ -154,9 +158,10 @@ const ProfileAccountTab: React.FC<ProfileAccountTabProps> = ({
                   variant="destructive"
                   onClick={async () => {
                     await signOut();
+                    dispatch(userActions.logout());
                     window.location.reload();
                   }}
-                  className="p-5 text-lg"
+                  className="p-5 text-sm"
                 >
                   Log out
                 </Button>

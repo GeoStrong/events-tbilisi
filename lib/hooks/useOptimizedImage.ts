@@ -1,6 +1,7 @@
 /**
  * Hook for using optimized images in components
  * Handles async image fetching with proper loading states
+ * Uses shared image cache context for browser-level persistence
  */
 
 import { useEffect, useState } from "react";
@@ -9,6 +10,7 @@ import {
   getCachedOptimizedImageUrl,
 } from "@/lib/functions/supabaseFunctions";
 import type { ImageType } from "@/lib/types";
+import { useImageCache } from "@/lib/context/ImageCacheContext";
 
 interface UseOptimizedImageOptions {
   quality?: number;
@@ -25,6 +27,7 @@ export const useOptimizedImage = (
   const [imageUrl, setImageUrl] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const { getCachedUrl, setCachedUrl } = useImageCache();
 
   useEffect(() => {
     if (!imageLocation) {
@@ -35,25 +38,45 @@ export const useOptimizedImage = (
 
     let isMounted = true;
 
-    // Try to read a synchronous cache entry to avoid loading flicker
+    // Try browser localStorage cache first (persists across refreshes)
     let hadCache = false;
-    try {
-      const cached = getCachedOptimizedImageUrl(imageLocation, {
-        quality: options.quality,
-        format: options.format,
-        width: options.width,
-        height: options.height,
-      });
+    const browserCached = getCachedUrl(imageLocation, {
+      quality: options.quality,
+      format: options.format,
+      width: options.width,
+      height: options.height,
+    });
 
-      if (cached) {
-        hadCache = true;
-        setImageUrl(cached);
-        setIsLoading(false);
-        // continue to fetch in background to refresh cache if needed
+    if (browserCached) {
+      hadCache = true;
+      setImageUrl(browserCached);
+      setIsLoading(false);
+    } else {
+      // Fallback to in-memory cache (per-process)
+      try {
+        const cached = getCachedOptimizedImageUrl(imageLocation, {
+          quality: options.quality,
+          format: options.format,
+          width: options.width,
+          height: options.height,
+        });
+
+        if (cached) {
+          hadCache = true;
+          setImageUrl(cached);
+          setIsLoading(false);
+          // Store in browser cache for persistence
+          setCachedUrl(imageLocation, cached, {
+            quality: options.quality,
+            format: options.format,
+            width: options.width,
+            height: options.height,
+          });
+        }
+      } catch (e) {
+        // ignore cache errors and proceed to fetch
+        console.error("Error reading cached optimized image URL:", e);
       }
-    } catch (e) {
-      // ignore cache errors and proceed to fetch
-      console.error("Error reading cached optimized image URL:", e);
     }
 
     const fetchImage = async () => {
@@ -68,9 +91,18 @@ export const useOptimizedImage = (
           height: options.height,
         });
 
-        if (isMounted) {
-          setImageUrl(url || options.fallback || "");
+        if (isMounted && url) {
+          setImageUrl(url);
           setError(null);
+          // Store in browser cache for future use
+          setCachedUrl(imageLocation, url, {
+            quality: options.quality,
+            format: options.format,
+            width: options.width,
+            height: options.height,
+          });
+        } else if (isMounted) {
+          setImageUrl(options.fallback || "");
         }
       } catch (err) {
         if (isMounted) {
@@ -96,6 +128,8 @@ export const useOptimizedImage = (
     options.width,
     options.height,
     options.fallback,
+    getCachedUrl,
+    setCachedUrl,
   ]);
 
   return { imageUrl, isLoading, error };
