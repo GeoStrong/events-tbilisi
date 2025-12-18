@@ -15,10 +15,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { redirect } from "next/navigation";
 import ActivityUpdate from "./activityUpdate";
 import { Category, ActivityEntity, ActivityCategories } from "@/lib/types";
 import { checkUserParticipation } from "@/lib/profile/profile";
+import { useInvalidateActivities } from "@/lib/hooks/useActivities";
+import { useRouter } from "next/navigation";
 
 const ActivityHeaderButtons: React.FC<{
   activity: ActivityEntity;
@@ -26,13 +27,18 @@ const ActivityHeaderButtons: React.FC<{
 }> = ({ activity, categories }) => {
   const { user } = useGetUserProfile();
   const [isUserParticipant, setIsUserParticipant] = useState<boolean>(false);
+  const { invalidateAll: invalidateAllActivities } = useInvalidateActivities();
+  const router = useRouter();
 
   const isUserHost = activity.user_id === user?.id;
 
   const deleteActivityHandler = async () => {
     if (!user?.id) return;
     await deleteActivityByUser(user.id, activity.id);
-    redirect("/activities");
+    // Refresh any cached activity lists/maps
+    invalidateAllActivities();
+    // Navigate away from the now-deleted activity page
+    router.push("/activities");
   };
 
   const categoryIds = categories.map(

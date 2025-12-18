@@ -104,6 +104,8 @@ const ActivityUpdate: React.FC<{
             <CreateActivityAlert
               buttonRef={openCreateActivityAlertRef}
               isActivityCreated={false}
+              activityId={activity.id}
+              activityTitle={activity.title}
             />
           </DrawerHeader>
         </DrawerContent>

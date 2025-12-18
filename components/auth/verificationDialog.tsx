@@ -48,7 +48,7 @@ const VerificationDialog: React.FC = () => {
 };
 
 const VerificationDialogWrapper: React.FC = () => (
-  <Suspense fallback={<>Loading...</>}>
+  <Suspense fallback={<></>}>
     <VerificationDialog />
   </Suspense>
 );

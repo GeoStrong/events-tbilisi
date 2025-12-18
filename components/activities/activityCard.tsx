@@ -48,7 +48,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
 
   return (
     <Card
-      className="flex h-full flex-col cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:border-slate-700 dark:bg-slate-800"
+      className="flex h-full cursor-pointer flex-col transition-all duration-300 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:border-slate-700 dark:bg-slate-800"
       onClick={() => {
         if (setSearchParams)
           return setSearchParams("activity", activity.id.toString());
@@ -97,12 +97,14 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
         <CardDescription></CardDescription>
       </CardHeader>
       <CardContent className="flex min-h-[4rem] flex-shrink-0 items-start justify-between gap-3 p-4 pb-0 md:p-6">
-        <div className="flex-1 min-w-0">
-          <p className="text-lg leading-snug break-words">
+        <div className="min-w-0 flex-1">
+          <p className="break-words text-lg leading-snug">
             {activity.location && activity.location.toLocaleString()}
           </p>
           {activity.hostName && (
-            <p className="mt-1 text-sm text-muted-foreground">{activity.hostName}</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {activity.hostName}
+            </p>
           )}
         </div>
         {activity.googleLocation && (

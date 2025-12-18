@@ -3,8 +3,7 @@
 import React from "react";
 import Header from "@/components/header/header";
 import Container from "@/components/container/container";
-import ActivityCategoriesCarousel from "@/components/activities/activityCategoriesCarousel";
-import { categories } from "@/lib/data/categories";
+import SmartActivityCategoriesCarousel from "@/components/activities/smartActivityCategoriesCarousel";
 import { useLocation } from "react-use";
 import SearchSection from "./searchSection";
 import { Toaster } from "../ui/sonner";
@@ -23,9 +22,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <VerificationDialogWrapper />
       <SignupSuccessDialog />
       <Header />
-      {displayCategories && (
-        <ActivityCategoriesCarousel categories={categories} />
-      )}
+      {displayCategories && <SmartActivityCategoriesCarousel />}
       {displaySearchSection && <SearchSection />}
       <Container>{children}</Container>
     </>

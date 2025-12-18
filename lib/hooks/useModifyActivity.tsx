@@ -21,6 +21,7 @@ import {
   postNewActivityCategories,
   updateActivtiy,
 } from "../functions/supabaseFunctions";
+import { useInvalidateActivities } from "./useActivities";
 
 interface useModifyActivityProps {
   user: UserProfile | null;
@@ -48,12 +49,17 @@ const useModifyActivity: (props: useModifyActivityProps) => {
   image,
 }) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [createdActivityId, setCreatedActivityId] = useState<string | null>(null);
-  const [createdActivityTitle, setCreatedActivityTitle] = useState<string | null>(null);
+  const [createdActivityId, setCreatedActivityId] = useState<string | null>(
+    null,
+  );
+  const [createdActivityTitle, setCreatedActivityTitle] = useState<
+    string | null
+  >(null);
   const openMobileMapRef = useRef<HTMLButtonElement | null>(null);
   const openCreateActivityAlertRef = useRef<HTMLButtonElement | null>(null);
   const dispatch = useDispatch();
   const { isMobile } = useScreenSize();
+  const { invalidateAll: invalidateAllActivities } = useInvalidateActivities();
 
   const validationSchema = Yup.object({
     title: Yup.string()
@@ -133,6 +139,8 @@ const useModifyActivity: (props: useModifyActivityProps) => {
         JSON.stringify(initialValues.categories) ===
         JSON.stringify(values.categories)
       ) {
+        // Even if categories didn't change, the core activity may have – keep caches fresh.
+        invalidateAllActivities();
         return;
       } else {
         await deleteActivityCategories(activityId || "");
@@ -140,10 +148,13 @@ const useModifyActivity: (props: useModifyActivityProps) => {
       }
     } else {
       await postNewActivityCategories(activity[0].id, values.categories!);
-      // Store created activity info for feed posting
+      // Store created activity info for follow-up UI (e.g., feed posting)
       setCreatedActivityId(activity[0].id);
       setCreatedActivityTitle(activity[0].title);
     }
+
+    // Ensure all activities-based views (lists, map pins) see the latest data
+    invalidateAllActivities();
   };
 
   useEffect(() => {
@@ -198,9 +209,9 @@ const useModifyActivity: (props: useModifyActivityProps) => {
     </Formik>
   );
 
-  return { 
-    formikComponent, 
-    openMobileMapRef, 
+  return {
+    formikComponent,
+    openMobileMapRef,
     openCreateActivityAlertRef,
     createdActivityId,
     createdActivityTitle,

@@ -52,6 +52,19 @@ const ActivityCommentItem: React.FC<ActivityCommentItemProps> = ({
     },
   );
 
+  const commentFormattedDate =
+    comment.created_at &&
+    new Date().getFullYear() === new Date(comment.created_at).getFullYear()
+      ? new Date(comment.created_at).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        })
+      : new Date(comment?.created_at || "").toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
+
   return (
     <div className="flex items-start gap-3">
       <Link href={`/users/${comment.user_id}`}>
@@ -75,11 +88,14 @@ const ActivityCommentItem: React.FC<ActivityCommentItemProps> = ({
                 className={`text-base ${isReply ? "font-semibold" : "font-bold"}`}
               >
                 {profile?.name || "User"}
-                {activityHostId === comment.user_id && (
-                  <span className="ml-2 rounded-xl border px-2 text-xs font-light text-gray-600 dark:border-gray-400 dark:text-gray-400">
-                    Author
-                  </span>
-                )}
+                <span className="pl-2 text-xs font-light text-gray-600 dark:text-gray-400">
+                  {commentFormattedDate}
+                  {activityHostId === comment.user_id && (
+                    <span className="ml-2 rounded-xl border px-2 text-xs font-light text-gray-600 dark:border-gray-400 dark:text-gray-400">
+                      Author
+                    </span>
+                  )}
+                </span>
               </h4>
             </Link>
 

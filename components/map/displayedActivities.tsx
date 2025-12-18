@@ -15,8 +15,7 @@ import {
 } from "../ui/drawer";
 import useScreenSize from "@/lib/hooks/useScreenSize";
 import ActivityCardsWrapper from "../activities/activityCardsWrapper";
-import ActivityCategories from "../activities/activityCategoriesCarousel";
-import { categories } from "@/lib/data/categories";
+import SmartActivityCategoriesCarousel from "../activities/smartActivityCategoriesCarousel";
 
 interface CreateActivityProps {
   buttonRef: React.RefObject<HTMLButtonElement>;
@@ -52,7 +51,7 @@ const DisplayedActivities: React.FC<CreateActivityProps> = ({
                 <DrawerDescription className="text-left text-base"></DrawerDescription>
               </DrawerHeader>
               <div className="flex flex-col gap-3 p-4">
-                {isMobile && <ActivityCategories categories={categories} />}
+                {isMobile && <SmartActivityCategoriesCarousel />}
                 <ActivityCardsWrapper />
               </div>
               <DrawerFooter className="flex flex-col gap-2 md:flex-row-reverse">

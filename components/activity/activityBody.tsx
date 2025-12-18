@@ -26,7 +26,6 @@ import { useOptimizedImage } from "@/lib/hooks/useOptimizedImage";
 import ActivityParticipants from "./activityParticipants";
 import UserFollowButton from "../general/userFollowButton";
 import ActivityLocation from "./activityLocation";
-import PostToFeedButton from "../activities/PostToFeedButton";
 
 interface ActivityBodyProps {
   categories: (Category | null)[];
@@ -232,15 +231,6 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
             </div>
           </div>
         </div>
-        {user?.id === activity.user_id && (
-          <div className="rounded-xl bg-white px-3 py-4 shadow-md dark:bg-gray-800">
-            <h3 className="mb-3 font-bold md:text-lg">Share to Feed</h3>
-            <PostToFeedButton
-              activityId={activity.id}
-              activityTitle={activity.title}
-            />
-          </div>
-        )}
         <ActivityLocation activity={activity} />
         <ActivityComments user={user} activity={activity} />
         {activityParticipants && activityParticipants.length > 0 && (

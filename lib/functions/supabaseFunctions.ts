@@ -160,7 +160,7 @@ export const getActivities = async (
   }
 
   // Order by updated_at descending
-  query = query.order("updated_at", { ascending: false });
+  query = query.order("date", { ascending: false });
 
   if (params) {
     query = query.range(offset, offset + limit - 1);
@@ -580,18 +580,56 @@ export const deleteActivityByUser = async (
   userId: string,
   activityId: string,
 ) => {
-  const { data, error } = await supabase
-    .from("activities")
-    .delete()
-    .eq("id", activityId)
-    .eq("user_id", userId);
+  try {
+    // Fetch the activity first so we can clean up its image and related data
+    const { data: activity, error: fetchError } = await supabase
+      .from("activities")
+      .select("id, image")
+      .eq("id", activityId)
+      .eq("user_id", userId)
+      .maybeSingle();
 
-  if (error) {
-    console.error("Error deleting an activity:", error);
+    if (fetchError) {
+      console.error("Error fetching activity before delete:", fetchError);
+    }
+
+    // Best-effort image cleanup – don't fail the whole delete if this throws
+    if (activity?.image) {
+      try {
+        await deleteImageFromStorage(activity.image as string);
+      } catch (imageErr) {
+        console.error(
+          "Failed to delete activity image from storage:",
+          imageErr,
+        );
+      }
+    }
+
+    // Delete related activity categories (foreign-key rows)
+    try {
+      await deleteActivityCategories(activityId);
+    } catch (catErr) {
+      console.error("Failed to delete activity categories:", catErr);
+    }
+
+    // Finally, delete the activity row
+    const { data: deleted, error } = await supabase
+      .from("activities")
+      .delete()
+      .eq("id", activityId)
+      .eq("user_id", userId)
+      .select("*");
+
+    if (error) {
+      console.error("Error deleting an activity:", error);
+      return [];
+    }
+
+    return deleted as ActivityEntity[];
+  } catch (err) {
+    console.error("Unexpected error deleting activity:", err);
     return [];
   }
-
-  return data;
 };
 
 export const updateActivtiy = async (
@@ -904,7 +942,13 @@ export const getFeedPostsFromFollowedUsers = async (userId: string) => {
         author: author as UserProfile,
       };
     })
-    .filter((post: any): post is FeedPostWithActivity => post !== null);
+    .filter((post: any): post is FeedPostWithActivity => post !== null)
+    // Sort so that updated_at (when present) takes precedence over created_at
+    .sort((a, b) => {
+      const aTs = new Date(a.updated_at || a.created_at).getTime();
+      const bTs = new Date(b.updated_at || b.created_at).getTime();
+      return bTs - aTs;
+    });
 
   return transformedPosts;
 };
@@ -984,7 +1028,11 @@ export const updateFeedPost = async (
 
   const { data, error } = await supabase
     .from("feed_posts")
-    .update({ comment: comment || null })
+    .update({
+      comment: comment || null,
+      // Mark the post as updated so ordering can use updated_at
+      updated_at: new Date().toISOString(),
+    })
     .eq("id", postId)
     .eq("user_id", userId)
     .select()

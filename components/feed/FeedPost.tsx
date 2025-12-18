@@ -98,7 +98,9 @@ const FeedPost: React.FC<FeedPostProps> = ({ user, post }) => {
           <UserAvatar avatarPath={post.author?.avatar_path} size={12} />
           <div>
             <p className="font-semibold">{post.author?.name}</p>
-            <p className="text-xs text-muted-foreground">{formattedDate}</p>
+            <p className="text-xs text-muted-foreground">
+              Created at {formattedDate}
+            </p>
           </div>
         </div>
         {isOwnPost && (
@@ -185,7 +187,6 @@ const FeedPost: React.FC<FeedPostProps> = ({ user, post }) => {
         )}
       </div>
 
-      {/* Delete confirmation dialog */}
       <AlertDialog
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}

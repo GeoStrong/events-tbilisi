@@ -52,11 +52,25 @@ const Feed: React.FC = () => {
         {postsLoading && !memoizedPosts.length ? (
           <FeedPostSkeleton />
         ) : (
-          <div className="space-y-6">
-            {memoizedPosts.map((post) => (
-              <FeedPost key={post.id} user={user} post={post} />
-            ))}
-          </div>
+          <>
+            {memoizedPosts.length === 0 ? (
+              <div className="flex w-full flex-col items-center justify-center gap-4">
+                <p className="text-center text-muted-foreground">
+                  You don&apos;t have any posts in your feed yet! Start by
+                  following users and activities you&apos;re interested in.
+                </p>
+                <Button variant="outline" asChild>
+                  <Link href="/activities">View Activities</Link>
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {memoizedPosts.map((post) => (
+                  <FeedPost key={post.id} user={user} post={post} />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
