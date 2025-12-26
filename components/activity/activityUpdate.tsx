@@ -17,6 +17,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/lib/store/store";
 import { mapActions } from "@/lib/store/mapSlice";
 import { useDispatch } from "react-redux";
+import { env } from "@/lib/utils/env";
 
 const snapPoints = [0.5, 1];
 
@@ -75,6 +76,7 @@ const ActivityUpdate: React.FC<{
       isUpdatingActivity: true,
       enableMapFloating: isDrawerOpen,
       image: image,
+      apiKey: env.googleMapsApiKey || "",
     });
 
   return (

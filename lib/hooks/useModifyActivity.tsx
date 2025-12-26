@@ -31,6 +31,7 @@ interface useModifyActivityProps {
   isUpdatingActivity: boolean;
   enableMapFloating?: boolean;
   image?: ImageType;
+  apiKey?: string;
 }
 
 const useModifyActivity: (props: useModifyActivityProps) => {
@@ -47,6 +48,7 @@ const useModifyActivity: (props: useModifyActivityProps) => {
   isUpdatingActivity = false,
   enableMapFloating = false,
   image,
+  apiKey = "",
 }) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [createdActivityId, setCreatedActivityId] = useState<string | null>(
@@ -204,6 +206,7 @@ const useModifyActivity: (props: useModifyActivityProps) => {
           handleImagePreview={setImagePreview}
           handleOpenMobileMap={onOpenMobileMap}
           displayOpenMapButton={isUpdatingActivity ? true : isMobile}
+          apiKey={apiKey}
         />
       )}
     </Formik>

@@ -64,12 +64,12 @@ const MapComponent: React.FC<MapProps> = ({
         defaultCenter={
           selectedActivity
             ? selectedActivity[0].location
-            : { lat: 41.73809, lng: 44.7808 }
+            : { lat: 41.73809, lng: 44.7808 } // Tbilisi coordinates
         }
         gestureHandling={"greedy"}
         disableDefaultUI={true}
-        defaultZoom={selectedActivity ? 16 : 8}
-        minZoom={12}
+        defaultZoom={selectedActivity ? 16 : 12}
+        minZoom={6}
         className={`${mapHeight} w-full`}
         onMousemove={(e) => {
           mouseMoveHandler(e);

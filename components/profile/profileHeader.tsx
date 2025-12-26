@@ -136,7 +136,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
 
                 <Button
                   size="icon"
-                  variant="secondary"
+                  variant="outline"
                   className="absolute bottom-0 right-0 h-10 w-10 rounded-full"
                   disabled={uploading}
                   onClick={handleAvatarClick}

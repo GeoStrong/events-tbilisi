@@ -53,6 +53,7 @@ const CreateActivityLayout: React.FC<{ mapKey: string }> = ({ mapKey }) => {
     initialValues: initialValues,
     isUpdatingActivity: false,
     enableMapFloating: true,
+    apiKey: mapKey,
   });
 
   useEffectOnce(() => {

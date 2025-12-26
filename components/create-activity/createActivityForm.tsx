@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { FaMapMarkedAlt } from "react-icons/fa";
 import { useLocation } from "react-use";
 import Image from "next/image";
+import PlacesAutocomplete from "./PlacesAutocomplete";
 
 interface CreateActivityProps {
   formik: FormikProps<NewActivityEntity>;
@@ -18,6 +19,7 @@ interface CreateActivityProps {
   latLng: google.maps.LatLngLiteral | null;
   handleOpenMobileMap: () => void;
   displayOpenMapButton: boolean;
+  apiKey: string;
 }
 
 const CreateActivityForm: React.FC<CreateActivityProps> = ({
@@ -27,6 +29,7 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
   latLng,
   handleOpenMobileMap,
   displayOpenMapButton,
+  apiKey,
 }) => {
   const { pathname } = useLocation();
 
@@ -145,12 +148,23 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
         {/* Location */}
         <div>
           <label htmlFor="location">Address *</label>
-          <Field
+          <PlacesAutocomplete
+            value={formik.values.location || ""}
+            onChange={(value) => {
+              formik.setFieldValue("location", value);
+            }}
+            onPlaceSelect={(place) => {
+              // Update location field with the selected address
+              formik.setFieldValue("location", place.address);
+              // Update googleLocation with lat/lng
+              formik.setFieldValue("googleLocation", {
+                lat: place.lat,
+                lng: place.lng,
+              });
+            }}
+            placeholder="Start typing an address..."
             className="dark:border-gray-600"
-            as={Input}
-            id="location"
-            name="location"
-            placeholder="Activity location"
+            apiKey={apiKey}
           />
           <ErrorMessage
             name="location"

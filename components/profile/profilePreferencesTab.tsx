@@ -9,15 +9,24 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { Bell, Globe, Lock, Mail, Palette } from "lucide-react";
+import { Bell, Globe, Lock, Mail, Palette, Monitor, Sun, Moon } from "lucide-react";
 import { Label } from "../ui/label";
 import { Separator } from "@radix-ui/react-dropdown-menu";
-import { Switch } from "../ui/switch";
 import useThemeSwitch from "@/lib/hooks/useThemeSwitch";
 import { Button } from "../ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 const ProfilePreferencesTab: React.FC = () => {
-  const { onThemeToggle } = useThemeSwitch();
+  const { theme, setTheme } = useThemeSwitch();
   return (
     <>
       <TabsContent value="preferences" className="space-y-4">
@@ -86,9 +95,56 @@ const ProfilePreferencesTab: React.FC = () => {
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <Palette className="h-6 w-6 text-muted-foreground" />
-                <Switch onCheckedChange={onThemeToggle} />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Palette className="h-6 w-6 text-muted-foreground" />
+                  <Label className="text-base">Theme</Label>
+                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="w-[140px] justify-start">
+                      {theme === "system" ? (
+                        <>
+                          <Monitor className="mr-2 h-4 w-4" />
+                          System
+                        </>
+                      ) : theme === "dark" ? (
+                        <>
+                          <Moon className="mr-2 h-4 w-4" />
+                          Dark
+                        </>
+                      ) : (
+                        <>
+                          <Sun className="mr-2 h-4 w-4" />
+                          Light
+                        </>
+                      )}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Select Theme</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuRadioGroup
+                      value={theme || "system"}
+                      onValueChange={(value) =>
+                        setTheme(value as "system" | "light" | "dark")
+                      }
+                    >
+                      <DropdownMenuRadioItem value="system">
+                        <Monitor className="mr-2 h-4 w-4" />
+                        System
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="light">
+                        <Sun className="mr-2 h-4 w-4" />
+                        Light
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="dark">
+                        <Moon className="mr-2 h-4 w-4" />
+                        Dark
+                      </DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
           </CardContent>
