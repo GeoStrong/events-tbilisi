@@ -19,7 +19,6 @@ interface CreateActivityProps {
   latLng: google.maps.LatLngLiteral | null;
   handleOpenMobileMap: () => void;
   displayOpenMapButton: boolean;
-  apiKey: string;
 }
 
 const CreateActivityForm: React.FC<CreateActivityProps> = ({
@@ -29,7 +28,6 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
   latLng,
   handleOpenMobileMap,
   displayOpenMapButton,
-  apiKey,
 }) => {
   const { pathname } = useLocation();
 
@@ -38,6 +36,28 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
   useEffect(() => {
     if (latLng) {
       formik.setFieldValue("googleLocation", latLng);
+      
+      // Reverse geocode to get address when latLng is set from map click
+      // Only reverse geocode if location field is empty or significantly different
+      // This prevents overwriting when address is selected from autocomplete
+      if (typeof window !== "undefined" && window.google?.maps) {
+        const geocoder = new window.google.maps.Geocoder();
+        geocoder.geocode(
+          { location: latLng },
+          (results, status) => {
+            if (status === "OK" && results && results[0]) {
+              const newAddress = results[0].formatted_address;
+              const currentLocation = formik.values.location || "";
+              
+              // Only update if location is empty or if the new address is significantly different
+              // This allows reverse geocoding on map click while preserving autocomplete selections
+              if (!currentLocation || !currentLocation.includes(newAddress.split(",")[0])) {
+                formik.setFieldValue("location", newAddress);
+              }
+            }
+          },
+        );
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [latLng]);
@@ -164,7 +184,6 @@ const CreateActivityForm: React.FC<CreateActivityProps> = ({
             }}
             placeholder="Start typing an address..."
             className="dark:border-gray-600"
-            apiKey={apiKey}
           />
           <ErrorMessage
             name="location"

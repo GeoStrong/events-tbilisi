@@ -16,6 +16,7 @@ import CreateActivityAlert from "./createActivityAlert";
 import useModifyActivity from "@/lib/hooks/useModifyActivity";
 import { useEffectOnce } from "react-use";
 import { mapActions } from "@/lib/store/mapSlice";
+import { APIProvider } from "@vis.gl/react-google-maps";
 
 const CreateActivityLayout: React.FC<{ mapKey: string }> = ({ mapKey }) => {
   const dispatch = useDispatch();
@@ -53,7 +54,6 @@ const CreateActivityLayout: React.FC<{ mapKey: string }> = ({ mapKey }) => {
     initialValues: initialValues,
     isUpdatingActivity: false,
     enableMapFloating: true,
-    apiKey: mapKey,
   });
 
   useEffectOnce(() => {
@@ -61,49 +61,52 @@ const CreateActivityLayout: React.FC<{ mapKey: string }> = ({ mapKey }) => {
   });
 
   return (
-    <div className="mt-3 flex w-full flex-col justify-between gap-2 rounded-md bg-white dark:bg-gray-800 md:max-h-[500px] lg:flex-row">
-      {isMobile ? (
-        <div className="md:hidden">
-          <CreateActivityMobileMap buttonRef={openMobileMapRef} />
-        </div>
-      ) : (
-        <div className="hidden w-full rounded-2xl md:block">
+    <APIProvider apiKey={mapKey} libraries={["places"]}>
+      <div className="mt-3 flex w-full flex-col justify-between gap-2 rounded-md bg-white dark:bg-gray-800 md:max-h-[500px] lg:flex-row">
+        {isMobile ? (
+          <div className="md:hidden">
+            <CreateActivityMobileMap buttonRef={openMobileMapRef} />
+          </div>
+        ) : (
+          <div className="hidden w-full rounded-2xl md:block">
           <MapWrapper
             API_KEY={mapKey}
             height="h-96"
             displayActivities={false}
+            skipAPIProvider={true}
           />
-        </div>
-      )}
-      <div className="w-full p-3 pb-10 md:pb-0">
-        {isLoading ? (
-          <CreateActivityLoading />
-        ) : !isAuthenticated || !user ? (
-          <div className="flex flex-col items-center gap-4">
-            <p className="text-center text-xl">
-              Please sign up or log in to your account to create an activity
-            </p>
-            <Button
-              className="border"
-              variant="ghost"
-              onClick={() => {
-                dispatch(authActions.setAuthDialogOpen(true));
-              }}
-            >
-              Sign in
-            </Button>
           </div>
-        ) : (
-          <>{formikComponent}</>
         )}
+        <div className="w-full p-3 pb-10 md:pb-0">
+          {isLoading ? (
+            <CreateActivityLoading />
+          ) : !isAuthenticated || !user ? (
+            <div className="flex flex-col items-center gap-4">
+              <p className="text-center text-xl">
+                Please sign up or log in to your account to create an activity
+              </p>
+              <Button
+                className="border"
+                variant="ghost"
+                onClick={() => {
+                  dispatch(authActions.setAuthDialogOpen(true));
+                }}
+              >
+                Sign in
+              </Button>
+            </div>
+          ) : (
+            <>{formikComponent}</>
+          )}
+        </div>
+        <CreateActivityAlert
+          buttonRef={openCreateActivityAlertRef}
+          isActivityCreated={true}
+          activityId={createdActivityId || undefined}
+          activityTitle={createdActivityTitle || undefined}
+        />
       </div>
-      <CreateActivityAlert
-        buttonRef={openCreateActivityAlertRef}
-        isActivityCreated={true}
-        activityId={createdActivityId || undefined}
-        activityTitle={createdActivityTitle || undefined}
-      />
-    </div>
+    </APIProvider>
   );
 };
 export default CreateActivityLayout;

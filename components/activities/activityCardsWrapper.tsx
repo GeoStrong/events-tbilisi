@@ -5,7 +5,6 @@ import ActivityCard from "./activityCard";
 import ActivityDescription from "./activityDescription";
 import useAddSearchQuery from "@/lib/hooks/useAddSearchQuery";
 import { usePathname } from "next/navigation";
-import Spinner from "../general/spinner";
 import ActivityCardsLoading from "./activityCardsLoading";
 import useActivitiesFilter from "@/lib/hooks/useActvitiesFilter";
 
@@ -33,7 +32,7 @@ const ActivityCards: React.FC = () => {
       </h2>
       {activities === null && (
         <div className="mt-5">
-          <Spinner />
+          <ActivityCardsLoading />
         </div>
       )}
       {activities?.length === 0 ? (

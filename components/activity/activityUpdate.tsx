@@ -18,6 +18,7 @@ import { RootState } from "@/lib/store/store";
 import { mapActions } from "@/lib/store/mapSlice";
 import { useDispatch } from "react-redux";
 import { env } from "@/lib/utils/env";
+import { APIProvider } from "@vis.gl/react-google-maps";
 
 const snapPoints = [0.5, 1];
 
@@ -76,7 +77,6 @@ const ActivityUpdate: React.FC<{
       isUpdatingActivity: true,
       enableMapFloating: isDrawerOpen,
       image: image,
-      apiKey: env.googleMapsApiKey || "",
     });
 
   return (
@@ -95,21 +95,23 @@ const ActivityUpdate: React.FC<{
           Edit
         </DrawerTrigger>
         <DrawerContent className="w-full">
-          <DrawerHeader>
-            <DrawerTitle className="mb-3 text-center text-xl">
-              Edit Activity
-            </DrawerTitle>
-            <div className="">
-              <CreateActivityMobileMap buttonRef={openMobileMapRef} />
-            </div>
-            <div className="h-[75%] md:h-[85%]">{formikComponent}</div>
-            <CreateActivityAlert
-              buttonRef={openCreateActivityAlertRef}
-              isActivityCreated={false}
-              activityId={activity.id}
-              activityTitle={activity.title}
-            />
-          </DrawerHeader>
+          <APIProvider apiKey={env.googleMapsApiKey || ""} libraries={["places"]}>
+            <DrawerHeader>
+              <DrawerTitle className="mb-3 text-center text-xl">
+                Edit Activity
+              </DrawerTitle>
+              <div className="">
+                <CreateActivityMobileMap buttonRef={openMobileMapRef} />
+              </div>
+              <div className="h-[75%] md:h-[85%]">{formikComponent}</div>
+              <CreateActivityAlert
+                buttonRef={openCreateActivityAlertRef}
+                isActivityCreated={false}
+                activityId={activity.id}
+                activityTitle={activity.title}
+              />
+            </DrawerHeader>
+          </APIProvider>
         </DrawerContent>
       </Drawer>
     </>

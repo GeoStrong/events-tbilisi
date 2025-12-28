@@ -33,7 +33,9 @@ const MapComponent: React.FC<MapProps> = ({
 }) => {
   const map = useMap();
   const dispatch = useDispatch();
-  const { isFloatingEnabled } = useSelector((state: RootState) => state.map);
+  const { isFloatingEnabled, latLng } = useSelector(
+    (state: RootState) => state.map,
+  );
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [value, _, removeValue] = useLocalStorage<Poi | null>("location", null);
 
@@ -56,6 +58,14 @@ const MapComponent: React.FC<MapProps> = ({
       removeValue();
     }, 500);
   }, [map, removeValue, value]);
+
+  // Center map and zoom when latLng changes (e.g., from address selection)
+  useEffect(() => {
+    if (latLng && map && !displayActivities) {
+      map.setCenter(latLng);
+      map.setZoom(16);
+    }
+  }, [latLng, map, displayActivities]);
 
   return (
     <div ref={containerRef} className="relative w-full rounded-2xl">
@@ -84,6 +94,14 @@ const MapComponent: React.FC<MapProps> = ({
           <PoiMarkers pois={selectedActivity!} enableClick={false} />
         )}
 
+        {/* Show marker when latLng is set (from address selection or map click) */}
+        {latLng && !displayActivities && (
+          <AdvancedMarker position={latLng}>
+            <FloatingCursorPin />
+          </AdvancedMarker>
+        )}
+
+        {/* Show floating cursor pin when enabled and clicked */}
         {clickedLatLng && isFloatingEnabled && (
           <AdvancedMarker position={clickedLatLng}>
             <FloatingCursorPin />
@@ -114,7 +132,14 @@ const MapWrapper: React.FC<{
   height?: string;
   displayActivities?: boolean;
   selectedActivityLocation?: Poi[];
-}> = ({ API_KEY, height, displayActivities, selectedActivityLocation }) => {
+  skipAPIProvider?: boolean;
+}> = ({
+  API_KEY,
+  height,
+  displayActivities,
+  selectedActivityLocation,
+  skipAPIProvider = false,
+}) => {
   const [mapError, setMapError] = React.useState<string | null>(null);
 
   const normalizedApiKey = React.useMemo(() => {
@@ -213,46 +238,53 @@ const MapWrapper: React.FC<{
     );
   }
 
+  const mapContent = mapError ? (
+    <div className="flex h-full items-center justify-center rounded-2xl bg-gray-100 dark:bg-gray-800">
+      <div className="p-4 text-center">
+        <p className="text-lg font-semibold text-red-600 dark:text-red-400">
+          Google Maps API Error
+        </p>
+        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          {mapError}
+        </p>
+        <p className="mt-4 text-xs text-gray-500 dark:text-gray-500">
+          <a
+            href="https://console.cloud.google.com/google/maps-apis/credentials"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 underline"
+          >
+            Check your API key settings
+          </a>
+          {" | "}
+          <a
+            href="https://console.cloud.google.com/apis/library/maps-backend.googleapis.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 underline"
+          >
+            Enable Maps JavaScript API
+          </a>
+        </p>
+      </div>
+    </div>
+  ) : (
+    <MapComponent
+      mapHeight={height}
+      displayActivities={displayActivities}
+      selectedActivity={selectedActivityLocation}
+    />
+  );
+
+  // Skip APIProvider if already inside one
+  if (skipAPIProvider) {
+    return <Suspense fallback={<MapLoadingLayout />}>{mapContent}</Suspense>;
+  }
+
   return (
     <Suspense fallback={<MapLoadingLayout />}>
-      <APIProvider apiKey={normalizedApiKey}>
-        {mapError ? (
-          <div className="flex h-full items-center justify-center rounded-2xl bg-gray-100 dark:bg-gray-800">
-            <div className="p-4 text-center">
-              <p className="text-lg font-semibold text-red-600 dark:text-red-400">
-                Google Maps API Error
-              </p>
-              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                {mapError}
-              </p>
-              <p className="mt-4 text-xs text-gray-500 dark:text-gray-500">
-                <a
-                  href="https://console.cloud.google.com/google/maps-apis/credentials"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 underline"
-                >
-                  Check your API key settings
-                </a>
-                {" | "}
-                <a
-                  href="https://console.cloud.google.com/apis/library/maps-backend.googleapis.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 underline"
-                >
-                  Enable Maps JavaScript API
-                </a>
-              </p>
-            </div>
-          </div>
-        ) : (
-          <MapComponent
-            mapHeight={height}
-            displayActivities={displayActivities}
-            selectedActivity={selectedActivityLocation}
-          />
-        )}
+      <APIProvider apiKey={normalizedApiKey} libraries={["places"]}>
+        {mapContent}
       </APIProvider>
     </Suspense>
   );
