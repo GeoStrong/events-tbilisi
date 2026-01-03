@@ -41,10 +41,10 @@ const FeedActivityCard: React.FC<FeedActivityCardProps> = ({ activity }) => {
   return (
     <Link
       href={`/activities/${activity?.id}`}
-      className="group mb-4 block overflow-hidden rounded-lg border bg-card transition-all hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
+      className="group mx-4 mb-4 block overflow-hidden rounded-lg border bg-card transition-all hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
     >
       <div className="flex gap-4">
-        <div className="relative w-32 flex-shrink-0 overflow-hidden rounded-l-lg md:h-40 md:w-40">
+        <div className="relative hidden w-1/2 flex-shrink-0 overflow-hidden rounded-l-lg sm:flex md:h-40 md:w-40">
           <OptimizedImage
             src={activityImage}
             width={160}

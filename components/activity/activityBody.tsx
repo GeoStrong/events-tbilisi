@@ -13,7 +13,6 @@ import ActivityDetails from "./activityDetails";
 import Link from "next/link";
 import Socials from "../general/socials";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { BiUser } from "react-icons/bi";
 import { Badge } from "../ui/badge";
 import useMapZoom from "@/lib/hooks/useMapZoom";
 import {
@@ -26,6 +25,8 @@ import { useOptimizedImage } from "@/lib/hooks/useOptimizedImage";
 import ActivityParticipants from "./activityParticipants";
 import UserFollowButton from "../general/userFollowButton";
 import ActivityLocation from "./activityLocation";
+import defaultUserImg from "@/public/images/default-user.png";
+import Image from "next/image";
 
 interface ActivityBodyProps {
   categories: (Category | null)[];
@@ -180,7 +181,13 @@ const ActivityBody: React.FC<ActivityBodyProps> = ({
                 className="object-cover object-top"
               />
               <AvatarFallback>
-                <BiUser />
+                <Image
+                  src={defaultUserImg.src}
+                  alt="Default Avatar"
+                  width={20}
+                  height={20}
+                  className="h-12 w-12 object-cover"
+                />
               </AvatarFallback>
             </Avatar>
             <Link

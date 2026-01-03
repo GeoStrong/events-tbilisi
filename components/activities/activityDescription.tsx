@@ -29,6 +29,7 @@ import { Button } from "../ui/button";
 import useOptimizedImage from "@/lib/hooks/useOptimizedImage";
 import OptimizedImage from "../ui/optimizedImage";
 import { checkUserParticipation } from "@/lib/profile/profile";
+import { BiRightTopArrowCircle } from "react-icons/bi";
 
 const snapPoints = [0.5, 1];
 
@@ -176,6 +177,15 @@ const ActivityDescription: React.FC<ActivityDescriptionProps> = ({
                         {activity.targetAudience}
                       </span>
                     </p>
+                  )}
+                  {user?.id !== activity.user_id && (
+                    <Link
+                      href={`users/${activity.user_id}`}
+                      className="flex items-center gap-1 text-primary"
+                    >
+                      Author Profile
+                      <BiRightTopArrowCircle className="text-lg" />
+                    </Link>
                   )}
                   {activity?.image && (
                     <OptimizedImage

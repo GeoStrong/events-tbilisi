@@ -198,3 +198,7 @@ body {
 [data-vaul-drawer][data-vaul-drawer-direction="right"]::after {
   width: 0 !important;
 }
+
+@theme {
+  --container-xs: 30rem;
+}

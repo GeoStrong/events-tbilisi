@@ -18,7 +18,7 @@ const ProfilePostsTab: React.FC<{ userId: string }> = ({ userId }) => {
         <CardHeader>
           <CardTitle className="text-lg">My Feed Posts</CardTitle>
           <CardDescription className="text-base">
-            Activities you've shared to your feed
+            Activities you&apos;ve shared to your feed
           </CardDescription>
         </CardHeader>
         {isLoading ? (
@@ -30,13 +30,13 @@ const ProfilePostsTab: React.FC<{ userId: string }> = ({ userId }) => {
             </div>
           </CardDescription>
         ) : posts.length === 0 ? (
-          <CardDescription className="p-3">
+          <CardDescription className="md:p-4">
             <p className="col-span-2 py-8 text-center text-muted-foreground">
-              You haven't posted any activities to your feed yet!
+              You haven&apos;t posted any activities to your feed yet!
             </p>
           </CardDescription>
         ) : (
-          <CardDescription className="space-y-6 p-3">
+          <CardDescription className="space-y-6 md:p-4">
             {posts.map((post) => (
               <FeedPost key={post.id} user={user} post={post} />
             ))}

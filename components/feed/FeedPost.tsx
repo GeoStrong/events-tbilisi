@@ -92,7 +92,7 @@ const FeedPost: React.FC<FeedPostProps> = ({ user, post }) => {
   );
 
   return (
-    <div className="rounded-xl border bg-card p-4 shadow-md dark:border-slate-700 dark:bg-slate-800 md:p-6">
+    <div className="border-b bg-card p-2 pb-4 dark:border-slate-700 dark:bg-slate-800 md:p-4">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <UserAvatar avatarPath={post.author?.avatar_path} size={12} />
@@ -171,7 +171,7 @@ const FeedPost: React.FC<FeedPostProps> = ({ user, post }) => {
         </>
       )}
 
-      <div className="flex items-center justify-between border-t pt-4 dark:border-slate-700">
+      <div className="flex items-center justify-between px-4 pt-4">
         <ActivityEngagement
           user={user!}
           activityId={post.activity?.id}

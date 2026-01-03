@@ -8,16 +8,8 @@ interface QueryProviderProps {
   children: React.ReactNode;
 }
 
-/**
- * React Query provider component
- * Wraps the app to provide query client context
- */
 export const QueryProvider: React.FC<QueryProviderProps> = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 };
-
-
-
-

@@ -159,6 +159,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                     </div>
                   </div>
                 )}
+
                 {user && <p className="text-muted-foreground">{user.email}</p>}
               </div>
 

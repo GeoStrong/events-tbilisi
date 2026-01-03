@@ -94,11 +94,13 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
         <CardTitle className="min-h-[3rem] px-4 pt-4 text-xl leading-tight md:px-6 md:text-2xl">
           {activity.title}
         </CardTitle>
-        <CardDescription></CardDescription>
+        <CardDescription className="h-[4rem] px-4 pt-4 text-sm leading-tight md:px-6 md:text-lg">
+          {activity.description.slice(0, 50) + "..."}
+        </CardDescription>
       </CardHeader>
-      <CardContent className="flex min-h-[4rem] flex-shrink-0 items-start justify-between gap-3 p-4 pb-0 md:p-6">
+      <CardContent className="flex h-[1rem] flex-shrink-0 items-start justify-between gap-3 p-4 md:p-6">
         <div className="min-w-0 flex-1">
-          <p className="break-words text-lg leading-snug">
+          <p className="break-words text-base leading-snug">
             {activity.location && activity.location.toLocaleString()}
           </p>
           {activity.hostName && (
@@ -123,7 +125,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
           </Link>
         )}
       </CardContent>
-      <CardFooter className="mt-auto flex flex-col items-start gap-3 p-4 pt-4 md:p-6">
+      <CardFooter className="mt-2 flex flex-col items-start p-4 pt-4 md:p-6">
         <p className="flex items-center gap-1 text-base text-muted-foreground">
           <BiTimeFive className="flex-shrink-0" />
           <span>{activity.time && activity.time.toLocaleString()}</span>
