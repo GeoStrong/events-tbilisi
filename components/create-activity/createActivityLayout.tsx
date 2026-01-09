@@ -23,6 +23,7 @@ const CreateActivityLayout: React.FC<{ mapKey: string }> = ({ mapKey }) => {
   const { user, isLoading, isAuthenticated } = useGetUserProfile();
   const { latLng } = useSelector((state: RootState) => state.map);
   const { isMobile } = useScreenSize();
+  const { isFullscreen } = useSelector((state: RootState) => state.map);
 
   const initialValues: NewActivityEntity = {
     title: "",
@@ -58,6 +59,7 @@ const CreateActivityLayout: React.FC<{ mapKey: string }> = ({ mapKey }) => {
 
   useEffectOnce(() => {
     dispatch(mapActions.setLatLng(null));
+    dispatch(mapActions.setIsFloatingEnabled(true));
   });
 
   return (
@@ -69,12 +71,12 @@ const CreateActivityLayout: React.FC<{ mapKey: string }> = ({ mapKey }) => {
           </div>
         ) : (
           <div className="hidden w-full rounded-2xl md:block">
-          <MapWrapper
-            API_KEY={mapKey}
-            height="h-96"
-            displayActivities={false}
-            skipAPIProvider={true}
-          />
+            <MapWrapper
+              API_KEY={mapKey}
+              height={`h-96 ${isFullscreen && "h-screen"}`}
+              displayActivities={false}
+              skipAPIProvider={true}
+            />
           </div>
         )}
         <div className="w-full p-3 pb-10 md:pb-0">

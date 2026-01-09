@@ -20,11 +20,8 @@ export const isValidImage = (url?: string) => {
 };
 
 export const zoomToLocation = (map: google.maps.Map | null, location: Poi) => {
-  map?.setZoom(10);
   map?.setCenter(location.location);
-  setTimeout(() => {
-    map?.setZoom(16);
-  }, 500);
+  map?.setZoom(16);
 };
 
 export const handleUploadFile = async (

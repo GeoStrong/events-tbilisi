@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export const FeedPostSkeleton: React.FC = () => {
   return (
-    <div className="rounded-xl border bg-card p-4 shadow-md dark:border-slate-700 dark:bg-slate-800 md:p-6">
+    <div className="rounded-xl bg-card p-2 dark:bg-slate-800 md:p-4">
       {/* Post Header - Author Info */}
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-3">

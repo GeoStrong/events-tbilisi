@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/dialog";
 import MapWrapper from "../map/map";
 import { Button } from "../ui/button";
+import { useSelector } from "react-redux";
+import { RootState } from "@/lib/store/store";
 
 interface CreateActivityMobileMapProps {
   buttonRef: React.RefObject<HTMLButtonElement | null>;
@@ -21,6 +23,7 @@ const CreateActivityMobileMap: React.FC<CreateActivityMobileMapProps> = ({
   buttonRef,
 }) => {
   const [mapKey, setMapKey] = useState<string>("");
+  const { isFullscreen } = useSelector((state: RootState) => state.map);
 
   useEffect(() => {
     (async () => {
@@ -48,7 +51,7 @@ const CreateActivityMobileMap: React.FC<CreateActivityMobileMapProps> = ({
           </DialogHeader>
           <MapWrapper
             API_KEY={mapKey}
-            height="h-96"
+            height={`h-96 ${isFullscreen && "h-screen"}`}
             displayActivities={false}
           />
           <DialogClose>

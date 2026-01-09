@@ -5,10 +5,12 @@ const initialState: {
   map: google.maps.Map | null;
   latLng: google.maps.LatLngLiteral | null;
   isFloatingEnabled: boolean;
+  isFullscreen: boolean;
 } = {
   map: null,
   latLng: null,
   isFloatingEnabled: false,
+  isFullscreen: false,
 };
 
 export const mapSlice = createSlice({
@@ -26,6 +28,9 @@ export const mapSlice = createSlice({
     },
     setIsFloatingEnabled: (state, action: PayloadAction<boolean>) => {
       state.isFloatingEnabled = action.payload;
+    },
+    setIsFullscreen: (state, action: PayloadAction<boolean>) => {
+      state.isFullscreen = action.payload;
     },
   },
 });

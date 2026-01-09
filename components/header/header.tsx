@@ -4,8 +4,6 @@ import Link from "next/link";
 import React from "react";
 import { IoMdMegaphone } from "react-icons/io";
 import HeaderNav from "./headerNav";
-import { useLocation } from "react-use";
-import useScreenSize from "@/lib/hooks/useScreenSize";
 import AuthDialog from "../auth/authForm";
 import useGetUserProfile from "@/lib/hooks/useGetUserProfile";
 import { Button } from "../ui/button";
@@ -20,14 +18,6 @@ const Header: React.FC = () => {
   const { authDialogOpen } = useSelector((state: RootState) => state.auth);
   const { user, isLoading, isAuthenticated } = useGetUserProfile();
 
-  const { pathname } = useLocation();
-  const { isMobile } = useScreenSize();
-
-  const headerBg =
-    pathname === "/map" && isMobile
-      ? "bg-transparent border-none"
-      : "bg-white dark:bg-gray-900";
-
   const setAuthDialogOpen = (value: boolean) => {
     dispatch(authActions.setAuthDialogOpen(value));
   };
@@ -38,7 +28,7 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`sticky top-0 z-40 flex w-full items-center justify-between border-b bg-white backdrop-blur-md dark:border-slate-700 dark:bg-slate-900 md:px-20 ${headerBg ? "border-none bg-transparent backdrop-blur-none" : ""} px-6 pb-2 pt-2 transition-colors md:pb-0`}
+      className={`sticky top-0 z-40 flex w-full items-center justify-between border-b bg-white px-6 pb-2 pt-2 backdrop-blur-md transition-colors dark:border-slate-700 dark:bg-slate-900 md:px-20 md:pb-0`}
     >
       <Link
         href="/"

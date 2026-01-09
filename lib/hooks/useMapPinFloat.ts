@@ -42,11 +42,40 @@ const useMapPinFloat = (
     setCursorPos({ x: mouseEvent.clientX, y: mouseEvent.clientY });
   };
 
-  const onClickHandler = (event: MapMouseEvent) => {
-    if (!event.detail.latLng) return;
-    setClickedLatLng(event.detail.latLng);
-    dispatch(mapActions.setLatLng(event.detail.latLng));
-    // dispatch(mapActions.setIsFloatingEnabled(false));
+  const onClickHandler = (event: MapMouseEvent | google.maps.MapMouseEvent) => {
+    // Support multiple event shapes from different map callbacks
+    // Try common locations for latLng: event.latLng, event.detail?.latLng, event.domEvent?.latLng
+    let rawLatLng: any =
+      (event as any).latLng ||
+      (event as any).detail?.latLng ||
+      (event as any).domEvent?.latLng;
+
+    // If still no latLng, try accessing it through the event object directly
+    if (!rawLatLng && event && typeof event === "object") {
+      rawLatLng = (event as any)["latLng"];
+    }
+
+    if (!rawLatLng) {
+      console.warn("No latLng found in click event:", event);
+      return;
+    }
+
+    let latLng: google.maps.LatLngLiteral;
+
+    if (
+      typeof rawLatLng.lat === "function" &&
+      typeof rawLatLng.lng === "function"
+    ) {
+      latLng = { lat: rawLatLng.lat(), lng: rawLatLng.lng() };
+    } else if (rawLatLng.lat !== undefined && rawLatLng.lng !== undefined) {
+      latLng = { lat: Number(rawLatLng.lat), lng: Number(rawLatLng.lng) };
+    } else {
+      console.warn("Invalid latLng format:", rawLatLng);
+      return;
+    }
+
+    setClickedLatLng(latLng);
+    dispatch(mapActions.setLatLng(latLng));
     setCursorPos(null);
   };
 

@@ -46,7 +46,7 @@ const Feed: React.FC = () => {
       </div>
 
       <div className="overflow-y-auto rounded-xl border shadow-md dark:border-slate-700 dark:bg-slate-800 md:col-span-4 md:col-start-3">
-        <h1 className="mb-6 text-center text-3xl font-bold md:text-4xl">
+        <h1 className="my-6 text-center text-3xl font-bold md:text-4xl">
           For you
         </h1>
         {postsLoading && !memoizedPosts.length ? (

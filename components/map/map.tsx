@@ -20,7 +20,7 @@ import PoiMarkers from "./poiMarkers";
 import { Poi } from "@/lib/types";
 import { useDispatch } from "react-redux";
 import { mapActions } from "@/lib/store/mapSlice";
-import { useLocalStorage } from "react-use";
+import { useLocalStorage, useLocation } from "react-use";
 import { zoomToLocation } from "@/lib/functions/helperFunctions";
 import FloatingCursorPin from "./floatingCursorPin";
 import useMapPinFloat from "@/lib/hooks/useMapPinFloat";
@@ -72,35 +72,58 @@ const MapComponent: React.FC<MapProps> = ({
 
   const { activityLocations } = useActivitiesFilter();
   const [isLocating, setIsLocating] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const hasSetTbilisiRef = useRef(false);
   const { resolvedTheme } = useTheme();
+  const { isFullscreen } = useSelector((state: RootState) => state.map);
+  const { pathname } = useLocation();
 
   useEffect(() => {
     if (!map) return;
     dispatch(mapActions.setMap(map));
   }, [dispatch, map]);
 
-  // Ensure map is centered on Tbilisi on initial load
   useEffect(() => {
-    if (!map || hasSetTbilisiRef.current || selectedActivity) return;
+    if (!map || hasSetTbilisiRef.current || selectedActivity || value) return;
 
-    // Set center and zoom to Tbilisi after a short delay to ensure map is ready
-    // This ensures Tbilisi is shown by default before any fitBounds calls
-    const timer = setTimeout(() => {
-      if (map && !selectedActivity) {
+    const timerId = window.setTimeout(() => {
+      if (map && !selectedActivity && !value) {
         map.setCenter({ lat: 41.73809, lng: 44.7808 });
-        map.setZoom(12);
+        map.setZoom(11);
         hasSetTbilisiRef.current = true;
       }
     }, 100);
 
-    return () => clearTimeout(timer);
-  }, [map, selectedActivity]);
+    // If the user interacts with the map before the timer fires, cancel it so we don't override their action.
+    const clickListener = map.addListener("click", () => {
+      if (timerId) {
+        clearTimeout(timerId);
+      }
+      hasSetTbilisiRef.current = true;
+    });
+
+    const mouseDownListener = map.addListener("mousedown", () => {
+      if (timerId) {
+        clearTimeout(timerId);
+      }
+      hasSetTbilisiRef.current = true;
+    });
+
+    return () => {
+      clearTimeout(timerId);
+      if (clickListener && typeof clickListener.remove === "function") {
+        clickListener.remove();
+      }
+      if (mouseDownListener && typeof mouseDownListener.remove === "function") {
+        mouseDownListener.remove();
+      }
+    };
+  }, [map, selectedActivity, value]);
 
   useEffect(() => {
     if (value && map) {
       zoomToLocation(map, value);
+      // Mark that we've set a location so Tbilisi centering doesn't override it
+      hasSetTbilisiRef.current = true;
       // Use a ref to avoid dependency on removeValue
       const timeoutId = setTimeout(() => {
         removeValue();
@@ -110,7 +133,6 @@ const MapComponent: React.FC<MapProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, value]); // removeValue is stable from useLocalStorage, safe to omit
 
-  // Center map and zoom when latLng changes (e.g., from address selection)
   useEffect(() => {
     if (latLng && map && !displayActivities) {
       map.setCenter(latLng);
@@ -173,13 +195,14 @@ const MapComponent: React.FC<MapProps> = ({
         console.error("Error attempting to enable fullscreen:", err);
         toast.error("Unable to enter fullscreen mode");
       });
-      setIsFullscreen(true);
+      dispatch(mapActions.setIsFullscreen(true));
     } else {
       document.exitFullscreen().catch((err) => {
         console.error("Error attempting to exit fullscreen:", err);
       });
-      setIsFullscreen(false);
+      dispatch(mapActions.setIsFullscreen(false));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleResetToTbilisi = useCallback(() => {
@@ -189,38 +212,26 @@ const MapComponent: React.FC<MapProps> = ({
     toast.success("Map reset to Tbilisi");
   }, [map]);
 
-  // Apply map theme based on website theme
-  // The mapId configured in Google Maps Console should have styles for both light and dark
-  // This effect ensures the map refreshes when theme changes to apply the correct styles
   useEffect(() => {
     if (!map) return;
 
-    // If you have different mapIds for light/dark themes in Google Maps Console,
-    // you can switch them here. For example:
-    // const mapId = resolvedTheme === "dark" ? "dark-map-id" : "light-map-id";
-    // map.setMapTypeId(mapId);
-
-    // Otherwise, the current mapId should handle both themes via console configuration
-    // Force a refresh to ensure styles are applied
     const currentCenter = map.getCenter();
     const currentZoom = map.getZoom();
     if (currentCenter && currentZoom) {
-      // Small refresh to trigger style reapplication
       map.setZoom(currentZoom);
     }
   }, [map, resolvedTheme]);
 
-  // Listen for fullscreen changes
   useEffect(() => {
     const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
+      dispatch(mapActions.setIsFullscreen(!!document.fullscreenElement));
     };
 
     document.addEventListener("fullscreenchange", handleFullscreenChange);
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
     };
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     let polygon: google.maps.Polygon | null = null;
@@ -252,9 +263,12 @@ const MapComponent: React.FC<MapProps> = ({
           strokeWeight: 2,
           fillColor: "#000",
           fillOpacity: 0.05,
+          clickable: false,
         });
 
-        polygon.setMap(map);
+        setTimeout(() => {
+          polygon?.setMap(map);
+        }, 1);
       } catch (err) {
         console.error("Failed to load or parse ge.csv", err);
       }
@@ -274,11 +288,11 @@ const MapComponent: React.FC<MapProps> = ({
             ? selectedActivity[0].location
             : { lat: 41.73809, lng: 44.7808 } // Tbilisi coordinates
         }
-        gestureHandling={"greedy"}
         disableDefaultUI={true}
-        defaultZoom={selectedActivity ? 16 : 12}
+        gestureHandling={"greedy"}
+        defaultZoom={selectedActivity ? 16 : 11}
         minZoom={6}
-        streetViewControl={true}
+        streetViewControl={pathname?.includes("/activities/") ? false : true}
         streetViewControlOptions={{
           position: ControlPosition.INLINE_END_BLOCK_CENTER,
         }}
@@ -296,20 +310,12 @@ const MapComponent: React.FC<MapProps> = ({
       >
         {displayActivities ? (
           <PoiMarkers pois={activityLocations} />
-        ) : (
-          <PoiMarkers pois={selectedActivity!} enableClick={false} />
-        )}
+        ) : selectedActivity ? (
+          <PoiMarkers pois={selectedActivity} enableClick={false} />
+        ) : null}
 
-        {/* Show marker when latLng is set (from address selection or map click) */}
-        {latLng && !displayActivities && (
-          <AdvancedMarker position={latLng}>
-            <FloatingCursorPin />
-          </AdvancedMarker>
-        )}
-
-        {/* Show floating cursor pin when enabled and clicked */}
-        {clickedLatLng && isFloatingEnabled && (
-          <AdvancedMarker position={clickedLatLng}>
+        {(latLng || clickedLatLng) && isFloatingEnabled && (
+          <AdvancedMarker position={latLng || clickedLatLng!}>
             <FloatingCursorPin />
           </AdvancedMarker>
         )}
@@ -321,7 +327,6 @@ const MapComponent: React.FC<MapProps> = ({
               left: cursorPos.x,
               top: cursorPos.y,
               pointerEvents: "none",
-              zIndex: 9999,
               transform: "translate(-50%, -100%)",
             }}
           >
@@ -329,59 +334,63 @@ const MapComponent: React.FC<MapProps> = ({
           </div>
         )}
 
-        <MapControl position={ControlPosition.RIGHT_CENTER}>
-          <div className="m-2 flex flex-col gap-2">
+        {!pathname?.includes("/activities/") && (
+          <MapControl position={ControlPosition.RIGHT_CENTER}>
+            <div className="m-2 flex flex-col gap-2">
+              <button
+                onClick={handleZoomIn}
+                className="flex h-10 w-10 items-center justify-center rounded-lg bg-white shadow-lg hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700"
+                title="Zoom In"
+                aria-label="Zoom In"
+              >
+                <ZoomIn className="h-5 w-5 text-gray-700 dark:text-gray-200" />
+              </button>
+              <button
+                onClick={handleZoomOut}
+                className="flex h-10 w-10 items-center justify-center rounded-lg bg-white shadow-lg hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700"
+                title="Zoom Out"
+                aria-label="Zoom Out"
+              >
+                <ZoomOut className="h-5 w-5 text-gray-700 dark:text-gray-200" />
+              </button>
+              <button
+                onClick={handleFullscreen}
+                className="flex h-10 w-10 items-center justify-center rounded-lg bg-white shadow-lg hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700"
+                title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+                aria-label={
+                  isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"
+                }
+              >
+                {isFullscreen ? (
+                  <Minimize className="h-5 w-5 text-gray-700 dark:text-gray-200" />
+                ) : (
+                  <Maximize className="h-5 w-5 text-gray-700 dark:text-gray-200" />
+                )}
+              </button>
+              <button
+                onClick={handleResetToTbilisi}
+                className="flex h-10 w-10 items-center justify-center rounded-lg bg-white shadow-lg hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700"
+                title="Reset to Tbilisi"
+                aria-label="Reset to Tbilisi"
+              >
+                <Home className="h-5 w-5 text-gray-700 dark:text-gray-200" />
+              </button>
+            </div>
             <button
-              onClick={handleZoomIn}
-              className="flex h-10 w-10 items-center justify-center rounded-lg bg-white shadow-lg hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700"
-              title="Zoom In"
-              aria-label="Zoom In"
+              onClick={handleLocateMe}
+              disabled={isLocating}
+              className="m-2 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg hover:bg-gray-100 disabled:opacity-50 dark:bg-gray-800 dark:hover:bg-gray-700"
+              title="Locate Me"
+              aria-label="Locate Me"
             >
-              <ZoomIn className="h-5 w-5 text-gray-700 dark:text-gray-200" />
+              <MapPin
+                className={`h-5 w-5 text-gray-700 dark:text-gray-200 ${
+                  isLocating ? "animate-pulse" : ""
+                }`}
+              />
             </button>
-            <button
-              onClick={handleZoomOut}
-              className="flex h-10 w-10 items-center justify-center rounded-lg bg-white shadow-lg hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700"
-              title="Zoom Out"
-              aria-label="Zoom Out"
-            >
-              <ZoomOut className="h-5 w-5 text-gray-700 dark:text-gray-200" />
-            </button>
-            <button
-              onClick={handleFullscreen}
-              className="flex h-10 w-10 items-center justify-center rounded-lg bg-white shadow-lg hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700"
-              title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
-              aria-label={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
-            >
-              {isFullscreen ? (
-                <Minimize className="h-5 w-5 text-gray-700 dark:text-gray-200" />
-              ) : (
-                <Maximize className="h-5 w-5 text-gray-700 dark:text-gray-200" />
-              )}
-            </button>
-            <button
-              onClick={handleResetToTbilisi}
-              className="flex h-10 w-10 items-center justify-center rounded-lg bg-white shadow-lg hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700"
-              title="Reset to Tbilisi"
-              aria-label="Reset to Tbilisi"
-            >
-              <Home className="h-5 w-5 text-gray-700 dark:text-gray-200" />
-            </button>
-          </div>
-          <button
-            onClick={handleLocateMe}
-            disabled={isLocating}
-            className="m-2 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg hover:bg-gray-100 disabled:opacity-50 dark:bg-gray-800 dark:hover:bg-gray-700"
-            title="Locate Me"
-            aria-label="Locate Me"
-          >
-            <MapPin
-              className={`h-5 w-5 text-gray-700 dark:text-gray-200 ${
-                isLocating ? "animate-pulse" : ""
-              }`}
-            />
-          </button>
-        </MapControl>
+          </MapControl>
+        )}
       </GoogleMap>
     </div>
   );
@@ -413,7 +422,6 @@ const MapWrapper: React.FC<{
   }, [normalizedApiKey]);
 
   useEffect(() => {
-    // Listen for Google Maps errors
     const handleError = (event: ErrorEvent) => {
       if (
         event.message?.includes("InvalidKeyMapError") ||
@@ -536,7 +544,6 @@ const MapWrapper: React.FC<{
     />
   );
 
-  // Skip APIProvider if already inside one
   if (skipAPIProvider) {
     return <Suspense fallback={<MapLoadingLayout />}>{mapContent}</Suspense>;
   }
